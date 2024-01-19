@@ -1,25 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./ProductDetails.css";
+import { FaWhatsapp } from "react-icons/fa";
+import Swal from "sweetalert2";
 import Header from "../../components/Header";
 import MidFooter from "../../components/MidFooter";
-import Swal from "sweetalert2";
-import { FaWhatsapp } from 'react-icons/fa';
+import "./ProductDetails.css";
 // import cover1 from "../../images/s1.jpg";
 // import cover2 from "../../images/s4.jpg";
 // import cover3 from "../../images/s3.jpg";
 
+import Category from "../../components/Category";
 import "../../components/SeasonalProducts.css";
 import "../../components/TopProducts.css";
-import Category from "../../components/Category";
-import S1 from "../../images/s1.jpg";
-import S2 from "../../images/s2.jpg";
-import S3 from "../../images/s3.jpg";
-import S4 from "../../images/s4.jpg";
-import S5 from "../../images/s5.jpg";
 // import S6 from "../../images/s6.jpg";
 // import S7 from "../../images/s7.jpg";
 // import S8 from "../../images/s8.jpg";
 // import S9 from "../../images/s9.jpg";
+import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Preloader from "../../components/Loader";
 import MobileSidebar from "../../components/MobileSidebar";
@@ -46,7 +42,7 @@ const ProductDetails = () => {
     GetProductsbyCategoryId,
     GetAllVarProducts,
     OpenLoginModal,
-    setOpenLoginModal
+    setOpenLoginModal,
   } = useContext(SignContext);
   const [ProductData, setProductData] = useState([]);
   const [OtherProductData, setOtherProductData] = useState([]);
@@ -115,7 +111,7 @@ const ProductDetails = () => {
 
   const handleCartClick = async () => {
     try {
-      const customerId = CustomerInfo._id; 
+      const customerId = CustomerInfo._id;
       const cartInfo = {
         productId: ProductData._id,
         quantity: Quantity,
@@ -123,10 +119,8 @@ const ProductDetails = () => {
       const res = await addToCart(customerId, cartInfo);
 
       if (res.success) {
-        
         console.log("Cart updated successfully");
         navigate(`/cart/${customerId}`);
-        
       } else {
         console.error(res.msg);
         setOpenLoginModal(true);
@@ -185,7 +179,7 @@ const ProductDetails = () => {
 
   const handleWhatsAppInquiry = () => {
     // Assuming you have a WhatsApp business number
-    const businessNumber = '918980963151'; 
+    const businessNumber = "918980963151";
     const productDetailsUrl = window.location.href;
     const productName = ProductData.name;
 
@@ -193,10 +187,12 @@ const ProductDetails = () => {
     const inquiryMessage = `Hi, I'm interested in the product "${productName}" (${productDetailsUrl}). Can you provide more information?`;
 
     // Generate the WhatsApp link with the predefined message
-    const whatsappLink = `https://wa.me/${businessNumber}?text=${encodeURIComponent(inquiryMessage)}`;
+    const whatsappLink = `https://wa.me/${businessNumber}?text=${encodeURIComponent(
+      inquiryMessage
+    )}`;
 
     // Open the WhatsApp link in a new window
-    window.open(whatsappLink, '_blank');
+    window.open(whatsappLink, "_blank");
   };
 
   useEffect(() => {
@@ -242,13 +238,26 @@ const ProductDetails = () => {
     <div>
       <Header />
       <MobileSidebar />
-      <div class="page-header breadcrumb-wrap">
+      {/* <div class="page-header breadcrumb-wrap">
         <div class="container">
           <div class="breadcrumb">
             <Link to="/" rel="nofollow">
               <i class="fi-rs-home mr-5"></i>Home
             </Link>
             <span></span> <Link to="#">Shringar</Link> <span></span>
+          </div>
+        </div>
+      </div> */}
+      <div class="page-header breadcrumb-wrap">
+        <div className="container">
+          <div className="breadcrumb">
+            <Link className="homeLink" to="/" rel="nofollow">
+              <i className="fi-rs-home ">
+                <AiOutlineHome />
+              </i>
+              Home{" "}
+            </Link>
+            <AiOutlineRight className="rightIcon" /> <span /> Shringar <span />
           </div>
         </div>
       </div>
@@ -264,6 +273,7 @@ const ProductDetails = () => {
                     </span> */}
                     <div className="wrapper_preview_img" id="preview_img">
                       <img
+                        className="productImg"
                         src={`${url}/products/${
                           selectedImage || ProductData?.imageGallery?.[0] || ""
                         }`}
@@ -275,26 +285,31 @@ const ProductDetails = () => {
                       />
                     </div>
                     <div className="wrapper_thumb p-2" id="wrapper-thumb">
-  {ProductData.imageGallery?.map((image, index) => (
-    <div
-      key={index}
-      className={`thumb p-2 ${selectedImage === image ? "active" : ""} ${
-        ProductData.imageGallery.length < 4 ? "single-column" : ""
-      }`}
-      onClick={() => handleThumbClick(image)}
-    >
-      <img
-        src={`${url}/products/${image}`}
-        alt={`Thumbnail ${index + 1}`}
-        onError={(e) => {
-          e.target.src =
-            "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
-        }}
-        style={{ width: '150.11px', height: '150.11px' }}
-      />
-    </div>
-  ))}
-</div>
+                      {ProductData.imageGallery?.map((image, index) => (
+                        <div
+                          key={index}
+                          className={`thumb p-2 ${
+                            selectedImage === image ? "active" : ""
+                          } ${
+                            ProductData.imageGallery.length < 4
+                              ? "single-column"
+                              : ""
+                          }`}
+                          onClick={() => handleThumbClick(image)}
+                        >
+                          <img
+                            className="productImg"
+                            src={`${url}/products/${image}`}
+                            alt={`Thumbnail ${index + 1}`}
+                            onError={(e) => {
+                              e.target.src =
+                                "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                            }}
+                            style={{ width: "150.11px", height: "150.11px" }}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
                   {/* End Gallery */}
@@ -343,8 +358,6 @@ const ProductDetails = () => {
                       />
                     </div>
 
-                    
-                    
                     <div className="detail-extralink   ">
                       <div className="detail-qty border radius">
                         <Link
@@ -394,53 +407,59 @@ const ProductDetails = () => {
                           <WishlistMessage onClose={closeWishlistMessage} />
                         )}
                       </div>
-                      <button className="button button-whatsapp-share" onClick={handleWhatsAppInquiry} style={{ backgroundColor: '#25D366', color: '#FFFFFF', border: 'none' , height:"50px"}}>
-        <FaWhatsapp style={{fontSize:"25px"}} />
-      </button>
+                      <button
+                        className="button button-whatsapp-share"
+                        onClick={handleWhatsAppInquiry}
+                        style={{
+                          backgroundColor: "#25D366",
+                          color: "#FFFFFF",
+                          border: "none",
+                          height: "50px",
+                        }}
+                      >
+                        <FaWhatsapp style={{ fontSize: "25px" }} />
+                      </button>
                     </div>
 
-                   
-  <div className="product-details-options">
-    <div className="product-details-options-section">
-      <h3>Available Colors:</h3>
-      <div className="color-options">
-        {OtherProductData ? (
-          OtherProductData.map((OtherProduct) => (
-            <Link
-              key={OtherProduct._id}
-              to={`/product-details/${OtherProduct._id}`}
-              className="color-option-link"
-            >
-              {OtherProduct.productColor}
-            </Link>
-          ))
-        ) : (
-          <p>No colors available</p>
-        )}
-      </div>
-    </div>
+                    <div className="product-details-options">
+                      <div className="product-details-options-section">
+                        <h3>Available Colors:</h3>
+                        <div className="color-options">
+                          {OtherProductData ? (
+                            OtherProductData.map((OtherProduct) => (
+                              <Link
+                                key={OtherProduct._id}
+                                to={`/product-details/${OtherProduct._id}`}
+                                className="color-option-link"
+                              >
+                                {OtherProduct.productColor}
+                              </Link>
+                            ))
+                          ) : (
+                            <p>No colors available</p>
+                          )}
+                        </div>
+                      </div>
 
-    <div className="product-details-options-section">
-      <h3>Available Sizes:</h3>
-      <div className="size-options">
-        {OtherProductData ? (
-          OtherProductData.map((OtherProduct) => (
-            <Link
-              key={OtherProduct._id}
-              to={`/product-details/${OtherProduct._id}`}
-              className="size-option-link"
-            >
-              {OtherProduct.productSize} cm
-            </Link>
-          ))
-        ) : (
-          <p>No sizes available</p>
-        )}
-      </div>
-    </div>
-  </div>
-
-
+                      <div className="product-details-options-section">
+                        <h3>Available Sizes:</h3>
+                        <div className="size-options">
+                          {OtherProductData ? (
+                            OtherProductData.map((OtherProduct) => (
+                              <Link
+                                key={OtherProduct._id}
+                                to={`/product-details/${OtherProduct._id}`}
+                                className="size-option-link"
+                              >
+                                {OtherProduct.productSize} cm
+                              </Link>
+                            ))
+                          ) : (
+                            <p>No sizes available</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
 
                     <div className="font-xs d-none">
                       <ul className="mr-50 float-start">
@@ -1042,7 +1061,10 @@ const ProductDetails = () => {
                   <div className="product-cart-wrap popular-card" tabIndex={0}>
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
-                        <Link to={`/product-details/${product._id}`} tabIndex={0}>
+                        <Link
+                          to={`/product-details/${product._id}`}
+                          tabIndex={0}
+                        >
                           <img
                             className="default-img"
                             src={`${url}/products/${product.imageGallery[0]}`}
@@ -1067,7 +1089,9 @@ const ProductDetails = () => {
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/product-details/${product._id}`}>{product.name}</Link>
+                        <Link to={`/product-details/${product._id}`}>
+                          {product.name}
+                        </Link>
                       </h2>
 
                       <div class="product-card-bottom">
@@ -1085,7 +1109,12 @@ const ProductDetails = () => {
                           )}
                         </div>
                         <div class="add-cart popular-card-cart">
-                          <Link class="add add-cart-btn" onClick={()=>{handleCartClick(product._id)}}>
+                          <Link
+                            class="add add-cart-btn"
+                            onClick={() => {
+                              handleCartClick(product._id);
+                            }}
+                          >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
                             Add{" "}
                           </Link>

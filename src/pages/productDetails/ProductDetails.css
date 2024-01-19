@@ -15,6 +15,10 @@
   margin: 0;
   border-radius: 0;
 }
+.productImg {
+  border: 1px solid #ccc;
+  border-radius: 7px;
+}
 .breadcrumb {
   display: flex;
   flex-wrap: wrap;
@@ -524,7 +528,8 @@ p {
   font-size: 18px;
   margin-bottom: 8px;
 }
-.color-option-link, .size-option-link {
+.color-option-link,
+.size-option-link {
   display: inline-block;
   margin-right: 10px;
   margin-bottom: 10px;
@@ -536,7 +541,8 @@ p {
   transition: background-color 0.3s;
 }
 
-.color-option-link:hover, .size-option-link:hover {
+.color-option-link:hover,
+.size-option-link:hover {
   background-color: #dfaaaa;
   color: #333;
 }

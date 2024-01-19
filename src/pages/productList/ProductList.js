@@ -8,25 +8,18 @@ import Subscribe from "../../components/Subscribe";
 
 import "../../components/SeasonalProducts.css";
 import "../../components/TopProducts.css";
-import S1 from "../../images/s1.jpg";
-import S2 from "../../images/s2.jpg";
-import S3 from "../../images/s3.jpg";
 // import S4 from "../../images/s4.jpg";
 // import S5 from "../../images/s5.jpg";
 // import S6 from "../../images/s6.jpg";
 // import S7 from "../../images/s7.jpg";
 // import S8 from "../../images/s8.jpg";
 // import S9 from "../../images/s9.jpg";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import MobileSidebar from "../../components/MobileSidebar";
-import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
-import SignContext from "../../contextAPI/Context/SignContext";
-import Swal from 'sweetalert2';
 import axios from "axios";
-
-
-
-
+import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
+import MobileSidebar from "../../components/MobileSidebar";
+import SignContext from "../../contextAPI/Context/SignContext";
 
 const ProductList = () => {
   const originalData = useRef(null);
@@ -50,7 +43,6 @@ const ProductList = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
-
 
   const Getproduct = async (id) => {
     const res = await GetProductsbyCategoryId(id);
@@ -142,10 +134,10 @@ const ProductList = () => {
   const [productsToShow, setProductsToShow] = useState(5);
 
   const resetFilters = () => {
-    setSelectedColors([]); 
-    setSelectedPriceRange(null); 
-    setSelectedCategory("All Categories"); 
-    setSelectedShopBy([]); 
+    setSelectedColors([]);
+    setSelectedPriceRange(null);
+    setSelectedCategory("All Categories");
+    setSelectedShopBy([]);
     setShowFilters(false);
     Getproduct();
   };
@@ -180,8 +172,7 @@ const ProductList = () => {
     // Update the selected colors state
     setSelectedSeason(updatedColors);
 
-    
-    changeQueryparams("season", updatedColors.join(",")); 
+    changeQueryparams("season", updatedColors.join(","));
   };
 
   const handlePriceChange = (range) => {
@@ -216,7 +207,6 @@ const ProductList = () => {
   // const handleSortByChange = (value) => {
   //   setSelectedSortBy(value);
 
-    
   //   const sortedData = [...ProductData];
 
   //   if (value === "newIn") {
@@ -239,18 +229,17 @@ const ProductList = () => {
   //   setProductData(sortedData);
   // };
 
-
   const handleSortByChange = (value) => {
     // If original data is not set, store the current order as the original order
     if (!originalData.current) {
       originalData.current = [...ProductData];
     }
-  
+
     setSelectedSortBy(value);
-  
+
     // Sort the product data based on the selected option
     const sortedData = [...originalData.current];
-  
+
     if (value === "newIn") {
       sortedData.reverse();
     } else if (value === "priceLowestFirst") {
@@ -268,31 +257,30 @@ const ProductList = () => {
     } else if (value === "") {
       console.log("clicked");
     }
-  
+
     setProductData(sortedData);
   };
-  
 
   const handleShowMore = () => {
-    setProductsToShow(ProductData?ProductData.length:null);
+    setProductsToShow(ProductData ? ProductData.length : null);
   };
 
   const handleCartClick = async (id) => {
     try {
-      if (authToken) { 
-        const customerId = CustomerInfo._id; 
+      if (authToken) {
+        const customerId = CustomerInfo._id;
         const cartInfo = {
           productId: id,
           quantity: 1,
         };
         const res = await addToCart(customerId, cartInfo);
-  
+
         if (res.success) {
           // Cart updated successfully
           console.log("Cart updated successfully");
           Swal.fire({
-            icon: 'success',
-            title: 'Item Added to Cart',
+            icon: "success",
+            title: "Item Added to Cart",
             showConfirmButton: false,
             timer: 1500,
           });
@@ -302,14 +290,13 @@ const ProductList = () => {
         }
       } else {
         Swal.fire({
-          icon: 'warning', 
-          title: 'Please Login First',
+          icon: "warning",
+          title: "Please Login First",
           showConfirmButton: false,
           timer: 1500,
         });
       }
     } catch (error) {
-  
       console.error("Unexpected error:", error);
     }
   };
@@ -320,7 +307,7 @@ const ProductList = () => {
     GetMaterials();
     GetSeasons();
     GetColors();
-  }, [id , authToken]);
+  }, [id, authToken]);
 
   useEffect(() => {
     getFilteredItems();
@@ -345,8 +332,8 @@ const ProductList = () => {
         </div>
       </div>
       <div className="container">
-        <div className="row">
-        <div className="col-lg-9">
+        <div className="row" style={{ alignItems: "center" }}>
+          <div className="col-xl-9 col-lg-9 col-md-9 col">
             <Link className="shop-filter-toogle" to="#" onClick={toggleFilters}>
               <span className="fi-rs-filter bi bi-funnel" />
               Filters
@@ -358,7 +345,7 @@ const ProductList = () => {
             </Link>
           </div>
           <div
-            className="col-xl-3 col-lg-6 col-md-6 mb-lg-0 mb-md-5 mb-sm-5 "
+            className="col-xl-3 col-lg-3 col-md-3 col mb-lg-0 mb-md-5 mb-sm-5 "
             style={{ float: "right" }}
           >
             <div className="reset">
@@ -498,7 +485,7 @@ const ProductList = () => {
             )}
           </div>
         </div>
-        
+
         <div className="row">
           <div class="shop-product-fillter ">
             <div class="totall-product">
@@ -524,13 +511,10 @@ const ProductList = () => {
                   value={selectedSortBy}
                   onChange={(e) => handleSortByChange(e.target.value)}
                 >
-
                   <option value="">Select</option>
                   <option value="newIn">New In</option>
                   <option value="priceLowestFirst">Price (lowest)</option>
-                  <option value="priceHighestFirst">
-                    Price (highest)
-                  </option>
+                  <option value="priceHighestFirst">Price (highest)</option>
                 </select>
               </div>
             </div>
@@ -541,7 +525,10 @@ const ProductList = () => {
                   className=" col-lg-3 col-md-4 col-sm-6 col-6 mb-4"
                   key={product.id}
                 >
-                  <div className="product-cart-wrap popular-card filter-card" tabIndex={0}>
+                  <div
+                    className="product-cart-wrap popular-card filter-card"
+                    tabIndex={0}
+                  >
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
                         <Link
@@ -611,11 +598,11 @@ const ProductList = () => {
             : null}
         </div>
         <div>
-        {productsToShow < (ProductData?.length || 0) ? (
-  <div className="btn" onClick={handleShowMore}>
-    Show More
-  </div>
-) : null}
+          {productsToShow < (ProductData?.length || 0) ? (
+            <div className="btn" onClick={handleShowMore}>
+              Show More
+            </div>
+          ) : null}
         </div>
       </div>
       <Subscribe />
