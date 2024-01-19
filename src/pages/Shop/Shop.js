@@ -45,6 +45,9 @@ const Shop = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
+  
+  // Assuming selectedPriceRange is a state variable
+
 
   const Getproduct = async () => {
     const res = await getProducts();
@@ -126,7 +129,7 @@ const Shop = () => {
   // Define state variables for filters
   const [showFilters, setShowFilters] = useState(false);
   const [selectedColors, setSelectedColors] = useState([]);
-  const [selectedPriceRange, setSelectedPriceRange] = useState("");
+  const [selectedPriceRange, setSelectedPriceRange] = useState("All");
   const [selectedSortBy, setSelectedSortBy] = useState("New In");
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedMaterial, setSelectedMaterial] = useState([]);
@@ -176,22 +179,53 @@ const Shop = () => {
 
     changeQueryparams("season", updatedColors.join(","));
   };
+   
+  
+  
+  // const handlePriceChange = (range) => {
+  //   const [min, max] = range.match(/\d+/g);
 
-  const handlePriceChange = (range) => {
-    const [min, max] = range.match(/\d+/g);
+  //   // console.log(range , [min , max])
+  //   changeQueryparams("minPrice", min);
+  //   changeQueryparams("maxPrice", max);
 
-    // console.log(range , [min , max])
-    changeQueryparams("minPrice", min);
-    changeQueryparams("maxPrice", max);
-
-    setSelectedPriceRange(range);
-  };
+  //   setSelectedPriceRange(range);
+  // };
 
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
     changeQueryparams("category", selectedCategory);
     setSelectedCategory(selectedCategory);
   };
+  const handlePriceChange = (selectedRange) => {
+    setSelectedPriceRange(selectedRange);
+  
+    // Assuming ProductData is an array of products
+    const newFilteredData = ProductData.filter((product) => {
+      const price = product.prices.discounted || product.prices.calculatedPrice;
+  
+      switch (selectedRange) {
+        case "₹0 - ₹1000":
+          return price >= 0 && price <= 1000;
+        case "₹1000 - ₹5000":
+          return price > 1000 && price <= 5000;
+        case "₹5000 - ₹10000":
+          return price > 5000 && price <= 10000;
+        case "Over ₹10000":
+          return price > 10000;
+        default:
+          return true; // Show all if no specific range is selected
+      }
+    });
+  
+    // Update the state with the filtered data based on the selected price range
+    setProductData(newFilteredData);
+  
+    // For debugging purposes, log the selected range and filtered data
+    console.log("Selected Price Range:", selectedRange);
+    console.log("Filtered Data:", newFilteredData);
+  };
+  
   const handleMaterialChange = (selectedmaterial) => {
     // console.log(selectedCategory)
     changeQueryparams("material", selectedmaterial);
@@ -284,7 +318,7 @@ const Shop = () => {
       console.error("Unexpected error:", error);
     }
   };
-
+  const [originalProductData, setOriginalProductData] = useState([]);
   useEffect(() => {
     Getproduct();
     GetColors();
@@ -292,6 +326,8 @@ const Shop = () => {
     GetMaterials();
     GetSeasons();
   }, [authToken]);
+
+   
 
   useEffect(() => {
     getFilteredItems();
