@@ -5,14 +5,19 @@ import "./TopProducts.css";
 
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import SignContext from "../contextAPI/Context/SignContext";
 import Swal from "sweetalert2";
+import SignContext from "../contextAPI/Context/SignContext";
 
 const TopProducts = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  const { getProducts, getCategories, getLoggedInCustomer, addToCart, OpenLoginModal,
-    setOpenLoginModal } =
-    useContext(SignContext);
+  const {
+    getProducts,
+    getCategories,
+    getLoggedInCustomer,
+    addToCart,
+    OpenLoginModal,
+    setOpenLoginModal,
+  } = useContext(SignContext);
   const [ProductData, setProductData] = useState([]);
   const [categoryNameMapping, setCategoryNameMapping] = useState({});
   const [CustomerInfo, setCustomerInfo] = useState({});
@@ -68,7 +73,6 @@ const TopProducts = () => {
       </button>
     </div>
   );
-  
 
   const settings = {
     dots: false,
@@ -155,7 +159,9 @@ const TopProducts = () => {
         <div className="row popular-row">
           <div className="row text-start">
             <div className="col">
-              <h1 className="text-start fs-1 mt-4 mb-4">Popular Products</h1>
+              <h1 className="text-start fs-1 mt-4 mb-4 titleCategory">
+                Popular Products
+              </h1>
             </div>
             <div className="col text-end d-flex align-items-center justify-content-end">
               <Link to="/shop" className="mb-2">
@@ -203,7 +209,9 @@ const TopProducts = () => {
                           </Link>
                         </div>
                         <h2 className="new-product-name">
-                          <Link to={`/product-details/${product._id}`}>{product.name}</Link>
+                          <Link to={`/product-details/${product._id}`}>
+                            {product.name}
+                          </Link>
                         </h2>
 
                         <div class="product-card-bottom new-arrival-card-bottom">
