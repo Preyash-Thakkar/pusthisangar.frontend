@@ -76,15 +76,23 @@ body {
   .header-action-right {
     display: none !important;
   }
+  h4 {
+    font-size: 15px !important;
+  }
   .logo.logo-width-1 {
     margin-right: 48px !important;
   }
-
+  .newsletter .newsletter-inner {
+    padding: 20px !important;
+  }
   .header-style-1 .search-style-2 form {
     max-width: 524px !important;
   }
   .hotline {
     display: none !important;
+  }
+  h2 {
+    font-size: 31px !important;
   }
 
   .col-2 {
@@ -143,7 +151,10 @@ body {
   .header-style-1 {
     display: none !important;
   }
-
+  .shop-filter-toogle {
+    right: 39% !important;
+    top: -10px !important;
+  }
   .footer-link-widget:not(:last-child) {
     margin-right: 0px !important;
   }
@@ -321,6 +332,7 @@ body {
   .nav-logo {
     margin-left: 75px !important;
   }
+
   .nav-cart {
     margin-left: 105px !important;
   }
@@ -446,6 +458,9 @@ body {
   }
   .shop-now-hover-2 {
     margin-left: -60px !important;
+  }
+  .shop-filter-toogle {
+    top: 7px !important;
   }
 }
 

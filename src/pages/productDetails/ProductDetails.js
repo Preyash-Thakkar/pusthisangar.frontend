@@ -315,7 +315,7 @@ const ProductDetails = () => {
                   {/* End Gallery */}
                 </div>
                 <div className="col-md-6 col-sm-12 col-xs-12">
-                  <div className="detail-info pr-30 pl-30 text-start">
+                  <div className="detail-info pr-30  text-start">
                     <span className="stock-status out-stock">
                       {" "}
                       {categoryNameMapping[ProductData.category]}{" "}
@@ -1042,7 +1042,9 @@ const ProductDetails = () => {
         <div className="row popular-row">
           <div className="row text-start">
             <div className="col">
-              <h1 className="text-start fs-1 mt-4 mb-4">Related Products</h1>
+              <h1 className="text-start  mt-4 mb-4 titleCategory">
+                Related Products
+              </h1>
             </div>
             <div className="col text-end d-flex align-items-center justify-content-end">
               <Link to={`/product-list/${CategoryId}`} className="mb-2">

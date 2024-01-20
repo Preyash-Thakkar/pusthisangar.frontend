@@ -74,7 +74,7 @@ const MidFooter = () => {
       <section className="section-padding footer-mid bg-dark ">
         <div className="container pt-15 pb-20">
           <div className="row">
-            <Col sm="12" md="6" lg="3" className="col-lg">
+            <Col sm="12" md="6" lg="4" className="col-lg">
               <div className="widget-about font-md mb-md-3 mb-lg-3 mb-xl-0">
                 <div className="logo mb-2">
                   <Link to="#" className="mb-15">
@@ -184,7 +184,7 @@ const MidFooter = () => {
             </Col>
 
             {authToken && (
-              <Col sm="12" md="6" lg="2" className="footer-link-widget col">
+              <Col sm="12" md="6" lg="1" className="footer-link-widget col">
                 <h4 className="widget-title footer-title text-start">
                   Account
                 </h4>

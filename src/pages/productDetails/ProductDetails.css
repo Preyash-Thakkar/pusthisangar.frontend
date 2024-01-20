@@ -15,6 +15,15 @@
   margin: 0;
   border-radius: 0;
 }
+.title-detail {
+  margin-bottom: 0.5rem !important;
+}
+.mt-3 {
+  margin-top: 0rem !important;
+}
+.fs-1 {
+  font-size: 1.5rem !important;
+}
 .productImg {
   border: 1px solid #ccc;
   border-radius: 7px;
@@ -554,7 +563,7 @@ p {
 
 @media (max-width: 767.98px) {
   .responsive-div {
-    padding: 40px;
+    /* padding: 40px; */
     box-sizing: border-box;
     overflow: hidden;
   }

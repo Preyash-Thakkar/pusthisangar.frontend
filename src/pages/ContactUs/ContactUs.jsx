@@ -3,32 +3,31 @@ import React, { useContext } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import * as Yup from "yup";
-import Subscribe from "../../components/Subscribe";
-import MidFooter from "../../components/MidFooter";
 import Featured from "../../components/Featured";
 import Header from "../../components/Header";
-import "./contactUs.css";
+import MidFooter from "../../components/MidFooter";
 import MobileSidebar from "../../components/MobileSidebar";
+import Subscribe from "../../components/Subscribe";
 import SignContext from "../../contextAPI/Context/SignContext";
-import Swal from 'sweetalert2';
+import "./contactUs.css";
 
 const ContactUs = () => {
-  const {  AddContact } = useContext(SignContext);
+  const { AddContact } = useContext(SignContext);
 
   const handleSavedContact = async (Values) => {
     const res = await AddContact(Values);
     if (res.success) {
       Swal.fire({
-        icon: 'success',
-        title: 'Contact added successfully',
+        icon: "success",
+        title: "Contact added successfully",
         showConfirmButton: false,
         timer: 1500,
       });
     } else {
       // Handle error
       console.error("Error adding content:", res.msg);
-      
     }
   };
 
@@ -37,17 +36,17 @@ const ContactUs = () => {
       .required("Email is a required field")
       .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
     phone: Yup.string()
-      .required("Phone number  is a required field").matches(/^\d{10}$/, 'Phone number must be exactly 10 digits'),
+      .required("Phone number  is a required field")
+      .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
     name: Yup.string().required("Please enter your name !!!"),
     subject: Yup.string().required("Please enter your subject !!!"),
     message: Yup.string().required("Please enter your message !!!"),
   });
 
-
   return (
     <React.Fragment>
       <Header />
-      <MobileSidebar/>
+      <MobileSidebar />
       <div class="page-header breadcrumb-wrap">
         <div className="container">
           <div className="breadcrumb">
@@ -57,15 +56,17 @@ const ContactUs = () => {
               </i>
               Home
             </Link>
-          
             <AiOutlineRight className="rightIcon" /> Contact
           </div>
         </div>
       </div>
       <Container>
         <div className="row justify-content-center">
-          <div className="col-xl-8 col-lg-8" style={{justifyContent : 'center'}}>
-            <div className="contact-from-area" style={{padding : "65px"}}>
+          <div
+            className="col-xl-8 col-lg-8"
+            style={{ justifyContent: "center" }}
+          >
+            <div className="contact-from-area">
               <h5 className="contactFormTitle">Contact form</h5>
               <h2 className="contactSubTitle">Drop Us a Line</h2>
               <p className="text-muted  font-sm">
@@ -151,9 +152,7 @@ const ContactUs = () => {
                               />
                               {/* If validation is not passed show errors */}
                               <p className="error">
-                                {errors.phone &&
-                                  touched.phone &&
-                                  errors.phone}
+                                {errors.phone && touched.phone && errors.phone}
                               </p>
                             </div>
                           </Col>
@@ -190,7 +189,7 @@ const ContactUs = () => {
                                 rows={4}
                                 cols={40}
                               />
-                               <p className="error">
+                              <p className="error">
                                 {errors.message &&
                                   touched.message &&
                                   errors.message}
@@ -209,8 +208,6 @@ const ContactUs = () => {
             </div>
           </div>
         </div>
-          
-          
       </Container>
 
       <Subscribe />
