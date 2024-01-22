@@ -45,6 +45,7 @@ const Shop = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
+  const [quantitii,setQuantitii] = useState(0);
 
   const Getproduct = async () => {
     const res = await getProducts();
@@ -84,7 +85,7 @@ const Shop = () => {
 
     try {
       const response = await axios.post(fullUrl);
-      console.log(response.data);
+      console.log("Main response", response.data);
       if (response.data.success) setProductData(response.data.products);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -138,7 +139,7 @@ const Shop = () => {
   const resetFilters = () => {
     setSelectedColors([]);
     setSelectedPriceRange(null);
-    setSelectedCategory("All Categories");
+    setSelectedCategory([]);
     setSelectedShopBy([]);
     setShowFilters(false);
     Getproduct();
@@ -243,12 +244,24 @@ const Shop = () => {
     setProductsToShow(ProductData.length);
   };
 
-  const handleCartClick = async (id) => {
+  const handleCartClick = async (products) => {
     try {
+      setQuantitii(products.productStock[0].quantity);
       if (authToken) {
+        if (quantitii < 1) {
+          // Show message if item is sold out
+          Swal.fire({
+            icon: "error",
+            title: "Item Sold Out",
+            text: "This item is no longer available.",
+            showConfirmButton: true,
+          });
+          return; // Stop the function here
+        }
+
         const customerId = CustomerInfo._id;
         const cartInfo = {
-          productId: id,
+          productId: products._id,
           quantity: 1,
         };
         const res = await addToCart(customerId, cartInfo);
@@ -488,7 +501,6 @@ const Shop = () => {
               </div>
             )}
           </div>
-         
         </div>
         {/* Product List */}
         {/* <div className="row">
@@ -547,7 +559,10 @@ const Shop = () => {
                   className=" col-lg-3 col-md-4 col-sm-6 col-6  mb-4"
                   key={product.id}
                 >
-                  <div className="product-cart-wrap popular-card filter-card" tabIndex={0}>
+                  <div
+                    className="product-cart-wrap popular-card filter-card"
+                    tabIndex={0}
+                  >
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
                         <Link
@@ -599,16 +614,16 @@ const Shop = () => {
                             </span>
                           )}
                         </div>
-                        <div class="add-cart popular-card-cart"  >
+                        <div class="add-cart popular-card-cart">
                           <Link
                             class="add add-cart-btn"
                             id="shop-cart"
                             onClick={() => {
-                              handleCartClick(product._id);
+                              handleCartClick(product);
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add{" "}
+                            Add 
                           </Link>
                         </div>
                       </div>
