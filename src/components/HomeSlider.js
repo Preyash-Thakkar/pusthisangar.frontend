@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useContext } from "react";
-import "./HomeSlider.css";
+import React, { useContext, useEffect, useState } from "react";
 import "./Header.css";
+import "./HomeSlider.css";
 // import Banner from "../images/banner-1.jpg";
 // import Banner2 from "../images/banner-2.jpg";
 // import Banner3 from "../images/banner-3.jpg";
@@ -17,12 +17,12 @@ const HomeSlider = () => {
   const GetBanners = async () => {
     const res = await getAllBanner();
     console.log(res);
-    if(res.data){
-
-      const filteredData = res.data.filter((banner) => banner.bannerType === "carousel" && banner.isActive === true);
+    if (res.data) {
+      const filteredData = res.data.filter(
+        (banner) => banner.bannerType === "carousel" && banner.isActive === true
+      );
       setBannerData(filteredData);
     }
-
   };
 
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -45,7 +45,7 @@ const HomeSlider = () => {
 
   return (
     <div>
-      <section className="home-slider style-2 position-relative mb-50">
+      <section className="home-slider style-2 position-relative ">
         <div className="container">
           <div className="row">
             <div className="col-xl-8 col-lg-12">
@@ -68,30 +68,26 @@ const HomeSlider = () => {
                     ))}
                   </div>
                   <div className="carousel-inner">
-                    
-                    {BannerData.map(
-                      (banner, index) =>
-                        (
-                          <div
-                            key={index}
-                            className={`carousel-item ${
-                              currentSlide === index ? "active" : ""
-                            }`}
-                          >
-                            <Link to="/shop">
-                            <img
-                              src={`${url}/banner/${banner.image}`} // Assuming you have an 'image' property in BannerData
-                              className="d-block w-100"
-                              alt={`Slide ${index + 1}`}
-                            />
-                            </Link>
-                            <div className="carousel-caption d-none d-md-block">
-                              {/* <h5>{banner.title}</h5> */}
-                              {/* <p>{banner.description}</p> */}
-                            </div>
-                          </div>
-                        )
-                    )}
+                    {BannerData.map((banner, index) => (
+                      <div
+                        key={index}
+                        className={`carousel-item ${
+                          currentSlide === index ? "active" : ""
+                        }`}
+                      >
+                        <Link to="/shop">
+                          <img
+                            src={`${url}/banner/${banner.image}`} // Assuming you have an 'image' property in BannerData
+                            className="d-block w-100"
+                            alt={`Slide ${index + 1}`}
+                          />
+                        </Link>
+                        <div className="carousel-caption d-none d-md-block">
+                          {/* <h5>{banner.title}</h5> */}
+                          {/* <p>{banner.description}</p> */}
+                        </div>
+                      </div>
+                    ))}
                   </div>
                   <button
                     className="carousel-control-prev"
@@ -121,21 +117,16 @@ const HomeSlider = () => {
               </div>
             </div>
             <div className="col-lg-4 d-none d-xl-block">
-                    <div
-                      className="banner-img style-3 animated animated"
-                    >
-                      <div
-                        className="banner-text"
-                        style={{ marginTop: "8rem" }}
-                      >
-                        <p
-                          className="cutom-color mb-50 d-flex flex-column"
-                          style={{ fontSize: "36px" }}
-                        >
-                          <span>Delivered to</span>
-                          <span className="mt-3 ms-4">your home</span>
-                        </p>
-                        {/* <img
+              <div className="banner-img style-3 animated animated">
+                <div className="banner-text" style={{ marginTop: "8rem" }}>
+                  <p
+                    className="cutom-color mb-50 d-flex flex-column"
+                    style={{ fontSize: "36px" }}
+                  >
+                    <span>Delivered to</span>
+                    <span className="mt-3 ms-4">your home</span>
+                  </p>
+                  {/* <img
                           src={banner.image}
                           alt=""
                           style={{
@@ -145,11 +136,11 @@ const HomeSlider = () => {
                             overflow: "hidden",
                           }}
                         /> */}
-                        <Link to="/shop" className="shop-now-hover btn btn">
-                          Shop Now <i className="fi-rs-arrow-small-right" />
-                        </Link>
-                      </div>
-                    </div>
+                  <Link to="/shop" className="shop-now-hover btn btn">
+                    Shop Now <i className="fi-rs-arrow-small-right" />
+                  </Link>
+                </div>
+              </div>
             </div>
           </div>
         </div>

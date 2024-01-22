@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./FeatureCategory.css";
-import "./Category.css";
-import VastraCat from "../images/VastraCatagorySmall.jpg";
-import VastraCat2 from "../images/VastraCategory2Small.png";
-import VastraCat3 from "../images/ShangarSmallCategory.png";
-import VastraCat4 from "../images/ShringarSmallCategory.jpg";
 import { Link } from "react-router-dom";
-import ShowMoreCategory from "./ShowMoreCategory";
 import { useNavigate } from "react-router-dom/dist";
 import SignContext from "../contextAPI/Context/SignContext";
+import VastraCat3 from "../images/ShangarSmallCategory.png";
+import VastraCat4 from "../images/ShringarSmallCategory.jpg";
+import VastraCat from "../images/VastraCatagorySmall.jpg";
+import VastraCat2 from "../images/VastraCategory2Small.png";
+import "./Category.css";
+import "./FeatureCategory.css";
+import ShowMoreCategory from "./ShowMoreCategory";
 
 const Category = ({ background }) => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
@@ -54,7 +54,7 @@ const Category = ({ background }) => {
     // Add more categories here...
   ];
 
-  const CategoryCard = ({ name, image, itemCount, color , id }) => (
+  const CategoryCard = ({ name, image, itemCount, color, id }) => (
     <div className="col-12  col-md-6 col-lg-3  category col-lg-1-5">
       <Link to={`/product-list/${id}`}>
         <div className="card" style={{ backgroundColor: color }}>
@@ -92,15 +92,15 @@ const Category = ({ background }) => {
     const res = await getCategories();
     // console.log(res);
     if (res !== undefined) {
-    const transformedData = res.map((category, index) => ({
-      ...category,
-      id: index + 1,
-    }));
-    setCategoryData(transformedData);}
+      const transformedData = res.map((category, index) => ({
+        ...category,
+        id: index + 1,
+      }));
+      setCategoryData(transformedData);
+    }
   };
 
   // console.log(CategoryData);
-
 
   const handlecategoryClick = () => {
     // Use navigate to go to the cart page
@@ -109,7 +109,7 @@ const Category = ({ background }) => {
   const inlineStyle = {
     padding: "20px",
     paddingTop: "1px",
-    marginTop: "-50px",
+    // marginTop: "-50px",
     background: background || "#f2fce4", // Use the prop value if provided, or red as a default
   };
 
@@ -120,12 +120,16 @@ const Category = ({ background }) => {
   return (
     <div style={inlineStyle}>
       <div className="container">
-      <div className="row text-start">
+        <div className="row text-start">
           <div className="col">
-        <h1 className="fs-1 mt-4 mb-4 fw-bold text-start">Our Category</h1>
-        </div>
-        <div className="col text-end d-flex align-items-center justify-content-end">
-            <Link to="/shop" className="mb-2"><strong>view all Products</strong></Link>
+            <h1 className="fs-1 mt-4 mb-4 fw-bold text-start titleCategory">
+              Our Category
+            </h1>
+          </div>
+          <div className="col text-end d-flex align-items-center justify-content-end">
+            <Link to="/shop" className="mb-2">
+              <strong>view all Products</strong>
+            </Link>
           </div>
         </div>
         <div className="row">

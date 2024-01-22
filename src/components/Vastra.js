@@ -1,17 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 
-import "./SeasonalProducts.css";
 import Slider from "react-slick";
+import "./SeasonalProducts.css";
 import "./Vastra.css";
 
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import SignContext from "../contextAPI/Context/SignContext";
-import Swal from 'sweetalert2';
-
 
 const Vastra = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  const  id  = "650837faf32a06ef841fa5d8";
+  const id = "650837faf32a06ef841fa5d8";
   // const navigate = useNavigate();
   const {
     GetProductsbyCategoryId,
@@ -19,7 +18,7 @@ const Vastra = () => {
     getLoggedInCustomer,
     addToCart,
     OpenLoginModal,
-    setOpenLoginModal
+    setOpenLoginModal,
   } = useContext(SignContext);
   const [ProductData, setProductData] = useState([]);
   const [categoryNameMapping, setCategoryNameMapping] = useState({});
@@ -38,15 +37,13 @@ const Vastra = () => {
       categoryRes.forEach((category) => {
         mapping[category._id] = category.name;
         if (category._id === id) {
-          
-          setCategoryImage(category.image); 
+          setCategoryImage(category.image);
         }
       });
-      
+
       setCategoryNameMapping(mapping);
     }
 
-   
     setProductData(res.products);
   };
 
@@ -97,7 +94,7 @@ const Vastra = () => {
       {
         breakpoint: 1025,
         settings: {
-          slidesToShow: ProductData? ProductData.length : null,
+          slidesToShow: ProductData ? ProductData.length : null,
           slidesToScroll: 1,
           infinite: true,
           dots: false,
@@ -106,16 +103,16 @@ const Vastra = () => {
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: ProductData?ProductData.length : null,
-          slidesToScroll:ProductData? ProductData.length : null,
+          slidesToShow: ProductData ? ProductData.length : null,
+          slidesToScroll: ProductData ? ProductData.length : null,
           initialSlide: 0,
         },
       },
       {
         breakpoint: 480,
         settings: {
-          slidesToShow: ProductData? ProductData.length : null,
-          slidesToScroll:ProductData? ProductData.length : null,
+          slidesToShow: ProductData ? ProductData.length : null,
+          slidesToScroll: ProductData ? ProductData.length : null,
         },
       },
     ],
@@ -123,20 +120,20 @@ const Vastra = () => {
 
   const handleCartClick = async (id) => {
     try {
-      if (authToken) { 
-        const customerId = CustomerInfo._id; 
+      if (authToken) {
+        const customerId = CustomerInfo._id;
         const cartInfo = {
           productId: id,
           quantity: 1,
         };
         const res = await addToCart(customerId, cartInfo);
-  
+
         if (res.success) {
           // Cart updated successfully
           console.log("Cart updated successfully");
           Swal.fire({
-            icon: 'success',
-            title: 'Item Added to Cart',
+            icon: "success",
+            title: "Item Added to Cart",
             showConfirmButton: false,
             timer: 1500,
           });
@@ -148,7 +145,6 @@ const Vastra = () => {
         setOpenLoginModal(true);
       }
     } catch (error) {
-  
       console.error("Unexpected error:", error);
     }
   };
@@ -156,25 +152,34 @@ const Vastra = () => {
   useEffect(() => {
     Getproduct(id);
     GetLoggedInCustomer(authToken);
-  }, [id , authToken]);
+  }, [id, authToken]);
 
   const products = ProductData;
 
   return (
     <div style={{ background: "rgb(251 248 240 / 74%)" }}>
       <div className="container mb-4">
-      <div className="row text-start">
+        <div className="row text-start">
           <div className="col">
-            <h1 className="fs-1 mt-4 mb-4">Silver Vessels</h1>
+            <h1 className="fs-1 mt-4 mb-4 titleCategory">Silver Vessels</h1>
           </div>
           <div className="col text-end d-flex align-items-center justify-content-end">
-            <Link to={`/product-list/${id}`} className="mb-2"><strong>view all</strong></Link>
+            <Link to={`/product-list/${id}`} className="mb-2">
+              <strong>view all</strong>
+            </Link>
           </div>
         </div>
         <div className="row ">
-          <div class="col-lg-3 d-none d-lg-flex mb-4" style={{marginTop : "30px"}}>
+          <div
+            class="col-lg-3 d-none d-lg-flex mb-4"
+            style={{ marginTop: "30px" }}
+          >
             <div class="banner-img style-2 vastra">
-            <img style={{borderRadius : "10px"}} src={`${url}/cagtegory/${categoryImage}`} alt="" />
+              <img
+                style={{ borderRadius: "10px" }}
+                src={`${url}/cagtegory/${categoryImage}`}
+                alt=""
+              />
               <div class="banner-text d-none">
                 <h2 class="mb-100">Bring Top Vastra into Your Home</h2>
                 <Link to="#" class="btn btn-xs">
@@ -186,63 +191,85 @@ const Vastra = () => {
 
           <div className="col-lg-9 col-md-12 mb-4">
             <Slider {...settings}>
-              {products?products.map((product) => (
-                <div key={product.id}>
-                  {/* <ProductCard redirectTo imageLink productCategory></ProductCard> */}
-                  <Link to={`/product-details/${product._id}`}>
-                    <div
-                      className="product-cart-wrap shringar-card slick-slide slick-current slick-active"
-                      tabIndex={0}
-                      style={{ width: 246 }}
-                      data-slick-index={3}
-                      aria-hidden="false"
-                    >
-                      <div className="product-img-action-wrap">
-                        <div className="product-img product-img-zoom">
-                          <Link to={`/product-details/${product._id}`} tabIndex={0}>
-                            <img
-                              className="default-img"
-                              src={`${url}/products/${product.imageGallery[0]}`}
-                              alt=""
-                              onError={(e) => {
-                                e.target.src = 'https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg'; // Replace with the path to your alternate image
-                              }}
-                            />
-                          </Link>
-                        </div>
-                      </div>
-                      <div className="product-content-wrap">
-                        <div className="product-category">
-                          <Link to={`/product-details/${product._id}`} tabIndex={0}>
-                            {categoryNameMapping[product.category]}
-                          </Link>
-                        </div>
-                        <h2 className="vastra-title">
-                          <Link to={`/product-details/${product._id}`} tabIndex={0}>
-                            {product.name}
-                          </Link>
-                        </h2>
-                        <div className="product-price mt-10 mb-2">
-                          <span>₹{product.prices.discounted?product.prices.discounted:product.prices.calculatedPrice}</span>
-                          {!product.calculationOnWeight && (
-                          <span class="old-price">
-                            ₹{product.prices?product.prices.original:null}
-                          </span>
-                            )}
-                        </div>
-                        <Link
-                          className="btn w-100 hover-up"
+              {products
+                ? products.map((product) => (
+                    <div key={product.id}>
+                      {/* <ProductCard redirectTo imageLink productCategory></ProductCard> */}
+                      <Link to={`/product-details/${product._id}`}>
+                        <div
+                          className="product-cart-wrap shringar-card slick-slide slick-current slick-active"
                           tabIndex={0}
-                          onClick={()=>{handleCartClick(product._id)}}
+                          style={{ width: 246 }}
+                          data-slick-index={3}
+                          aria-hidden="false"
                         >
-                          <i className="fi-rs-shopping-cart bi bi-cart mr-5 me-1 " />
-                          Add To Cart
-                        </Link>
-                      </div>
+                          <div className="product-img-action-wrap">
+                            <div className="product-img product-img-zoom">
+                              <Link
+                                to={`/product-details/${product._id}`}
+                                tabIndex={0}
+                              >
+                                <img
+                                  className="default-img"
+                                  src={`${url}/products/${product.imageGallery[0]}`}
+                                  alt=""
+                                  onError={(e) => {
+                                    e.target.src =
+                                      "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
+                                  }}
+                                />
+                              </Link>
+                            </div>
+                          </div>
+                          <div className="product-content-wrap">
+                            <div className="product-category">
+                              <Link
+                                to={`/product-details/${product._id}`}
+                                tabIndex={0}
+                              >
+                                {categoryNameMapping[product.category]}
+                              </Link>
+                            </div>
+                            <h2 className="vastra-title">
+                              <Link
+                                to={`/product-details/${product._id}`}
+                                tabIndex={0}
+                              >
+                                {product.name}
+                              </Link>
+                            </h2>
+                            <div className="product-price mt-10 mb-2">
+                              <span>
+                                ₹
+                                {product.prices.discounted
+                                  ? product.prices.discounted
+                                  : product.prices.calculatedPrice}
+                              </span>
+                              {!product.calculationOnWeight && (
+                                <span class="old-price">
+                                  ₹
+                                  {product.prices
+                                    ? product.prices.original
+                                    : null}
+                                </span>
+                              )}
+                            </div>
+                            <Link
+                              className="btn w-100 hover-up"
+                              tabIndex={0}
+                              onClick={() => {
+                                handleCartClick(product._id);
+                              }}
+                            >
+                              <i className="fi-rs-shopping-cart bi bi-cart mr-5 me-1 " />
+                              Add To Cart
+                            </Link>
+                          </div>
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
-              )) : null}
+                  ))
+                : null}
             </Slider>
           </div>
         </div>
