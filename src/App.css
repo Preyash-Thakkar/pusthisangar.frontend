@@ -462,6 +462,9 @@ body {
   .shop-filter-toogle {
     top: 7px !important;
   }
+  .gQSbcI {
+    display: none !important;
+  }
 }
 
 @media screen and (max-width: 376px) {
