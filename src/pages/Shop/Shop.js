@@ -64,33 +64,6 @@ const Shop = () => {
     setCategoryData(categoryRes);
   };
 
-  const changeQueryparams = (parameter, value) => {
-    const updatedQueryParams = { ...QueryParams };
-    updatedQueryParams[parameter] = value;
-
-    setQueryParams(updatedQueryParams);
-  };
-
-  const getFilteredItems = async () => {
-    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
-
-    const queryString = Object.keys(QueryParams)
-      .map((key) => `${key}=${QueryParams[key]}`)
-      .join("&");
-
-    const fullUrl = queryString ? `${url}?${queryString}` : url;
-
-    console.log(fullUrl);
-
-    try {
-      const response = await axios.post(fullUrl);
-      console.log(response.data);
-      if (response.data.success) setProductData(response.data.products);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
   // console.log(CategoryData)
 
   const GetColors = async () => {
@@ -177,14 +150,66 @@ const Shop = () => {
     changeQueryparams("season", updatedColors.join(","));
   };
 
-  const handlePriceChange = (range) => {
+  const handlePriceChange = async (range) => {
     const [min, max] = range.match(/\d+/g);
 
-    // console.log(range , [min , max])
-    changeQueryparams("minPrice", min);
-    changeQueryparams("maxPrice", max);
+    // Update QueryParams with min and max prices
+    changeQueryparams(min, max);
+
+    // Log to check the updated state
+    console.log("handlePriceChange Selected Price Range:", selectedPriceRange);
+    console.log("handlePriceChange Parsed Min and Max:", [min, max]);
+    console.log("handlePriceChange Updated QueryParams:", QueryParams);
+
+    try {
+      // Fetch products based on the price range
+      await getFilteredItems();
+
+      // Log after the state update
+      // console.log("After state update:", QueryParams);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
 
     setSelectedPriceRange(range);
+  };
+
+  const changeQueryparams = (min, max) => {
+    let updatedMinPrice = min;
+    let updatedMaxPrice = max;
+
+    const priceRange = `${updatedMinPrice}-${updatedMaxPrice}`;
+
+    const updatedQueryParams = {
+      // minPrice: updatedMinPrice,
+      // maxPrice: updatedMaxPrice,
+      priceRange: priceRange,
+    };
+
+    console.log("Updated Price Range inside changeQueryparams:", priceRange);
+
+    setQueryParams(updatedQueryParams);
+  };
+
+  const getFilteredItems = async () => {
+    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
+
+    console.log("what is value", QueryParams);
+    const queryString = Object.entries(QueryParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
+    const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+    console.log(fullUrl);
+
+    try {
+      const response = await axios.post(fullUrl);
+      console.log("res filter product by price",response.data);
+      if (response.data.success) setProductData(response.data.products);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
   };
 
   const handleCategoryChange = (selectedCategory) => {
@@ -375,7 +400,7 @@ const Shop = () => {
                         {[
                           "₹0 - ₹1000",
                           "₹1000 - ₹5000",
-                          "₹5000 - ₹10000",
+                          //"₹5000 - ₹10000",
                           "Over ₹10000",
                         ].map((range) => (
                           <div
@@ -488,7 +513,6 @@ const Shop = () => {
               </div>
             )}
           </div>
-         
         </div>
         {/* Product List */}
         {/* <div className="row">
@@ -547,7 +571,10 @@ const Shop = () => {
                   className=" col-lg-3 col-md-4 col-sm-6 col-6  mb-4"
                   key={product.id}
                 >
-                  <div className="product-cart-wrap popular-card filter-card" tabIndex={0}>
+                  <div
+                    className="product-cart-wrap popular-card filter-card"
+                    tabIndex={0}
+                  >
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
                         <Link
@@ -599,7 +626,7 @@ const Shop = () => {
                             </span>
                           )}
                         </div>
-                        <div class="add-cart popular-card-cart"  >
+                        <div class="add-cart popular-card-cart">
                           <Link
                             class="add add-cart-btn"
                             id="shop-cart"
