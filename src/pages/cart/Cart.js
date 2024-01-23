@@ -246,7 +246,7 @@ const Cart = () => {
                                 </span>
                                 <input
                                   type="text"
-                                  value={item.quantity}
+                                  value={Math.min(item.quantity,item.stock.quantity)}
                                   onChange={(event) =>
                                     updateQuantity(
                                       item.quantity,

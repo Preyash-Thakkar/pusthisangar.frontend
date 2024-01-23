@@ -11,7 +11,7 @@ import { BsPerson, BsCart } from "react-icons/bs";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SignContext from "../contextAPI/Context/SignContext";
-
+import { debounce } from 'lodash';
 const options = [
   { value: "Shringar", label: "Shringar" },
   { value: "Vastra", label: "Vastra" },
@@ -161,7 +161,7 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCategoryHover = async (categoryId, index) => {
+  const handleCategoryHover = debounce(async (categoryId, index) => {
     setActiveIndex(index);
     setCategoryDropdownOpen(true);
     setIsOpen(true);
@@ -170,22 +170,19 @@ const Header = () => {
     console.log("Latest", data.categoriesWithSubCategoriesAndSubSubCategories);
     console.log("ok", data.categoriesWithSubCategoriesAndSubSubCategories);
     setSelectedCategory(data.categoriesWithSubCategoriesAndSubSubCategories);
-  };
+  },300);
 
-  const handleSubCategoryHover = async (categoryId, index) => {
+
+  
+  const handleSubCategoryHover = debounce(async (categoryId, index) => {
     setSubActiveIndex(index);
     setIsOpen(true);
     const data = await GetsubandsubSubcategory(categoryId);
-    console.log(data);
-    console.log(
-      "Sub sub",
-      data.categoriesWithSubCategoriesAndSubSubCategories[0].subSubCategories
-    );
-    setSelectedSubCategory(
-      data.categoriesWithSubCategoriesAndSubSubCategories[0].subSubCategories
-    );
-    console.log(selectedSubCategory);
-  };
+    if (data && data.categoriesWithSubCategoriesAndSubSubCategories.length > 0) {
+      const subCategories = data.categoriesWithSubCategoriesAndSubSubCategories[index].subSubCategories;
+      setSelectedSubCategory(subCategories);
+    }
+  }, 1000);
 
 
   const handleCategoryLeave = () => {

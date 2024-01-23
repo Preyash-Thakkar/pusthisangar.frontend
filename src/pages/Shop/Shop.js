@@ -45,7 +45,6 @@ const Shop = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
-  const [quantitii,setQuantitii] = useState(0);
 
   const Getproduct = async () => {
     const res = await getProducts();
@@ -178,15 +177,34 @@ const Shop = () => {
     changeQueryparams("season", updatedColors.join(","));
   };
 
-  const handlePriceChange = (range) => {
-    const [min, max] = range.match(/\d+/g);
-
-    // console.log(range , [min , max])
-    changeQueryparams("minPrice", min);
-    changeQueryparams("maxPrice", max);
-
-    setSelectedPriceRange(range);
+  const handlePriceChange = (selectedRange) => {
+    setSelectedPriceRange(selectedRange);
+  
+    const newFilteredData = ProductData.filter((product) => {
+      const price = product.prices.discounted || product.prices.calculatedPrice;
+  
+      switch (selectedRange) {
+        case "₹0 - ₹1000":
+          return price >= 0 && price <= 1000;
+        case "₹1000 - ₹5000":
+          return price > 1000 && price <= 5000;
+        case "₹5000 - ₹10000":
+          return price > 5000 && price <= 10000;
+        case "Over ₹10000":
+          return price > 10000;
+        default:
+          return true;
+      }
+    });
+  
+    // Update the state with the filtered data based on the selected price range
+    setProductData(newFilteredData);
+  
+    // For debugging
+    console.log("Selected Price Range:", selectedRange);
+    console.log("Filtered Data:", newFilteredData);
   };
+  
 
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
@@ -213,17 +231,23 @@ const Shop = () => {
 
     // Sort the product data based on the selected option
     const sortedData = [...ProductData];
-
+    const newSortedData = [...ProductData];
+    
     if (value === "newIn") {
       sortedData.sort((a, b) => {
-        if (a.isProductNew && !b.isProductNew) {
-          return -1; // A comes before B if A is new and B is not
-        } else if (!a.isProductNew && b.isProductNew) {
-          return 1; // B comes before A if B is new and A is not
-        } else {
-          return 0; // Preserve the original order if both are new or both are not new
-        }
+        // Sort by creation date in descending order
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
+    
+      // Filter products that are marked as new
+      const newInProducts = sortedData.filter(product => product.isProductNew);
+    
+      // Update the sorted data with only new products
+      // Assuming you want to update the sortedData array directly
+      // If you use sortedData(newInProducts), it will result in an error
+      sortedData.length = 0; // Clear the original array
+      sortedData.push(...newInProducts); // Push new products into the array
+    
     } else if (value === "priceLowestFirst") {
       sortedData.sort((a, b) => {
         const priceA = a.prices.discounted || a.prices.calculatedPrice;
@@ -246,9 +270,9 @@ const Shop = () => {
 
   const handleCartClick = async (products) => {
     try {
-      setQuantitii(products.productStock[0].quantity);
+      console.log("Quantity", products.productStock[0].quantity);
       if (authToken) {
-        if (quantitii < 1) {
+        if (products.productStock[0].quantity < 1) {
           // Show message if item is sold out
           Swal.fire({
             icon: "error",
