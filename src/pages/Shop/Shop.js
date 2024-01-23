@@ -647,7 +647,7 @@ const Shop = () => {
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add
+                            Add 
                           </Link>
                         </div>
                       </div>
