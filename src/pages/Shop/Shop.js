@@ -45,7 +45,6 @@ const Shop = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
-  const [quantitii,setQuantitii] = useState(0);
 
   const Getproduct = async () => {
     const res = await getProducts();
@@ -178,15 +177,34 @@ const Shop = () => {
     changeQueryparams("season", updatedColors.join(","));
   };
 
-  const handlePriceChange = (range) => {
-    const [min, max] = range.match(/\d+/g);
-
-    // console.log(range , [min , max])
-    changeQueryparams("minPrice", min);
-    changeQueryparams("maxPrice", max);
-
-    setSelectedPriceRange(range);
+  const handlePriceChange = (selectedRange) => {
+    setSelectedPriceRange(selectedRange);
+  
+    const newFilteredData = ProductData.filter((product) => {
+      const price = product.prices.discounted || product.prices.calculatedPrice;
+  
+      switch (selectedRange) {
+        case "₹0 - ₹1000":
+          return price >= 0 && price <= 1000;
+        case "₹1000 - ₹5000":
+          return price > 1000 && price <= 5000;
+        case "₹5000 - ₹10000":
+          return price > 5000 && price <= 10000;
+        case "Over ₹10000":
+          return price > 10000;
+        default:
+          return true;
+      }
+    });
+  
+    // Update the state with the filtered data based on the selected price range
+    setProductData(newFilteredData);
+  
+    // For debugging
+    console.log("Selected Price Range:", selectedRange);
+    console.log("Filtered Data:", newFilteredData);
   };
+  
 
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
@@ -246,9 +264,9 @@ const Shop = () => {
 
   const handleCartClick = async (products) => {
     try {
-      setQuantitii(products.productStock[0].quantity);
+      console.log("Quantity", products.productStock[0].quantity);
       if (authToken) {
-        if (quantitii < 1) {
+        if (products.productStock[0].quantity < 1) {
           // Show message if item is sold out
           Swal.fire({
             icon: "error",
@@ -623,7 +641,7 @@ const Shop = () => {
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add 
+                            Add
                           </Link>
                         </div>
                       </div>
