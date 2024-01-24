@@ -98,7 +98,7 @@ const Category = ({ background }) => {
     }
   };
 
-  // console.log(CategoryData);
+  console.log("whats thr data",CategoryData);
 
   const handlecategoryClick = () => {
     // Use navigate to go to the cart page

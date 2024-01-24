@@ -330,7 +330,7 @@ const Header = () => {
     }
   };
 
-  console.log("get categories 12",getCategories);
+  // console.log("get categories 12",getCategories);
 
   useEffect(() => {
     GetLoggedInCustomer(authToken);

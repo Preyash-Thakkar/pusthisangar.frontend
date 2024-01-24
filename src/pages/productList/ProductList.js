@@ -64,6 +64,7 @@ const ProductList = () => {
     //   id: index + 1,
     // }));
     setProductData(res.products);
+    console.log("productd",res.products);
   };
 
   const changeQueryparams = (parameter, value) => {
@@ -309,9 +310,9 @@ const ProductList = () => {
     GetColors();
   }, [id, authToken]);
 
-  useEffect(() => {
-    getFilteredItems();
-  }, [selectedCategory, QueryParams, selectedColors]);
+  // useEffect(() => {
+  //   getFilteredItems();
+  // }, [selectedCategory, QueryParams, selectedColors]);
 
   return (
     <div>
