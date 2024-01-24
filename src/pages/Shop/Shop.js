@@ -208,20 +208,28 @@ const Shop = () => {
   const changeQueryparams = (min, max) => {
     let updatedMinPrice = min;
     let updatedMaxPrice = max;
-
+  
+    // Check if the selected range is "Over ₹5000"
+    if (min === '5000' && max === undefined) {
+      updatedMinPrice = 5000;
+      updatedMaxPrice = 1000000;
+    }
+  
     const priceRange = `${updatedMinPrice}-${updatedMaxPrice}`;
-
+  
     const updatedQueryParams = {
       // minPrice: updatedMinPrice,
       // maxPrice: updatedMaxPrice,
       priceRange: priceRange,
     };
-
+  
     console.log("Updated Price Range inside changeQueryparams:", priceRange);
-
+  
     setQueryParams(updatedQueryParams);
   };
-
+  
+  
+  
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
 
@@ -450,7 +458,7 @@ const Shop = () => {
                           "₹0 - ₹1000",
                           "₹1000 - ₹5000",
                           //"₹5000 - ₹10000",
-                          "Over ₹10000",
+                          "Over ₹5000",
                         ].map((range) => (
                           <div
                             key={range}
