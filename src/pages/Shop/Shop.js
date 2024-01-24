@@ -64,6 +64,35 @@ const Shop = () => {
     setCategoryData(categoryRes);
   };
 
+
+//  const changeQueryparams = (parameter, value) => {
+//    const updatedQueryParams = { ...QueryParams };
+//    updatedQueryParams[parameter] = value;
+
+//    setQueryParams(updatedQueryParams);
+//  };
+
+//  const getFilteredItems = async () => {
+//    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
+
+//    const queryString = Object.keys(QueryParams)
+//      .map((key) => `${key}=${QueryParams[key]}`)
+//     .join("&");
+
+//    const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+//    console.log(fullUrl);
+
+//    try {
+//      const response = await axios.post(fullUrl);
+//      console.log("Main response", response.data);
+//      if (response.data.success) setProductData(response.data.products);
+//    } catch (error) {
+//      console.error("Error fetching data:", error);
+//    }
+//  };
+
+
   // console.log(CategoryData)
 
   const GetColors = async () => {
@@ -111,7 +140,7 @@ const Shop = () => {
   const resetFilters = () => {
     setSelectedColors([]);
     setSelectedPriceRange(null);
-    setSelectedCategory("All Categories");
+    setSelectedCategory([]);
     setSelectedShopBy([]);
     setShowFilters(false);
     Getproduct();
@@ -172,7 +201,9 @@ const Shop = () => {
     }
 
     setSelectedPriceRange(range);
+
   };
+  
 
   const changeQueryparams = (min, max) => {
     let updatedMinPrice = min;
@@ -237,17 +268,23 @@ const Shop = () => {
 
     // Sort the product data based on the selected option
     const sortedData = [...ProductData];
-
+    const newSortedData = [...ProductData];
+    
     if (value === "newIn") {
       sortedData.sort((a, b) => {
-        if (a.isProductNew && !b.isProductNew) {
-          return -1; // A comes before B if A is new and B is not
-        } else if (!a.isProductNew && b.isProductNew) {
-          return 1; // B comes before A if B is new and A is not
-        } else {
-          return 0; // Preserve the original order if both are new or both are not new
-        }
+        // Sort by creation date in descending order
+        return new Date(b.createdAt) - new Date(a.createdAt);
       });
+    
+      // Filter products that are marked as new
+      const newInProducts = sortedData.filter(product => product.isProductNew);
+    
+      // Update the sorted data with only new products
+      // Assuming you want to update the sortedData array directly
+      // If you use sortedData(newInProducts), it will result in an error
+      sortedData.length = 0; // Clear the original array
+      sortedData.push(...newInProducts); // Push new products into the array
+    
     } else if (value === "priceLowestFirst") {
       sortedData.sort((a, b) => {
         const priceA = a.prices.discounted || a.prices.calculatedPrice;
@@ -268,12 +305,24 @@ const Shop = () => {
     setProductsToShow(ProductData.length);
   };
 
-  const handleCartClick = async (id) => {
+  const handleCartClick = async (products) => {
     try {
+      console.log("Quantity", products.productStock[0].quantity);
       if (authToken) {
+        if (products.productStock[0].quantity < 1) {
+          // Show message if item is sold out
+          Swal.fire({
+            icon: "error",
+            title: "Item Sold Out",
+            text: "This item is no longer available.",
+            showConfirmButton: true,
+          });
+          return; // Stop the function here
+        }
+
         const customerId = CustomerInfo._id;
         const cartInfo = {
-          productId: id,
+          productId: products._id,
           quantity: 1,
         };
         const res = await addToCart(customerId, cartInfo);
@@ -631,11 +680,11 @@ const Shop = () => {
                             class="add add-cart-btn"
                             id="shop-cart"
                             onClick={() => {
-                              handleCartClick(product._id);
+                              handleCartClick(product);
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add{" "}
+                            Add 
                           </Link>
                         </div>
                       </div>

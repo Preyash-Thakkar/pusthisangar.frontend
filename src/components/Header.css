@@ -1258,29 +1258,104 @@ input:focus-visible {
 
 .right-positioned-mega-menu {
   position: absolute;
+  min-width: 310px;
+  margin-left: auto;
   top: 0;
   left: 100%; /* Position the mega menu to the right of the main menu */
   background-color: white; /* Set a background color */
   border: 1px solid #ccc; /* Add a border for visibility */
-  padding: 10px; /* Add padding for content */
+  padding: 5px; /* Add padding for content */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
   z-index: 999; /* Ensure the mega menu appears above other elements */
 }
 
-/* Updated styles for making submenu items horizontal */
-.submenu ul {
-  display: flex; /* Set the display property to flex for horizontal layout */
-  list-style: none;
-  padding: 0;
-  margin: 0;
+.right-positioned-mega-menu-1{
+  position: absolute;
+  min-width: 310px;
+  margin-left: auto;
+  top: 0;
+  left: 100%; /* Position the mega menu to the right of the main menu */
+  background-color: white; /* Set a background color */
+  border: 1px solid #ccc; /* Add a border for visibility */
+  padding: 5px; /* Add padding for content */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+  z-index: 1000; /* Ensure the mega menu appears above other elements */
 }
 
+.submenu{
+  position: absolute;
+  top: 0;
+  left: 100%; /* Position the submenu to the right of the main menu item */
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999;
+  width: 200px; /* Adjust the width as needed */
+}
+
+.submenu-1{
+  position: absolute;
+  top: 0;
+  left: 100%; /* Position the submenu to the right of the main menu item */
+  background-color: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  width: 200px; /* Adjust the width as needed */
+}
+
+/* Updated styles for making submenu items horizontal */
+.submenu ul {
+  position: relative;
+  display: flex; /* Set the display property to flex for horizontal layout */
+  flex-direction: column;
+  list-style: none;
+  padding: 5px;
+  /* margin: 20px; */
+}
+
+/* .inner1{
+  position: absolute;
+} */
+.category-item, .sub-category-item {
+  position: relative;
+}
+.inner2, .inner3 {
+  display: none;
+  position: absolute;
+  left: 100%; /* Align to the right of the parent li */
+  top: 0;
+}
+
+.inner2.show, .inner3.show {
+  display: block;
+}
+
+
 .submenu li {
-  margin-right: 20px; /* Add margin between submenu items if needed */
+  /* position: relative; */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  line-height: 48px;
+  border-radius: 5px;
+  border: 1px solid #f2f3f4;
+  padding: 9px 18px;
+  margin: 0 15px 15px 0;
+  height: 40px;
+  width: 200px;
+  transition: 0.3s;
+  -moz-transition: 0.3s;
+  -webkit-transition: 0.3s;
+  -o-transition: 0.3s; /* Add margin between submenu items if needed */
 }
 
 /* Adjust width and other styles as needed for individual submenu items */
-.submenu li ul {
+/* .submenu li ul {
   display: flex;
   flex-direction: column; /* Set the submenu items to stack vertically */
-}
