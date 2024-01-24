@@ -65,6 +65,8 @@ const ProductDetails = () => {
   const getspecificProduct = async (ProductId) => {
     const res = await getSpecificProduct(ProductId);
 
+    console.log("Whole object",res)
+
     if (res.success) {
       setProductData(res.product);
     }
@@ -81,7 +83,7 @@ const ProductDetails = () => {
   };
 
   const GetALLvarProducts = async () => {
-    console.log(ProductData.OtherVariations);
+    console.log("GetALLvarProducts",ProductData.OtherVariations);
     const res = await GetAllVarProducts(ProductData.OtherVariations);
     setOtherProductData(res.products);
     console.log(res);
@@ -109,7 +111,7 @@ const ProductDetails = () => {
     }
   };
 
-  const handleCartClick = async () => {
+  const handleCartClick = async (product) => {
     try {
       const customerId = CustomerInfo._id;
       const cartInfo = {
@@ -393,7 +395,7 @@ const ProductDetails = () => {
                           onClick={handleCartClick}
                         >
                           <i className="fi-rs-shopping-cart" />
-                          Add to cart
+                          Add to cart 
                         </button>
                         <Link
                           aria-label="Add To Wishlist"
@@ -1114,7 +1116,7 @@ const ProductDetails = () => {
                           <Link
                             class="add add-cart-btn"
                             onClick={() => {
-                              handleCartClick(product._id);
+                              handleCartClick(product);
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>

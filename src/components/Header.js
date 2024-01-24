@@ -11,7 +11,7 @@ import { BsPerson, BsCart } from "react-icons/bs";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SignContext from "../contextAPI/Context/SignContext";
-
+import { debounce } from 'lodash';
 const options = [
   { value: "Shringar", label: "Shringar" },
   { value: "Vastra", label: "Vastra" },
@@ -45,7 +45,7 @@ const Header = () => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [ConfirmpasswordVisible, setConfirmPasswordVisible] = useState(false);
   const [isAccountDropdownOpen, setAccountDropdownOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState("All Categories");
+  const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isCategoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [CustomerInfo, setCustomerInfo] = useState({});
@@ -58,8 +58,12 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [buttonText, setButtonText] = useState("Show More...");
   const [isMegaMenuDropdownOpen, setMegaMenuDropdownOpen] = useState(false);
+  const [isSubSubMenuDropdownOpen, setSubSubMenuDropdownOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const [subActiveIndex, setSubActiveIndex] = useState(-1);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState([]);
 
-  
   // const [showLoginModal, setOpenLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
@@ -157,14 +161,37 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleCategoryHover = async (categoryId) => {
+  const handleCategoryHover = debounce(async (categoryId, index) => {
+    setActiveIndex(index);
     setCategoryDropdownOpen(true);
+    setIsOpen(true);
     const data = await GetsubandsubSubcategory(categoryId);
-    console.log(data.categoriesWithSubCategoriesAndSubSubCategories);
+    console.log(data);
+    console.log("Latest", data.categoriesWithSubCategoriesAndSubSubCategories);
+    console.log("ok", data.categoriesWithSubCategoriesAndSubSubCategories);
     setSelectedCategory(data.categoriesWithSubCategoriesAndSubSubCategories);
-    
-  };
+  },300);
+
+
+  
+  const handleSubCategoryHover = debounce(async (categoryId, index) => {
+    setSubActiveIndex(index);
+    setIsOpen(true);
+    const data = await GetsubandsubSubcategory(categoryId);
+    if (data && data.categoriesWithSubCategoriesAndSubSubCategories.length > 0) {
+      const subCategories = data.categoriesWithSubCategoriesAndSubSubCategories[index].subSubCategories;
+      setSelectedSubCategory(subCategories);
+    }
+  }, 1000);
+
+
   const handleCategoryLeave = () => {
+    setActiveIndex(-1);
+    setCategoryDropdownOpen(false);
+  };
+
+  const handleSubCategoryLeave = () => {
+    setSubActiveIndex(-1);
     setCategoryDropdownOpen(false);
   };
 
@@ -174,7 +201,16 @@ const Header = () => {
   };
   const handleMegaMenuLeave = () => {
     setMegaMenuDropdownOpen(false);
-    
+  };
+
+  const handleSubSubMenuHover = () => {
+    setSubSubMenuDropdownOpen(true);
+    setMegaMenuDropdownOpen(true);
+    setIsOpen(true);
+  };
+
+  const handleSuSubMenuLeave = () => {
+    setSubSubMenuDropdownOpen(false);
   };
 
   const handleCartHover = () => {
@@ -193,8 +229,6 @@ const Header = () => {
   const handleAccountLeave = () => {
     setAccountDropdownOpen(false);
   };
-
-  
 
   // Validation schemas
   const loginSchema = Yup.object().shape({
@@ -307,8 +341,7 @@ const Header = () => {
       }
     };
     getStoredUsername();
-  }, [CustomerInfo._id , selectedCategory]);
-
+  }, [CustomerInfo._id, selectedCategory]);
 
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -894,13 +927,11 @@ const Header = () => {
                     placeholder="Search for items..."
                   />
                   <button className="btn" ty>
-                  {tag ? (
-    <Link to={`/bytags/${tag}`}>
-      Search...
-    </Link>
-  ) : (
-    <span>Search...</span>
-  )}
+                    {tag ? (
+                      <Link to={`/bytags/${tag}`}>Search...</Link>
+                    ) : (
+                      <span>Search...</span>
+                    )}
                   </button>
                 </form>
                 {/* {showDropdown && (
@@ -940,44 +971,54 @@ const Header = () => {
                       {isCartDropdownOpen && (
                         <div className="cart-dropdown-wrap cart-dropdown-hm2">
                           <ul>
-                          {CartData
-  ? CartData.map((item) => (
-      <li key={item.product._id}>
-        {item.product && item.product.name && (
-          <>
-            <div className="shopping-cart-img">
-              <Link to="#">
-                <img
-                  alt="cart"
-                  src={`${url}/products/${item.product.imageGallery && item.product.imageGallery[0] ? item.product.imageGallery[0] : 'default-image.jpg'}`}
-                />
-              </Link>
-            </div>
-            <div className="shopping-cart-title">
-              <h4>
-                <Link to="#">{item.product.name}</Link>
-              </h4>
-              <h3>
-                <span>{item.quantity}× </span>
-                {item.product.prices.discounted
-                  ? item.product.prices.discounted
-                  : item.product.prices.calculatedPrice}
-              </h3>
-            </div>
-            <div className="shopping-cart-delete">
-              <Link
-                onClick={() => {
-                  handleRemoveItemFromCart(item.product._id);
-                }}
-              >
-                <i className="fi-rs-cross-small bi bi-x" />
-              </Link>
-            </div>
-          </>
-        )}
-      </li>
-    ))
-  : null}
+                            {CartData
+                              ? CartData.map((item) => (
+                                  <li key={item.product._id}>
+                                    {item.product && item.product.name && (
+                                      <>
+                                        <div className="shopping-cart-img">
+                                          <Link to="#">
+                                            <img
+                                              alt="cart"
+                                              src={`${url}/products/${
+                                                item.product.imageGallery &&
+                                                item.product.imageGallery[0]
+                                                  ? item.product.imageGallery[0]
+                                                  : "default-image.jpg"
+                                              }`}
+                                            />
+                                          </Link>
+                                        </div>
+                                        <div className="shopping-cart-title">
+                                          <h4>
+                                            <Link to="#">
+                                              {item.product.name}
+                                            </Link>
+                                          </h4>
+                                          <h3>
+                                            <span>{item.quantity}× </span>
+                                            {item.product.prices.discounted
+                                              ? item.product.prices.discounted
+                                              : item.product.prices
+                                                  .calculatedPrice}
+                                          </h3>
+                                        </div>
+                                        <div className="shopping-cart-delete">
+                                          <Link
+                                            onClick={() => {
+                                              handleRemoveItemFromCart(
+                                                item.product._id
+                                              );
+                                            }}
+                                          >
+                                            <i className="fi-rs-cross-small bi bi-x" />
+                                          </Link>
+                                        </div>
+                                      </>
+                                    )}
+                                  </li>
+                                ))
+                              : null}
                           </ul>
                           <div className="shopping-cart-footer">
                             {/* <div className="shopping-cart-total">
@@ -1067,7 +1108,7 @@ const Header = () => {
               <div
                 className="main-categori-wrap d-none d-lg-block"
                 onMouseEnter={handleCategoryHover}
-                // onMouseLeave={handleCategoryLeave}
+                onMouseLeave={handleCategoryLeave}
               >
                 <Link
                   className="categories-button-active"
@@ -1081,43 +1122,118 @@ const Header = () => {
                   <i className="fi-rs-angle-down bi bi-chevron-down " />
                 </Link>
                 {isOpen && (
-                  <div className="categories-dropdown-wrap categories-dropdown-active-large font-heading" onMouseEnter={ handleMegaMenuHover}
-                  onMouseLeave={ handleMegaMenuLeave}>
+                  <div
+                    className="categories-dropdown-wrap categories-dropdown-active-large font-heading"
+                    onMouseEnter={handleMegaMenuHover}
+                    onMouseLeave={handleMegaMenuLeave}
+                  >
                     <div className="d-flex categori-dropdown-inner">
-                      <ul>
+                      <ul className="inner1">
                         {CategoryData.map((category, index) => (
-                          <li key={index} onMouseEnter={() => handleCategoryHover(category._id)}>
+                          <li
+                            key={index}
+                            onMouseEnter={() =>
+                              handleCategoryHover(category._id, index)
+                            }
+                            onMouseLeave={() => {
+                              handleCategoryLeave();
+                            }}
+                            className="category-item"
+                          >
                             <Link to={`/product-list/${category._id}`}>
                               {" "}
-                              <img src={`${url}/cagtegory/${category.image}`} alt="" />
+                              <img
+                                src={`${url}/cagtegory/${category.image}`}
+                                alt=""
+                              />
                               {category.name}
                             </Link>
+
+                            {isMegaMenuDropdownOpen && (
+                              <>
+                                <div
+                                  className={`inner2 ${
+                                    activeIndex === index ? "show" : ""
+                                  }`}
+                                  onMouseEnter={handleSubSubMenuHover}
+                                  onMouseLeave={handleSuSubMenuLeave}
+                                >
+                                  <ul className="submenu  right-positioned-mega-menu categories-dropdown-active-large">
+                                    {selectedCategory
+                                      ? selectedCategory.map(
+                                          (subSubCategory, index) => (
+                                            <li
+                                              key={subSubCategory._id}
+                                              onMouseEnter={() =>
+                                                handleSubCategoryHover(
+                                                  category._id,
+                                                  index
+                                                )
+                                              }
+                                              onMouseLeave={() => {
+                                                handleSubCategoryLeave();
+                                              }}
+                                              className="category-item"
+                                            >
+                                              <Link
+                                                to={`/product-list/${subSubCategory._id}`}
+                                              >
+                                                {subSubCategory.subCategoryName}
+                                              </Link>
+
+                                              {isSubSubMenuDropdownOpen && (
+                                                <>
+                                                  <div
+                                                    className={`inner3 ${
+                                                      subActiveIndex === index
+                                                        ? "show"
+                                                        : ""
+                                                    }`}
+                                                  >
+                                                    <ul className="submenu-1  right-positioned-mega-menu categories-dropdown-active-large">
+                                                      {selectedSubCategory
+                                                        ? selectedSubCategory.map(
+                                                            (
+                                                              subSubSubCategory
+                                                            ) => (
+                                                              <li
+                                                                key={
+                                                                  subSubSubCategory.id
+                                                                }
+                                                                
+                                                                className="sub-category-item"
+                                                              >
+                                                                <Link
+                                                                  to={`/product-list/${subSubSubCategory.id}`}
+                                                                >
+                                                                  {
+                                                                    subSubSubCategory.name
+                                                                  }
+                                                                </Link>
+                                                              </li>
+                                                            )
+                                                          )
+                                                        : null}
+                                                    </ul>
+                                                  </div>
+                                                </>
+                                              )}
+                                            </li>
+                                          )
+                                        )
+                                      : null}
+                                  </ul>
+                                </div>
+                              </>
+                            )}
                           </li>
                         ))}
                       </ul>
                     </div>
-                    
                   </div>
-                  
                 )}
-                {isMegaMenuDropdownOpen && (
-  <div className="submenu d-flex ">
-    <div className="menu-title">{selectedCategory ? selectedCategory.subCategoryName : null}</div>
-    <ul>
-      {selectedCategory && selectedCategory.subSubCategories
-        ? selectedCategory.subSubCategories.map((subSubCategory) => (
-            <li key={subSubCategory.id}>
-              <Link to={`/product-list/${subSubCategory.id}`}>
-                {subSubCategory.name}
-              </Link>
-            </li>
-          ))
-        : null}
-    </ul>
-  </div>
-)}
               </div>
-              
+
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
                   <ul>
@@ -1150,7 +1266,11 @@ const Header = () => {
             </div>
             <div className="hotline d-none d-lg-flex">
               <div className="me-3 mt-1">
-                {authToken ? <p>Jay Shree Krishna , {username?username:null}</p> : <p>Jay Shree Krishna</p>}
+                {authToken ? (
+                  <p>Jay Shree Krishna , {username ? username : null}</p>
+                ) : (
+                  <p>Jay Shree Krishna</p>
+                )}
               </div>
             </div>
             <div className="header-action-icon-2 d-block d-lg-none">
