@@ -64,32 +64,34 @@ const Shop = () => {
     setCategoryData(categoryRes);
   };
 
-  const changeQueryparams = (parameter, value) => {
-    const updatedQueryParams = { ...QueryParams };
-    updatedQueryParams[parameter] = value;
 
-    setQueryParams(updatedQueryParams);
-  };
+//  const changeQueryparams = (parameter, value) => {
+//    const updatedQueryParams = { ...QueryParams };
+//    updatedQueryParams[parameter] = value;
 
-  const getFilteredItems = async () => {
-    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
+//    setQueryParams(updatedQueryParams);
+//  };
 
-    const queryString = Object.keys(QueryParams)
-      .map((key) => `${key}=${QueryParams[key]}`)
-      .join("&");
+//  const getFilteredItems = async () => {
+//    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
 
-    const fullUrl = queryString ? `${url}?${queryString}` : url;
+//    const queryString = Object.keys(QueryParams)
+//      .map((key) => `${key}=${QueryParams[key]}`)
+//     .join("&");
 
-    console.log(fullUrl);
+//    const fullUrl = queryString ? `${url}?${queryString}` : url;
 
-    try {
-      const response = await axios.post(fullUrl);
-      console.log("Main response", response.data);
-      if (response.data.success) setProductData(response.data.products);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+//    console.log(fullUrl);
+
+//    try {
+//      const response = await axios.post(fullUrl);
+//      console.log("Main response", response.data);
+//      if (response.data.success) setProductData(response.data.products);
+//    } catch (error) {
+//      console.error("Error fetching data:", error);
+//    }
+//  };
+
 
   // console.log(CategoryData)
 
@@ -177,34 +179,69 @@ const Shop = () => {
     changeQueryparams("season", updatedColors.join(","));
   };
 
-  const handlePriceChange = (selectedRange) => {
-    setSelectedPriceRange(selectedRange);
-  
-    const newFilteredData = ProductData.filter((product) => {
-      const price = product.prices.discounted || product.prices.calculatedPrice;
-  
-      switch (selectedRange) {
-        case "₹0 - ₹1000":
-          return price >= 0 && price <= 1000;
-        case "₹1000 - ₹5000":
-          return price > 1000 && price <= 5000;
-        case "₹5000 - ₹10000":
-          return price > 5000 && price <= 10000;
-        case "Over ₹10000":
-          return price > 10000;
-        default:
-          return true;
-      }
-    });
-  
-    // Update the state with the filtered data based on the selected price range
-    setProductData(newFilteredData);
-  
-    // For debugging
-    console.log("Selected Price Range:", selectedRange);
-    console.log("Filtered Data:", newFilteredData);
+  const handlePriceChange = async (range) => {
+    const [min, max] = range.match(/\d+/g);
+
+    // Update QueryParams with min and max prices
+    changeQueryparams(min, max);
+
+    // Log to check the updated state
+    console.log("handlePriceChange Selected Price Range:", selectedPriceRange);
+    console.log("handlePriceChange Parsed Min and Max:", [min, max]);
+    console.log("handlePriceChange Updated QueryParams:", QueryParams);
+
+    try {
+      // Fetch products based on the price range
+      await getFilteredItems();
+
+      // Log after the state update
+      // console.log("After state update:", QueryParams);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+    setSelectedPriceRange(range);
+
   };
   
+
+  const changeQueryparams = (min, max) => {
+    let updatedMinPrice = min;
+    let updatedMaxPrice = max;
+
+    const priceRange = `${updatedMinPrice}-${updatedMaxPrice}`;
+
+    const updatedQueryParams = {
+      // minPrice: updatedMinPrice,
+      // maxPrice: updatedMaxPrice,
+      priceRange: priceRange,
+    };
+
+    console.log("Updated Price Range inside changeQueryparams:", priceRange);
+
+    setQueryParams(updatedQueryParams);
+  };
+
+  const getFilteredItems = async () => {
+    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
+
+    console.log("what is value", QueryParams);
+    const queryString = Object.entries(QueryParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
+    const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+    console.log(fullUrl);
+
+    try {
+      const response = await axios.post(fullUrl);
+      console.log("res filter product by price",response.data);
+      if (response.data.success) setProductData(response.data.products);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
@@ -412,7 +449,7 @@ const Shop = () => {
                         {[
                           "₹0 - ₹1000",
                           "₹1000 - ₹5000",
-                          "₹5000 - ₹10000",
+                          //"₹5000 - ₹10000",
                           "Over ₹10000",
                         ].map((range) => (
                           <div
