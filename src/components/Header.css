@@ -1269,7 +1269,7 @@ input:focus-visible {
   z-index: 999; /* Ensure the mega menu appears above other elements */
 }
 
-.right-positioned-mega-menu-1{
+.right-positioned-mega-menu-1 {
   position: absolute;
   min-width: 310px;
   margin-left: auto;
@@ -1282,7 +1282,7 @@ input:focus-visible {
   z-index: 1000; /* Ensure the mega menu appears above other elements */
 }
 
-.submenu{
+.submenu {
   position: absolute;
   top: 0;
   left: 100%; /* Position the submenu to the right of the main menu item */
@@ -1294,10 +1294,10 @@ input:focus-visible {
   width: 200px; /* Adjust the width as needed */
 }
 
-.submenu-1{
+.submenu-1 {
   position: absolute;
   top: 0;
-  left: 100%; /* Position the submenu to the right of the main menu item */
+  left: 34%; /* Position the submenu to the right of the main menu item */
   background-color: white;
   border: 1px solid #ccc;
   padding: 5px;
@@ -1319,20 +1319,22 @@ input:focus-visible {
 /* .inner1{
   position: absolute;
 } */
-.category-item, .sub-category-item {
+.category-item,
+.sub-category-item {
   position: relative;
 }
-.inner2, .inner3 {
+.inner2,
+.inner3 {
   display: none;
   position: absolute;
   left: 100%; /* Align to the right of the parent li */
   top: 0;
 }
 
-.inner2.show, .inner3.show {
+.inner2.show,
+.inner3.show {
   display: block;
 }
-
 
 .submenu li {
   /* position: relative; */

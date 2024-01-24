@@ -1,16 +1,9 @@
 import React from "react";
 import "./MObileSidebar.css";
-import Sidebar from './Sidebar'
-
-
+import Sidebar from "./Sidebar";
 
 function MobileSidebar() {
-  return (
- 
-      <Sidebar/>
-      
-    
-  );
+  return <Sidebar />;
 }
 
 export default MobileSidebar;
