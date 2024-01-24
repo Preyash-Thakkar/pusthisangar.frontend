@@ -183,7 +183,7 @@ const MidFooter = () => {
               </ul>
             </Col>
 
-            {authToken && (
+            {/* {authToken && (
               <Col sm="12" md="6" lg="1" className="footer-link-widget col">
                 <h4 className="widget-title footer-title text-start">
                   Account
@@ -200,12 +200,10 @@ const MidFooter = () => {
                       My Wishlist
                     </Link>
                   </li>
-                  {/* <li>
-                  <Link to="#">Shipping Details</Link>
-                </li> */}
+                  
                 </ul>
               </Col>
-            )}
+            )} */}
           </div>
         </div>
       </section>

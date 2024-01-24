@@ -15,7 +15,7 @@ import { debounce } from 'lodash';
 const options = [
   { value: "Shringar", label: "Shringar" },
   { value: "Vastra", label: "Vastra" },
-  { value: "Silver Vassels", label: "Silver Vassels" },
+  { value: "Silver Vessels", label: "Silver Vessels" },
   { value: "Sugandhi(Attar)", label: "Sugandhi(Attar)" },
   { value: "Pichwai And Wall Art", label: "Pichwai And Wall Art" },
   { value: "Fibre Items", label: "Fibre Items" },
