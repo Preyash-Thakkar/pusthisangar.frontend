@@ -330,6 +330,8 @@ const Header = () => {
     }
   };
 
+  console.log("get categories 1234",getCategories);
+
   useEffect(() => {
     GetLoggedInCustomer(authToken);
     getLoggedinCustomerCart(CustomerInfo._id);
