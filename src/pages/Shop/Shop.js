@@ -180,53 +180,52 @@ const Shop = () => {
   };
 
   const handlePriceChange = async (range) => {
-    const [min, max] = range.match(/\d+/g);
+    let min, max;
+    if (range === "Over ₹5000") {
+        // Specifically handle the "Over ₹5000" case
+        min = '5000';
+        max = undefined;
+    } else {
+        // Extract min and max values for other ranges
+        [min, max] = range.match(/\d+/g);
+    }
 
     // Update QueryParams with min and max prices
     changeQueryparams(min, max);
 
     // Log to check the updated state
-    console.log("handlePriceChange Selected Price Range:", selectedPriceRange);
+    console.log("handlePriceChange Selected Price Range:", range);
     console.log("handlePriceChange Parsed Min and Max:", [min, max]);
     console.log("handlePriceChange Updated QueryParams:", QueryParams);
 
     try {
-      // Fetch products based on the price range
-      await getFilteredItems();
-
-      // Log after the state update
-      // console.log("After state update:", QueryParams);
+        // Fetch products based on the price range
+        await getFilteredItems();
     } catch (error) {
-      console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error);
     }
 
     setSelectedPriceRange(range);
+};
 
-  };
-  
 
-  const changeQueryparams = (min, max) => {
-    let updatedMinPrice = min;
-    let updatedMaxPrice = max;
+const changeQueryparams = (min, max) => {
+  let priceRange;
+
+  if (min === '5000' && max === undefined) {
+      priceRange = encodeURIComponent("5000+");
+  } else {
+      priceRange = `${encodeURIComponent(min)}-${encodeURIComponent(max)}`;
+  }
+
+  const updatedQueryParams = { priceRange };
+  console.log("Updated Price Range inside changeQueryparams:", priceRange);
+  setQueryParams(updatedQueryParams);
+};
+
   
-    // Check if the selected range is "Over ₹5000"
-    if (min === '5000' && max === undefined) {
-      updatedMinPrice = 5000;
-      updatedMaxPrice = 1000000;
-    }
   
-    const priceRange = `${updatedMinPrice}-${updatedMaxPrice}`;
   
-    const updatedQueryParams = {
-      // minPrice: updatedMinPrice,
-      // maxPrice: updatedMaxPrice,
-      priceRange: priceRange,
-    };
-  
-    console.log("Updated Price Range inside changeQueryparams:", priceRange);
-  
-    setQueryParams(updatedQueryParams);
-  };
   
   
   
@@ -250,7 +249,6 @@ const Shop = () => {
       console.error("Error fetching data:", error);
     }
   };
-
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
     changeQueryparams("category", selectedCategory);
