@@ -55,8 +55,8 @@ const Category = ({ background }) => {
   ];
 
   const CategoryCard = ({ name, image, itemCount, color, id }) => (
-    <div className="col-12  col-md-6 col-lg-3  category col-lg-1-5">
-      <Link to={`/product-list/${id}`}>
+    <div className="col-12 col-md-6 col-lg-3 category col-lg-1-5">
+      <Link to={`/product-list/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="card" style={{ backgroundColor: color }}>
           <img
             src={`${url}/cagtegory/${image}`}
@@ -71,17 +71,15 @@ const Category = ({ background }) => {
             }}
           />
           <div className="card-body">
-            <p className="card-text mt-2 d-block">
-              <span className="fw-bold">
-                <Link to={`/product-list/${id}`}>{name}</Link>
-              </span>
-              {/* <div className="mt-1"> {itemCount} Items</div> */}
+            <p className="card-text mt-2 d-block fw-bold">
+              {name}
             </p>
           </div>
         </div>
       </Link>
     </div>
   );
+  
 
   const { getCategories } = useContext(SignContext);
   const navigate = useNavigate();
@@ -100,7 +98,7 @@ const Category = ({ background }) => {
     }
   };
 
-  // console.log(CategoryData);
+  console.log("whats thr data",CategoryData);
 
   const handlecategoryClick = () => {
     // Use navigate to go to the cart page

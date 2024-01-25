@@ -358,7 +358,7 @@ const Header = () => {
     }
   };
 
-  console.log("get categories 1234", getCategories);
+  console.log("get categories 1234",getCategories);
 
   useEffect(() => {
     GetLoggedInCustomer(authToken);

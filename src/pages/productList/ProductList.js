@@ -64,6 +64,7 @@ const ProductList = () => {
     //   id: index + 1,
     // }));
     setProductData(res.products);
+    console.log("productd",res.products);
   };
 
   const changeQueryparams = (parameter, value) => {
@@ -203,7 +204,6 @@ const ProductList = () => {
       setSelectedShopBy([...selectedShopBy, shopItem]);
     }
   };
-
   // const handleSortByChange = (value) => {
   //   setSelectedSortBy(value);
 
@@ -233,6 +233,7 @@ const ProductList = () => {
     // If original data is not set, store the current order as the original order
     if (!originalData.current) {
       originalData.current = [...ProductData];
+      console.log("preyash",ProductData)
     }
 
     setSelectedSortBy(value);
