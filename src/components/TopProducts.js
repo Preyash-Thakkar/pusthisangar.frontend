@@ -178,7 +178,11 @@ const TopProducts = () => {
                   className=" col-lg-3 col-md-4 col-sm-6 mb-4 popular-card"
                   key={product.id}
                 >
-                  <Link to={`/product-details/${product._id}`}>
+                  <Link
+                    to={`/product-details/${product._id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     {" "}
                     <div
                       className="product-cart-wrap popular-card"
@@ -189,6 +193,8 @@ const TopProducts = () => {
                           <Link
                             to={`/product-details/${product._id}`}
                             tabIndex={0}
+                            target="_blank"
+                            rel="noopener noreferrer"
                           >
                             <img
                               className="default-img"
@@ -204,12 +210,20 @@ const TopProducts = () => {
                       </div>
                       <div class="product-content-wrap">
                         <div class="product-category">
-                          <Link to={`/product-details/${product._id}`}>
+                          <Link
+                            to={`/product-details/${product._id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             {categoryNameMapping[product.category]}
                           </Link>
                         </div>
                         <h2 className="new-product-name">
-                          <Link to={`/product-details/${product._id}`}>
+                          <Link
+                            to={`/product-details/${product._id}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
                             {product.name}
                           </Link>
                         </h2>

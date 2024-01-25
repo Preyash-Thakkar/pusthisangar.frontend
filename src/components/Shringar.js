@@ -169,7 +169,12 @@ const Shringar = () => {
             <h1 className="fs-1 mt-4 mb-4 titleCategory">Shringar</h1>
           </div>
           <div className="col text-end d-flex align-items-center justify-content-end">
-            <Link to={`/product-list/${id}`} className="mb-2">
+            <Link
+              to={`/product-list/${id}`}
+              className="mb-2"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <strong>view all</strong>
             </Link>
           </div>
@@ -200,7 +205,11 @@ const Shringar = () => {
               {products
                 ? products.map((product) => (
                     <div key={product.id}>
-                      <Link to={`/product-details/${product._id}`}>
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         <div
                           className="product-cart-wrap shringar-card slick-slide slick-current slick-active"
                           tabIndex={0}
@@ -213,6 +222,8 @@ const Shringar = () => {
                               <Link
                                 to={`/product-details/${product._id}`}
                                 tabIndex={0}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 <img
                                   className="default-img img-fluid"
@@ -231,6 +242,8 @@ const Shringar = () => {
                               <Link
                                 to={`/product-details/${product._id}`}
                                 tabIndex={0}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {categoryNameMapping[product.category]}
                               </Link>
@@ -239,6 +252,8 @@ const Shringar = () => {
                               <Link
                                 to={`/product-details/${product._id}`}
                                 tabIndex={0}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 {product.name}
                               </Link>

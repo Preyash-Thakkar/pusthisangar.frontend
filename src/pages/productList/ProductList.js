@@ -309,9 +309,9 @@ const ProductList = () => {
     GetColors();
   }, [id, authToken]);
 
-  useEffect(() => {
-    getFilteredItems();
-  }, [selectedCategory, QueryParams, selectedColors]);
+  // useEffect(() => {
+  //   getFilteredItems();
+  // }, [selectedCategory, QueryParams, selectedColors]);
 
   return (
     <div>
@@ -534,6 +534,8 @@ const ProductList = () => {
                         <Link
                           to={`/product-details/${product._id}`}
                           tabIndex={0}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           <img
                             className="default-img"
@@ -554,12 +556,20 @@ const ProductList = () => {
                     </div>
                     <div class="product-content-wrap">
                       <div class="product-category">
-                        <Link to={`/product-details/${product._id}`}>
+                        <Link
+                          to={`/product-details/${product._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {categoryNameMapping[product.category]}
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/product-details/${product._id}`}>
+                        <Link
+                          to={`/product-details/${product._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {product.name}
                         </Link>
                       </h2>

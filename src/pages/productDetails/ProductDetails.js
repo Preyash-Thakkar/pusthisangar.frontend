@@ -1065,6 +1065,7 @@ const ProductDetails = () => {
                   <div className="product-cart-wrap popular-card" tabIndex={0}>
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
+                        
                         <Link
                           to={`/product-details/${product._id}`}
                           tabIndex={0}

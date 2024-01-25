@@ -1327,7 +1327,7 @@ input:focus-visible {
 .inner3 {
   display: none;
   position: absolute;
-  left: 100%; /* Align to the right of the parent li */
+  left: 60%; /* Align to the right of the parent li */
   top: 0;
 }
 

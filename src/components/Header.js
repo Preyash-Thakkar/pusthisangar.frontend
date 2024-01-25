@@ -11,7 +11,7 @@ import { BsPerson, BsCart } from "react-icons/bs";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import SignContext from "../contextAPI/Context/SignContext";
-import { debounce } from 'lodash';
+import { debounce } from "lodash";
 const options = [
   { value: "Shringar", label: "Shringar" },
   { value: "Vastra", label: "Vastra" },
@@ -61,8 +61,7 @@ const Header = () => {
   const [isSubSubMenuDropdownOpen, setSubSubMenuDropdownOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const [subActiveIndex, setSubActiveIndex] = useState(-1);
-  const [selectedSubCategory, setSelectedSubCategory] =
-    useState([]);
+  const [selectedSubCategory, setSelectedSubCategory] = useState([]);
 
   // const [showLoginModal, setOpenLoginModal] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
@@ -166,24 +165,53 @@ const Header = () => {
     setCategoryDropdownOpen(true);
     setIsOpen(true);
     const data = await GetsubandsubSubcategory(categoryId);
-    console.log(data);
-    console.log("Latest", data.categoriesWithSubCategoriesAndSubSubCategories);
-    console.log("ok", data.categoriesWithSubCategoriesAndSubSubCategories);
+    console.log("Whole", data.categoriesWithSubCategoriesAndSubSubCategories);
+    // console.log("Latest", data.categoriesWithSubCategoriesAndSubSubCategories);
+    // console.log("ok", data.categoriesWithSubCategoriesAndSubSubCategories);
     setSelectedCategory(data.categoriesWithSubCategoriesAndSubSubCategories);
-  },300);
+  }, 300);
+    useEffect(() => {
+      console.log("Big data", selectedSubCategory);
+    }, [selectedSubCategory]);
 
-
-  
-  const handleSubCategoryHover = debounce(async (categoryId, index) => {
-    setSubActiveIndex(index);
-    setIsOpen(true);
-    const data = await GetsubandsubSubcategory(categoryId);
-    if (data && data.categoriesWithSubCategoriesAndSubSubCategories.length > 0) {
-      const subCategories = data.categoriesWithSubCategoriesAndSubSubCategories[index].subSubCategories;
-      setSelectedSubCategory(subCategories);
-    }
-  }, 1000);
-
+    
+    const handleSubCategoryHover = debounce(async (subCategoryId, index) => {
+      setSubActiveIndex(index);
+      setSubSubMenuDropdownOpen(true);
+    
+      try {
+        const data = await GetsubandsubSubcategory(subCategoryId);
+    
+        // Log to check the structure
+        console.log(data);
+    
+        // Assuming data.categoriesWithSubCategoriesAndSubSubCategories is the array received
+        if (
+          data &&
+          data.categoriesWithSubCategoriesAndSubSubCategories &&
+          data.categoriesWithSubCategoriesAndSubSubCategories.length > 0
+        ) {
+          // Since it seems to be an array with one element, we access the first one
+          const mainCategory = data.categoriesWithSubCategoriesAndSubSubCategories[0];
+    
+          // Now we find the subcategory within this main category
+          const subCategory = mainCategory.subcategories.find(sc => sc._id === subCategoryId);
+          
+          if (subCategory && subCategory.subsubcategories) {
+            const ssc = subCategory.subsubcategories;
+            setSelectedSubCategory(ssc); // This sets the sub-subcategories for the hovered subcategory
+            console.log("New code",selectedSubCategory);
+          } else {
+            console.log("Subcategory with subsubcategories not found or it has no subsubcategories");
+          }
+        } else {
+          console.log("Unexpected data structure or empty data", data);
+        }
+      } catch (error) {
+        console.error("Error fetching subsubcategories", error);
+      }
+    }, 1000);
+    
 
   const handleCategoryLeave = () => {
     setActiveIndex(-1);
@@ -330,7 +358,7 @@ const Header = () => {
     }
   };
 
-  console.log("get categories 1234",getCategories);
+  console.log("get categories 1234", getCategories);
 
   useEffect(() => {
     GetLoggedInCustomer(authToken);
@@ -1160,53 +1188,49 @@ const Header = () => {
                                   onMouseEnter={handleSubSubMenuHover}
                                   onMouseLeave={handleSuSubMenuLeave}
                                 >
-                                  <ul className="submenu  right-positioned-mega-menu categories-dropdown-active-large">
-                                    {selectedCategory
-                                      ? selectedCategory.map(
-                                          (subSubCategory, index) => (
-                                            <li
-                                              key={subSubCategory._id}
-                                              onMouseEnter={() =>
-                                                handleSubCategoryHover(
-                                                  category._id,
-                                                  index
-                                                )
-                                              }
-                                              onMouseLeave={() => {
-                                                handleSubCategoryLeave();
-                                              }}
-                                              className="category-item"
-                                            >
-                                              <Link
-                                                to={`/product-list/${subSubCategory._id}`}
-                                              >
-                                                {subSubCategory.subCategoryName}
-                                              </Link>
-
-                                              {isSubSubMenuDropdownOpen && (
-                                                <>
-                                                  <div
-                                                    className={`inner3 ${
-                                                      subActiveIndex === index
-                                                        ? "show"
-                                                        : ""
-                                                    }`}
+                                  <ul>
+                                    {selectedCategory?.map(
+                                      (subSubCategory, index) => (
+                                        <li key={subSubCategory._id}>
+                                          <ul className="submenu right-positioned-mega-menu categories-dropdown-active-large">
+                                            {subSubCategory.subcategories.map(
+                                              (subcategory) => (
+                                                <li
+                                                  key={subcategory._id}
+                                                  onMouseEnter={() =>
+                                                    handleSubCategoryHover(
+                                                      category._id,
+                                                      index
+                                                    )
+                                                  }
+                                                  onMouseLeave={
+                                                    handleSubCategoryLeave
+                                                  }
+                                                  className="category-item"
+                                                >
+                                                  <Link
+                                                    to={`/product-list/${subcategory._id}`}
                                                   >
-                                                    <ul className="submenu-1  right-positioned-mega-menu categories-dropdown-active-large">
-                                                      {selectedSubCategory
-                                                        ? selectedSubCategory.map(
+                                                    {subcategory.name}
+                                                  </Link>
+
+                                                  {isSubSubMenuDropdownOpen &&
+                                                    subActiveIndex ===
+                                                      index && (
+                                                      <div className="inner3 show">
+                                                        <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
+                                                          {selectedSubCategory?.map(
                                                             (
                                                               subSubSubCategory
                                                             ) => (
                                                               <li
                                                                 key={
-                                                                  subSubSubCategory.id
+                                                                  subSubSubCategory._id
                                                                 }
-                                                                
                                                                 className="sub-category-item"
                                                               >
                                                                 <Link
-                                                                  to={`/product-list/${subSubSubCategory.id}`}
+                                                                  to={`/product-list/${subSubSubCategory._id}`}
                                                                 >
                                                                   {
                                                                     subSubSubCategory.name
@@ -1214,16 +1238,17 @@ const Header = () => {
                                                                 </Link>
                                                               </li>
                                                             )
-                                                          )
-                                                        : null}
-                                                    </ul>
-                                                  </div>
-                                                </>
-                                              )}
-                                            </li>
-                                          )
-                                        )
-                                      : null}
+                                                          )}
+                                                        </ul>
+                                                      </div>
+                                                    )}
+                                                </li>
+                                              )
+                                            )}
+                                          </ul>
+                                        </li>
+                                      )
+                                    )}
                                   </ul>
                                 </div>
                               </>

@@ -173,7 +173,12 @@ const NewArrival = (props) => {
               </h1>
             </div>
             <div className="col text-end d-flex align-items-center justify-content-end">
-              <Link to="/shop" className="mb-2">
+              <Link
+                to="/shop"
+                className="mb-2"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <strong>view all Products</strong>
               </Link>
             </div>
@@ -189,7 +194,11 @@ const NewArrival = (props) => {
                       className="col-xxl-2 col-lg-3 col-md-4 col-sm-6 mb-4 popular-card"
                       key={product.id}
                     >
-                      <Link to={`/product-details/${product._id}`}>
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {" "}
                         <div
                           className="product-cart-wrap popular-card"
@@ -200,6 +209,8 @@ const NewArrival = (props) => {
                               <Link
                                 to={`/product-details/${product._id}`}
                                 tabIndex={0}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 <img
                                   className="default-img"
@@ -215,12 +226,20 @@ const NewArrival = (props) => {
                           </div>
                           <div class="product-content-wrap">
                             <div class="product-category">
-                              <Link to={`/product-details/${product._id}`}>
+                              <Link
+                                to={`/product-details/${product._id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 {categoryNameMapping[product.category]}
                               </Link>
                             </div>
                             <h2 className="new-product-name">
-                              <Link to={`/product-details/${product._id}`}>
+                              <Link
+                                to={`/product-details/${product._id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
                                 {product.name}
                               </Link>
                             </h2>
@@ -248,6 +267,8 @@ const NewArrival = (props) => {
                                   onClick={() => {
                                     handleCartClick(product._id);
                                   }}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
                                   Add{" "}
