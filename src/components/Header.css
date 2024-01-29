@@ -1284,7 +1284,8 @@ input:focus-visible {
 
 .submenu {
   position: absolute;
-  top: 0;
+  margin-top: -10px;
+  /* top: 0; */
   left: 100%; /* Position the submenu to the right of the main menu item */
   background-color: white;
   border: 1px solid #ccc;
@@ -1327,7 +1328,7 @@ input:focus-visible {
 .inner3 {
   display: none;
   position: absolute;
-  left: 60%; /* Align to the right of the parent li */
+  left: 100%; /* Align to the right of the parent li */
   top: 0;
 }
 
