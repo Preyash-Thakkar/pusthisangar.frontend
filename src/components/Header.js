@@ -1186,27 +1186,7 @@ const Header = () => {
                                             {subcategory.name}
                                           </Link>
 
-                                          {isSubSubMenuDropdownOpen &&
-                                            subActiveIndex === index && (
-                                              <div className="inner3 show">
-                                                <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
-                                                  {selectedSubCategory?.map(
-                                                    (subsubcategory) => (
-                                                      <li
-                                                        key={subsubcategory._id}
-                                                        className="sub-category-item"
-                                                      >
-                                                        <Link
-                                                          to={`/product-list/${subsubcategory._id}`}
-                                                        >
-                                                          {subsubcategory.name}
-                                                        </Link>
-                                                      </li>
-                                                    )
-                                                  )}
-                                                </ul>
-                                              </div>
-                                            )}
+                                          
                                         </li>
                                       ))}
                                     </ul>
