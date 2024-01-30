@@ -1297,8 +1297,8 @@ input:focus-visible {
 
 .submenu-1 {
   position: absolute;
-  top: 0;
-  left: 34%; /* Position the submenu to the right of the main menu item */
+  margin-top: 0px;
+  margin-left: 200px; /* Position the submenu to the right of the main menu item */
   background-color: white;
   border: 1px solid #ccc;
   padding: 5px;

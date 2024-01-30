@@ -1185,27 +1185,33 @@ const Header = () => {
                                       ))}
                                     </ul>
                                   ))}
+
+                                  {isSubSubMenuDropdownOpen &&
+                                    selectedSubCategory &&
+                                    selectedSubCategory.length > 0 && (
+                                      <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
+                                        {selectedSubCategory?.map(
+                                          (subsubcategory) => (
+                                            <li
+                                              key={subsubcategory._id}
+                                              className="sub-category-item"
+                                            >
+                                              <Link
+                                                to={`/product-list/${subsubcategory._id}`}
+                                              >
+                                                {subsubcategory.name}
+                                              </Link>
+                                            </li>
+                                          )
+                                        )}
+                                      </ul>
+                                    )}
                                 </div>
                               </>
                             )}
                           </li>
                         ))}
                       </ul>
-
-                      {isSubSubMenuDropdownOpen && selectedSubCategory && selectedSubCategory.length>0 &&(
-                        <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
-                          {selectedSubCategory?.map((subsubcategory) => (
-                            <li
-                              key={subsubcategory._id}
-                              className="sub-category-item"
-                            >
-                              <Link to={`/product-list/${subsubcategory._id}`}>
-                                {subsubcategory.name}
-                              </Link>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
                     </div>
                   </div>
                 )}
