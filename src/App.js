@@ -49,7 +49,7 @@ function App() {
         <Routes>
           {/* <Route path="/" element={< Undermaintainance/>} /> */}
           <Route path="/" element={<Home />} />
-          <Route path="/product-list/:id" element={<ProductList />} />
+          <Route path="/product-list/:id/:filtrationField" element={<ProductList />} />
           <Route path="/bytags/:tags" element={<ByTags />} />
           <Route path="/product-details/:id" element={<ProductDetails />} />
           <Route path="/cart/:id" element={<Cart />} />

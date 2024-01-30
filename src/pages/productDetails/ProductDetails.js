@@ -1049,7 +1049,7 @@ const ProductDetails = () => {
               </h1>
             </div>
             <div className="col text-end d-flex align-items-center justify-content-end">
-              <Link to={`/product-list/${CategoryId}`} className="mb-2">
+              <Link to={`/product-list/${CategoryId}/categoryId`} className="mb-2">
                 view all Products
               </Link>
             </div>

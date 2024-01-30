@@ -149,7 +149,7 @@ const MidFooter = () => {
               <ul className="footer-list mb-sm-5 mb-md-0 text-start">
                 {CategoryData.map((category, index) => (
                   <li key={index}>
-                    <Link to={`/product-list/${category._id}`}>
+                    <Link to={`/product-list/${category._id}/categoryId`}>
                       {" "}
                       {/* <img src={logo} alt /> */}
                       {category.name}

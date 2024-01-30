@@ -1113,11 +1113,7 @@ const Header = () => {
               </Link>
             </div>
             <div className="header-nav d-none d-lg-flex">
-              <div
-                className="main-categori-wrap d-none d-lg-block"
-                onMouseEnter={handleCategoryHover}
-                onMouseLeave={handleCategoryLeave}
-              >
+              <div className="main-categori-wrap d-none d-lg-block">
                 <Link
                   className="categories-button-active"
                   to="#"
@@ -1148,7 +1144,7 @@ const Header = () => {
                             }}
                             className="category-item"
                           >
-                            <Link to={`/product-list/${category._id}`}>
+                            <Link to={`/product-list/${category._id}/categoryId`}>
                               {" "}
                               <img
                                 src={`${url}/cagtegory/${category.image}`}
@@ -1180,20 +1176,39 @@ const Header = () => {
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
-                                          <Link to={`/product-list/${subcategory._id}`}>
-                                            {" "}
-                                            <img
-                                src={`${url}/cagtegory/${category.image}`}
-                                alt=""
-                              />
+
+                                          <Link
+                                            to={`/product-list/${subcategory._id}/subCategoryId`}
+                                          >
                                             {subcategory.name}
                                           </Link>
 
-                                          
+                                     
                                         </li>
                                       ))}
                                     </ul>
                                   ))}
+
+                                  {isSubSubMenuDropdownOpen &&
+                                    selectedSubCategory &&
+                                    selectedSubCategory.length > 0 && (
+                                      <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
+                                        {selectedSubCategory?.map(
+                                          (subsubcategory) => (
+                                            <li
+                                              key={subsubcategory._id}
+                                              className="sub-category-item"
+                                            >
+                                              <Link
+                                                to={`/product-list/${subsubcategory._id}/subSubCategory`}
+                                              >
+                                                {subsubcategory.name}
+                                              </Link>
+                                            </li>
+                                          )
+                                        )}
+                                      </ul>
+                                    )}
                                 </div>
                               </>
                             )}

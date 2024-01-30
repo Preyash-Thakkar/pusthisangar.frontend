@@ -95,13 +95,13 @@ const AllCategory = ({ background }) => {
 
 const CategoryCard = ({ name, image, itemCount, color , id }) => (
   <div className="col-12  col-md-6 col-lg-3  category col-lg-1-5">
-    <Link to={`/product-list/${id}`}>
+    <Link to={`/product-list/${id}/categoryId`}>
       <div className="card" style={{ backgroundColor: color }}>
         <img src={`${url}/cagtegory/${image}`} className="card-img-top" alt={name} />
         <div className="card-body">
           <p className="card-text mt-2 d-block">
             <span className="fw-bold ">
-              <Link to={`/product-list/${id}`}>{name}</Link>
+              <Link to={`/product-list/${id}/categoryId`}>{name}</Link>
             </span>
             
           </p>

@@ -298,10 +298,10 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
   };
 
   // GetProductsbyCategoryId
-  const GetProductsbyCategoryId = async (CategoryId) => {
+  const GetProductsbyCategoryId = async (filtrationField,CategoryId) => {
     try {
       const response = await axios.post(
-        `${url}/product/getproductsbycategoryid/${CategoryId}`,
+        `${url}/product/getproductsbycategoryid?${filtrationField }=${CategoryId}`,
         {}
       );
       return response.data;
