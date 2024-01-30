@@ -1115,8 +1115,7 @@ const Header = () => {
             <div className="header-nav d-none d-lg-flex">
               <div
                 className="main-categori-wrap d-none d-lg-block"
-                onMouseEnter={handleCategoryHover}
-                onMouseLeave={handleCategoryLeave}
+                
               >
                 <Link
                   className="categories-button-active"
@@ -1189,7 +1188,20 @@ const Header = () => {
                                           {isSubSubMenuDropdownOpen &&
                                             subActiveIndex === index && (
                                               <div className="inner3 show">
-                                                <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
+                                                
+                                              </div>
+                                            )}
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  ))}
+                                </div>
+                              </>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                      <ul className="submenu-1 right-positioned-mega-menu categories-dropdown-active-large">
                                                   {selectedSubCategory?.map(
                                                     (subsubcategory) => (
                                                       <li
@@ -1205,18 +1217,6 @@ const Header = () => {
                                                     )
                                                   )}
                                                 </ul>
-                                              </div>
-                                            )}
-                                        </li>
-                                      ))}
-                                    </ul>
-                                  ))}
-                                </div>
-                              </>
-                            )}
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                   </div>
                 )}
