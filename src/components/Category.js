@@ -56,7 +56,7 @@ const Category = ({ background }) => {
 
   const CategoryCard = ({ name, image, itemCount, color, id }) => (
     <div className="col-12 col-md-6 col-lg-3 category col-lg-1-5">
-      <Link to={`/product-list/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link to={`/product-list/${id}/categoryId`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="card" style={{ backgroundColor: color }}>
           <img
             src={`${url}/cagtegory/${image}`}

@@ -1144,7 +1144,7 @@ const Header = () => {
                             }}
                             className="category-item"
                           >
-                            <Link to={`/product-list/${category._id}`}>
+                            <Link to={`/product-list/${category._id}/categoryId`}>
                               {" "}
                               <img
                                 src={`${url}/cagtegory/${category.image}`}
@@ -1177,7 +1177,7 @@ const Header = () => {
                                           className="category-item"
                                         >
                                           <Link
-                                            to={`/product-list/${subcategory._id}`}
+                                            to={`/product-list/${subcategory._id}/subCategoryId`}
                                           >
                                             {subcategory.name}
                                           </Link>
@@ -1197,7 +1197,7 @@ const Header = () => {
                                               className="sub-category-item"
                                             >
                                               <Link
-                                                to={`/product-list/${subsubcategory._id}`}
+                                                to={`/product-list/${subsubcategory._id}/subSubCategory`}
                                               >
                                                 {subsubcategory.name}
                                               </Link>
