@@ -223,12 +223,6 @@ const changeQueryparams = (min, max) => {
   setQueryParams(updatedQueryParams);
 };
 
-  
-  
-  
-  
-  
-  
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
 
