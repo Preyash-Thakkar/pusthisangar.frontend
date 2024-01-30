@@ -1180,9 +1180,12 @@ const Header = () => {
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
-                                          <Link
-                                            to={`/product-list/${subcategory._id}`}
-                                          >
+                                          <Link to={`/product-list/${subcategory._id}`}>
+                                            {" "}
+                                            <img
+                                src={`${url}/cagtegory/${category.image}`}
+                                alt=""
+                              />
                                             {subcategory.name}
                                           </Link>
 
