@@ -1176,11 +1176,14 @@ const Header = () => {
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
+
                                           <Link
                                             to={`/product-list/${subcategory._id}/subCategoryId`}
                                           >
                                             {subcategory.name}
                                           </Link>
+
+                                     
                                         </li>
                                       ))}
                                     </ul>

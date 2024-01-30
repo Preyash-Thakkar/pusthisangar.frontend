@@ -160,13 +160,31 @@ const Shop = () => {
     const updatedColors = selectedColors.includes(selectedColor)
       ? selectedColors.filter((color) => color !== selectedColor)
       : [...selectedColors, selectedColor];
-
+  
     // Update the selected colors state
     setSelectedColors(updatedColors);
-
-    // Update the query parameters with the selected colors
-    changeQueryparams("color", updatedColors.join(",")); // Join selected colors with commas
+  
+    // Log the updated colors for debugging
+    console.log("Updated Colors:", updatedColors);
+  
+    // Filter products based on the selected colors locally
+    const filteredProducts = ProductData.filter((product) => {
+      const isIncluded = updatedColors.includes(product.productColor);
+      console.log(
+        `Product: ${product.productName}, Color: ${product.productColor}, Included: ${isIncluded}`
+      );
+      return isIncluded;
+    });
+    
+    // Log the filtered products for debugging
+    console.log("Filtered Products:", filteredProducts);
+  
+    // Update the displayed products
+    setProductData(filteredProducts);
   };
+  
+  
+  
 
   const handleSeasonChange = (selectedseason) => {
     const updatedColors = selectedSeason.includes(selectedseason)
@@ -223,12 +241,6 @@ const changeQueryparams = (min, max) => {
   setQueryParams(updatedQueryParams);
 };
 
-  
-  
-  
-  
-  
-  
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
 

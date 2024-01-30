@@ -67,15 +67,22 @@ const ByTags = () => {
         }
     };
   
-    const changeQueryparams = (parameter, value) => {
-      const updatedQueryParams = { ...QueryParams };
-      updatedQueryParams[parameter] = value;
-  
+    const changeQueryparams = (min, max) => {
+      let priceRange;
+    
+      if (min === '5000' && max === undefined) {
+          priceRange = encodeURIComponent("5000+");
+      } else {
+          priceRange = `${encodeURIComponent(min)}-${encodeURIComponent(max)}`;
+      }
+    
+      const updatedQueryParams = { priceRange };
+      console.log("Updated Price Range inside changeQueryparams:", priceRange);
       setQueryParams(updatedQueryParams);
     };
   
     const getFilteredItems = async () => {
-      const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
+      const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
   
       const queryString = Object.keys(QueryParams)
         .map((key) => `${key}=${QueryParams[key]}`)
@@ -175,15 +182,34 @@ const ByTags = () => {
       changeQueryparams("season", updatedColors.join(",")); 
     };
   
-    const handlePriceChange = (range) => {
-      const [min, max] = range.match(/\d+/g);
+    const handlePriceChange = async (range) => {
+      let min, max;
+      if (range === "Over ₹5000") {
+          // Specifically handle the "Over ₹5000" case
+          min = '5000';
+          max = undefined;
+      } else {
+          // Extract min and max values for other ranges
+          [min, max] = range.match(/\d+/g);
+      }
   
-      // console.log(range , [min , max])
-      changeQueryparams("minPrice", min);
-      changeQueryparams("maxPrice", max);
+      // Update QueryParams with min and max prices
+      changeQueryparams(min, max);
+  
+      // Log to check the updated state
+      console.log("handlePriceChange Selected Price Range:", range);
+      console.log("handlePriceChange Parsed Min and Max:", [min, max]);
+      console.log("handlePriceChange Updated QueryParams:", QueryParams);
+  
+      try {
+          // Fetch products based on the price range
+          await getFilteredItems();
+      } catch (error) {
+          console.error("Error fetching data:", error);
+      }
   
       setSelectedPriceRange(range);
-    };
+  };
   
     
     const handleMaterialChange = (selectedmaterial) => {
@@ -356,8 +382,8 @@ const ByTags = () => {
                           {[
                             "₹0 - ₹1000",
                             "₹1000 - ₹5000",
-                            "₹5000 - ₹10000",
-                            "Over ₹10000",
+                            //"₹5000 - ₹10000",
+                            "Over ₹5000",
                           ].map((range) => (
                             <div
                               key={range}
