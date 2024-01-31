@@ -19,6 +19,10 @@ const MidFooter = () => {
   };
   const email = "pushtishangarsales@gmail.com";
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleEmailClick = () => {
     window.location.href = `mailto:${email}`;
   };
@@ -130,17 +134,17 @@ const MidFooter = () => {
               <h4 className="widget-title footer-title text-start">Company</h4>
               <ul className="footer-list mb-sm-5 mb-md-0 text-start">
                 <li>
-                  <Link to="/about-us">About Us</Link>
+                  <Link to="/about-us" onClick={scrollToTop}>About Us</Link>
                 </li>
                 <li>
-                  <Link to="/disclaimer">Disclaimer</Link>
+                  <Link to="/disclaimer" onClick={scrollToTop}>Disclaimer</Link>
                 </li>
                 <li>
-                  <Link to="/privacy">Privacy Policy</Link>
+                  <Link to="/privacy" onClick={scrollToTop}>Privacy Policy</Link>
                 </li>
 
                 <li>
-                  <Link to="/shipping-policy">Shipping Policy</Link>
+                  <Link to="/shipping-policy" onClick={scrollToTop}>Shipping Policy</Link>
                 </li>
               </ul>
             </Col>
@@ -149,7 +153,7 @@ const MidFooter = () => {
               <ul className="footer-list mb-sm-5 mb-md-0 text-start">
                 {CategoryData.map((category, index) => (
                   <li key={index}>
-                    <Link to={`/product-list/${category._id}`}>
+                    <Link to={`/product-list/${category._id}/categoryId`} onClick={scrollToTop}>
                       {" "}
                       {/* <img src={logo} alt /> */}
                       {category.name}
@@ -169,16 +173,16 @@ const MidFooter = () => {
               </h4>
               <ul className="footer-list mb-sm-5 mb-md-0 text-start">
                 <li>
-                  <Link to="/contact-us">Contact Us</Link>
+                  <Link to="/contact-us" onClick={scrollToTop}>Contact Us</Link>
                 </li>
                 <li>
-                  <Link to="/faq">FAQ's</Link>
+                  <Link to="/faq" onClick={scrollToTop}>FAQ's</Link>
                 </li>
                 <li>
-                  <Link to="/return-policy">Return Policy</Link>
+                  <Link to="/return-policy" onClick={scrollToTop}>Return Policy</Link>
                 </li>
                 <li>
-                  <Link to="/terms-condition">Terms &amp; Conditions</Link>
+                  <Link to="/terms-condition" onClick={scrollToTop}>Terms &amp; Conditions</Link>
                 </li>
               </ul>
             </Col>
@@ -223,7 +227,7 @@ const MidFooter = () => {
                   Copyright © 2023,
                   <strong className=" fw-bold"> Pushti Shangar</strong> , All
                   rights reserved
-                </p>
+                </p>  
               </div>
               <div>
                 <p className="font-sm mb-0 text-start d-block text-white">

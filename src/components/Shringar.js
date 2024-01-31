@@ -25,7 +25,7 @@ const Shringar = () => {
   const authToken = localStorage.getItem("authToken");
 
   const Getproduct = async (id) => {
-    const res = await GetProductsbyCategoryId(id);
+    const res = await GetProductsbyCategoryId("categoryId",id);
     // console.log(res);
 
     const categoryRes = await getCategories();
@@ -170,7 +170,7 @@ const Shringar = () => {
           </div>
           <div className="col text-end d-flex align-items-center justify-content-end">
             <Link
-              to={`/product-list/${id}`}
+              to={`/product-list/${id}/categoryId`}
               className="mb-2"
               target="_blank"
               rel="noopener noreferrer"

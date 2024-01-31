@@ -24,7 +24,7 @@ import SignContext from "../../contextAPI/Context/SignContext";
 const ProductList = () => {
   const originalData = useRef(null);
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  const { id } = useParams();
+  const {filtrationField, id } = useParams();
   const navigate = useNavigate();
   const {
     GetProductsbyCategoryId,
@@ -44,8 +44,8 @@ const ProductList = () => {
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
 
-  const Getproduct = async (id) => {
-    const res = await GetProductsbyCategoryId(id);
+  const Getproduct = async (filtrationField,id) => {
+    const res = await GetProductsbyCategoryId(filtrationField,id);
     console.log(res);
 
     const categoryRes = await getCategories();
@@ -359,7 +359,7 @@ const getFilteredItems = async (_id) => {
   };
 
   useEffect(() => {
-    Getproduct(id);
+    Getproduct(filtrationField,id);
     GetLoggedInCustomer(authToken);
     GetMaterials();
     GetSeasons();

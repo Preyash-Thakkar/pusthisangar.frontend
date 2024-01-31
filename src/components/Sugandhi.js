@@ -26,7 +26,7 @@ const Sugandhi = () => {
   const authToken = localStorage.getItem("authToken");
 
   const Getproduct = async (id) => {
-    const res = await GetProductsbyCategoryId(id);
+    const res = await GetProductsbyCategoryId("categoryId",id);
     // console.log(res);
 
     const categoryRes = await getCategories();
@@ -165,7 +165,7 @@ const Sugandhi = () => {
           </div>
           <div className="col text-end d-flex align-items-center justify-content-end">
             <Link
-              to={`/product-list/${id}`}
+              to={`/product-list/${id}/categoryId`}
               className="mb-2"
               target="_blank"
               rel="noopener noreferrer"
@@ -201,7 +201,7 @@ const Sugandhi = () => {
                 ? products.map((product) => (
                     <div key={product.id}>
                       <Link
-                        to={`/product-details/${product._id}`}
+                        to={`/product-details/${product._id}/categoryId`}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
