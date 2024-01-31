@@ -267,7 +267,7 @@ const NewArrival = (props) => {
                                   onClick={() => {
                                     handleCartClick(product._id);
                                   }}
-                                  target="_blank"
+                                  
                                   rel="noopener noreferrer"
                                 >
                                   <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
