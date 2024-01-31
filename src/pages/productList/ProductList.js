@@ -74,6 +74,27 @@ const ProductList = () => {
   //   setQueryParams(updatedQueryParams);
   // };
 
+  const getFilteredItems = async () => {
+    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
+
+    console.log("what is value", QueryParams);
+    const queryString = Object.entries(QueryParams)
+      .map(([key, value]) => `${key}=${value}`)
+      .join("&");
+
+    const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+    console.log(fullUrl);
+
+    try {
+      const response = await axios.post(fullUrl);
+      console.log("res filter product by price",response.data);
+      if (response.data.success) setProductData(response.data.products);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const GetColors = async () => {
     const res = await getColors();
     console.log(res);
@@ -137,27 +158,12 @@ const ProductList = () => {
     const updatedColors = selectedColors.includes(selectedColor)
       ? selectedColors.filter((color) => color !== selectedColor)
       : [...selectedColors, selectedColor];
-  
+
     // Update the selected colors state
     setSelectedColors(updatedColors);
-  
-    // Log the updated colors for debugging
-    console.log("Updated Colors:", updatedColors);
-  
-    // Filter products based on the selected colors locally
-    const filteredProducts = ProductData.filter((product) => {
-      const isIncluded = updatedColors.includes(product.productColor);
-      console.log(
-        `Product: ${product.productName}, Color: ${product.productColor}, Included: ${isIncluded}`
-      );
-      return isIncluded;
-    });
-    
-    // Log the filtered products for debugging
-    console.log("Filtered Products:", filteredProducts);
-  
-    // Update the displayed products
-    setProductData(filteredProducts);
+
+    // Update the query parameters with the selected colors
+    changeQueryparams("color", updatedColors.join(",")); // Join selected colors with commas
   };
 
   const handleSeasonChange = (selectedseason) => {
@@ -214,29 +220,6 @@ const changeQueryparams = (min, max) => {
   setQueryParams(updatedQueryParams);
 };
 
-
-const getFilteredItems = async (_id) => {
-  console.log("hejhje",_id);
-  const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${_id}`;
-
-  console.log("what is value", QueryParams);
-  const queryString = Object.entries(QueryParams)
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
-
-  const fullUrl = queryString ? `${url}?${queryString}` : url;
-
-  console.log(fullUrl);
-
-  try {
-    const response = await axios.post(fullUrl);
-    console.log("res filter product by price",response.data);
-    if (response.data.success) setProductData(response.data.products);
-  } catch (error) {
-    console.error("Error fetching data:", error);
-  }
-};
-
   const handleCategoryChange = (selectedCategory) => {
     // console.log(selectedCategory)
     changeQueryparams("category", selectedCategory);
@@ -281,27 +264,19 @@ const getFilteredItems = async (_id) => {
   // };
 
   const handleSortByChange = (value) => {
+    // If original data is not set, store the current order as the original order
+    if (!originalData.current) {
+      originalData.current = [...ProductData];
+      console.log("preyash",ProductData)
+    }
+
     setSelectedSortBy(value);
 
     // Sort the product data based on the selected option
-    const sortedData = [...ProductData];
-    const newSortedData = [...ProductData];
-    
+    const sortedData = [...originalData.current];
+
     if (value === "newIn") {
-      sortedData.sort((a, b) => {
-        // Sort by creation date in descending order
-        return new Date(b.createdAt) - new Date(a.createdAt);
-      });
-    
-      // Filter products that are marked as new
-      const newInProducts = sortedData.filter(product => product.isProductNew);
-    
-      // Update the sorted data with only new products
-      // Assuming you want to update the sortedData array directly
-      // If you use sortedData(newInProducts), it will result in an error
-      sortedData.length = 0; // Clear the original array
-      sortedData.push(...newInProducts); // Push new products into the array
-    
+      sortedData.reverse();
     } else if (value === "priceLowestFirst") {
       sortedData.sort((a, b) => {
         const priceA = a.prices.discounted || a.prices.calculatedPrice;
@@ -314,7 +289,10 @@ const getFilteredItems = async (_id) => {
         const priceB = b.prices.discounted || b.prices.calculatedPrice;
         return priceB - priceA;
       });
+    } else if (value === "") {
+      console.log("clicked");
     }
+
     setProductData(sortedData);
   };
 
@@ -366,9 +344,9 @@ const getFilteredItems = async (_id) => {
     GetColors();
   }, [id, authToken]);
 
-  useEffect(() => {
-    getFilteredItems(id);
-  }, [id,selectedCategory, QueryParams, selectedColors,selectedPriceRange]);
+  // useEffect(() => {
+  //   getFilteredItems();
+  // }, [selectedCategory, QueryParams, selectedColors]);
 
   return (
     <div>
