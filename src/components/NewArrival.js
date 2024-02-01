@@ -28,7 +28,6 @@ const NewArrival = (props) => {
 
   // const getLoggedinCustomerCart = async (CustomerId) => {
   //   const res = await GetLoggedInCartItems(CustomerId);
-  //   // console.log("get cart", res);
   //   if (res.success) {
   //     setCartData(res.cartItems);
   //   }
@@ -121,7 +120,7 @@ const NewArrival = (props) => {
       },
     ],
   };
-  // console.log(CustomerInfo._id)
+
   const handleCartClick = async (id) => {
     try {
       if (authToken) {
@@ -135,7 +134,6 @@ const NewArrival = (props) => {
 
         if (res.success) {
           // Cart updated successfully
-          console.log("Cart updated successfully");
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",

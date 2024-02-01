@@ -19,7 +19,6 @@ const GalleryDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const arrayOfGallery = useSelector((state) => state.galleryCategoryList);
-  console.log(arrayOfGallery);
   const filteredArray = arrayOfGallery.filter(
     (item) => item.galleryCategory === id
   );
@@ -39,7 +38,6 @@ const GalleryDetails = () => {
         .then((res) => {
           const responseData = res.data.data;
           if (Array.isArray(responseData) && responseData.length === 0) {
-            console.log("Received an empty array from the server.");
           } else {
             dispatch(storeGalleryCategory(responseData));
           }
@@ -55,8 +53,6 @@ const GalleryDetails = () => {
       if (arrayOfGallery.length === 0) {
         await getAllGallerys();
       }
-
-      console.log(filteredArray);
       setGalleryFilterdPosts(filteredArray);
     };
 
@@ -66,16 +62,11 @@ const GalleryDetails = () => {
   const openSlider = (index) => {
     setSelectedImageIndex(index);
     setIsOpen(true);
-    console.log(index)
   };
 
   const closeSlider = () => {
     setIsOpen(false);
   };
-
-  console.log(filterdPosts);
-
-
 
   return (
     <React.Fragment>

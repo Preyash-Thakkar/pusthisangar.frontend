@@ -46,7 +46,6 @@ const MyAddress = () => {
     validationSchema,
     onSubmit: (values) => {
       // Handle form submission here
-      console.log('Form values:', values);
     },
   });
 

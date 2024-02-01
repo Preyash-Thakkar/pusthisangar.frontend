@@ -16,7 +16,6 @@ const MyOrder = () => {
 
   const getOrderHistorybyId = async (id) => {
     const res = await GetorderHistorybyId(id);
-    console.log(res)
     if (res.success) {
       setOrderData(res.orderHistory);
     }

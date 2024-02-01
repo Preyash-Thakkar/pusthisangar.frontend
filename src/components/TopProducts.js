@@ -25,16 +25,15 @@ const TopProducts = () => {
 
   const Getproduct = async () => {
     const res = await getProducts();
-    // console.log(res);
 
     const categoryRes = await getCategories();
-    // console.log(categoryRes)
+   
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
         mapping[category._id] = category.name;
       });
-      // console.log(mapping)
+    
       setCategoryNameMapping(mapping);
     }
 
@@ -43,11 +42,10 @@ const TopProducts = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    // console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
-      // console.log(res.msg);
+     
     }
   };
 
@@ -128,8 +126,6 @@ const TopProducts = () => {
         const res = await addToCart(customerId, cartInfo);
 
         if (res.success) {
-          // Cart updated successfully
-          console.log("Cart updated successfully");
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",

@@ -26,10 +26,9 @@ const Shringar = () => {
 
   const Getproduct = async (id) => {
     const res = await GetProductsbyCategoryId("categoryId",id);
-    // console.log(res);
 
     const categoryRes = await getCategories();
-    // console.log(categoryRes);
+ 
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
@@ -52,7 +51,7 @@ const Shringar = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    // console.log(res);
+
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -135,7 +134,6 @@ const Shringar = () => {
 
         if (res.success) {
           // Cart updated successfully
-          console.log("Cart updated successfully");
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",

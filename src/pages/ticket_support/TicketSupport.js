@@ -41,8 +41,6 @@ const TicketSupport = () => {
     },
     validationSchema,
     onSubmit: (values) => {
-      // Handle form submission here
-      console.log('Form values:', values);
       const newTicket = {
         id: tickets.length + 1,
         ticketNumber: `TKT-${Math.floor(Math.random() * 10000)}`,

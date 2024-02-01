@@ -27,10 +27,8 @@ const Sugandhi = () => {
 
   const Getproduct = async (id) => {
     const res = await GetProductsbyCategoryId("categoryId",id);
-    // console.log(res);
 
     const categoryRes = await getCategories();
-    // console.log(categoryRes);
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
@@ -39,7 +37,6 @@ const Sugandhi = () => {
           setCategoryImage(category.image);
         }
       });
-      console.log(mapping);
       setCategoryNameMapping(mapping);
     }
 
@@ -52,7 +49,6 @@ const Sugandhi = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    // console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -129,8 +125,7 @@ const Sugandhi = () => {
         const res = await addToCart(customerId, cartInfo);
 
         if (res.success) {
-          // Cart updated successfully
-          console.log("Cart updated successfully");
+  
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",

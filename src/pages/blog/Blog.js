@@ -33,8 +33,6 @@ const Blog = () => {
 
   const getAllBlogs = async (id) => {
     const res = await GetBlogbyCategoryId(id);
-    console.log(res);
-
     setBlogData(res.data);
   };
 
@@ -47,7 +45,6 @@ const Blog = () => {
     } else {
       // If BlogData is not empty, set it, and log it
       setBlogPosts(BlogData);
-      console.log(BlogData);
     }
   }, [id, BlogData]);
 
