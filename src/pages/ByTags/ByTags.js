@@ -139,6 +139,8 @@ const ByTags = () => {
       setSelectedPriceRange(null); 
       setSelectedCategory("All Categories"); 
       setSelectedShopBy([]); 
+      setSelectedSeason([]);
+      setSelectedMaterial([]);
       setShowFilters(false);
       Getproduct();
     };
