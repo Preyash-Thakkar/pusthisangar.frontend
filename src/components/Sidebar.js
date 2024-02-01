@@ -142,7 +142,6 @@ const Sidebar = () => {
         `${url}/product/getproductbytags?tag=${tag}`
       );
       const { success, products } = response.data;
-      console.log(response.data);
       if (success) {
         setProducts(products);
       } else {
@@ -158,12 +157,10 @@ const Sidebar = () => {
 
   const handleSignout = async () => {
     localStorage.removeItem("authToken");
-    console.log("authToken Removed");
   };
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    // console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -173,7 +170,6 @@ const Sidebar = () => {
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
-    // console.log("get cart", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -185,9 +181,7 @@ const Sidebar = () => {
       const res = await removeItemFromCart(customerId, productId);
 
       if (res.success) {
-        // Cart updated successfully
-        console.log("Cart updated successfully");
-        // navigate(`/cart/${customerId}`);
+
       } else {
         // Handle the error
         console.error(res.msg);

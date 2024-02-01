@@ -37,13 +37,11 @@ const BlogDetails = () => {
 
   const Getcategories = async () => {
     const res = await getBlogCategories();
-    console.log(res);
     setCategoryData(res.blogCategories);
   };
 
   const getAllBlogs = async (id) => {
     const res = await getBlogbyId(id);
-    console.log(res)
     if (res && res.recordExists) {
       setBlogData(res.recordExists);
       setSelectedBlogPost(res.recordExists);

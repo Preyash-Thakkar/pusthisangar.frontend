@@ -14,7 +14,6 @@ const Faq = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetFAQs();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);

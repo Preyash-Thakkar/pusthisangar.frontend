@@ -22,7 +22,6 @@ const Signup = () => {
 
   const handleSignupSubmit = async (Values) => {
     const res = await createCustomer(Values);
-    // console.log(res);
     if (res.success) {
       navigate("/login");
     }

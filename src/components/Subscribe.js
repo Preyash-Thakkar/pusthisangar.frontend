@@ -12,7 +12,6 @@ const Subscribe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await AddSubscribe({ email });
-    console.log(res);
     if (res.success) {
       
       Swal.fire({
@@ -34,13 +33,8 @@ const Subscribe = () => {
     }
   };
 
-
-
-
-
   const getaboutUsContent = async () => {
     const res = await GetMidfooter();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);

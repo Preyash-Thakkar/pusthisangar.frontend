@@ -44,7 +44,6 @@ const Gallery = () => {
       getAllGallerys();
     }
     setGalleryFilterdPosts(arrayOfGallery);
-    console.log(arrayOfGallery);
   }, []);
 
   return (

@@ -24,15 +24,12 @@ const Wishlist = () => {
   const authToken = localStorage.getItem("authToken");
 
   useEffect(() => {
-    console.log("customerId:", id);
     getLoggedinWishlist(id);
     GetLoggedInCustomer(authToken);
-    console.log("inside useeffect");
   }, [id , authToken]);
 
   const getLoggedinWishlist = async (CustomerId) => {
     const res = await GetLoggedInWishlistItems(CustomerId);
-    console.log("get cart", res);
     if (res.success) {
       setWishlistData(res.wishlistItems);
     }

@@ -34,7 +34,6 @@ const Login = () => {
 
   const handleLogin = async (Values) => {
     const res = await loginCustomer(Values);
-    // console.log(res);
     if (res.success) {
       window.localStorage.setItem("loggedIn", true);
       window.localStorage.setItem("authToken", res.token);

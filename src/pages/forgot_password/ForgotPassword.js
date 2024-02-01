@@ -17,7 +17,6 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const res = await forgotCustomerPassword(CustomerInfo);
-    console.log(res)
     if (res.success) {
       setSuccess(res.msg);
     } else {

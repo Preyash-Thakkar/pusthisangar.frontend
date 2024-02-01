@@ -14,8 +14,6 @@ const Disclaimer = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetDisclaimer();
-    console.log(res);
-
     if (res.success) {
       setContentData(res.content);
     }

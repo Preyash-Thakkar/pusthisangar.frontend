@@ -18,7 +18,6 @@ const AboutUs = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetAboutUsContent();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);

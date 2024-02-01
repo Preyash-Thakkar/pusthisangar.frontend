@@ -34,7 +34,6 @@ const MyProfile = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("username");
     localStorage.removeItem("loggedIn");
-    console.log("authToken Removed");
     
   };
 
@@ -43,7 +42,6 @@ const MyProfile = () => {
 
     try {
       const updateResult = await UpdateCustomer(id, CustomerInfo.username);
-      console.log(updateResult);
       if (updateResult.success) {
         // Update the state with the new username
         setCustomerInfo(updateResult.customer);
@@ -66,7 +64,6 @@ const MyProfile = () => {
   
       if (passwordResult.success) {
         // Handle success, e.g., show a success message
-        console.log("Password updated successfully");
         resetForm();
       } else {
         // Handle the case where the password update fails
@@ -81,7 +78,6 @@ const MyProfile = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -95,7 +91,6 @@ const MyProfile = () => {
     GetLoggedInCustomer(authToken);
   }, [authToken]);
 
-  console.log(CustomerInfo)
 
   return (
     <div>

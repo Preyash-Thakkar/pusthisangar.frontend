@@ -14,7 +14,7 @@ const OfferPart = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetMidBanner();
-    console.log(res);
+
 
     if (res.success) {
       setContentData(res.content);
@@ -22,7 +22,6 @@ const OfferPart = () => {
   };
   const getaboutUsContent2 = async () => {
     const res = await GetMidBannertwo();
-    console.log(res);
 
     if (res.success) {
       setContent2Data(res.content);
@@ -30,7 +29,6 @@ const OfferPart = () => {
   };
   const getaboutUsContent3 = async () => {
     const res = await GetMidBannerthree();
-    console.log(res);
 
     if (res.success) {
       setContent3Data(res.content);

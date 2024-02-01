@@ -88,7 +88,7 @@ const Category = ({ background }) => {
 
   const Getcategories = async () => {
     const res = await getCategories();
-    // console.log(res);
+    
     if (res !== undefined) {
       const transformedData = res.map((category, index) => ({
         ...category,
@@ -97,8 +97,6 @@ const Category = ({ background }) => {
       setCategoryData(transformedData);
     }
   };
-
-  console.log("whats thr data",CategoryData);
 
   const handlecategoryClick = () => {
     // Use navigate to go to the cart page

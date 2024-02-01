@@ -4,7 +4,6 @@ import React, { useState } from "react";
 
 export const SignState = (props) => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  // console.log(url)
   // const url = `http://localhost:5000`;
 
   // create customer
@@ -360,11 +359,9 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
 
   const GetAllVarProducts = async (otherVaraitions) => {
     try {
-      console.log(otherVaraitions);
       const response = await axios.post(`${url}/product/getvarproduct`, {
         productIds: otherVaraitions,
       });
-      console.log(response.data);
       return response.data;
     } catch (error) {
       return { success: false, msg: "server Error" };

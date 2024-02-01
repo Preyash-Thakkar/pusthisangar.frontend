@@ -25,14 +25,11 @@ const Cart = () => {
   
 
   useEffect(() => {
-    console.log("customerId:", id);
     getLoggedinCustomerCart(id);
-    console.log("inside useeffect");
   }, [id]);
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
-    console.log("get cart", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -41,7 +38,6 @@ const Cart = () => {
 
   const handleRemoveAll = async () => {
     const res = await RemoveAllItemsFromCart(id);
-    console.log("get cart", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -51,10 +47,7 @@ const Cart = () => {
     try {
       const customerId = id; // Replace with the actual customer ID
       const res = await UpdateCartItem(customerId, { cartItems: CartData });
-      console.log(res);
       if (res.success) {
-        
-        console.log("Cart updated successfully");
         
       } else {
       
@@ -163,9 +156,6 @@ const Cart = () => {
         return acc + totalPriceWithGST;
       }, 0)
     : null;
-
-  console.log("cart", CartData);
-  console.log("tax", productTax);
 
   return (
     <>

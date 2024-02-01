@@ -30,7 +30,6 @@ const Blog = () => {
 
   const getAllBlogsCategories = async () => {
     const res = await getBlogCategories();
-    console.log(res);
     setCategoryData(res.blogCategories);
   };
 
@@ -40,7 +39,6 @@ const Blog = () => {
     if (CategoryData.length === 0) {
         getAllBlogsCategories();}
     setBlogPosts(CategoryData)
-    console.log(CategoryData)
   }, [CategoryData]);
 
   return (

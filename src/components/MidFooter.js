@@ -55,7 +55,7 @@ const MidFooter = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
+   
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -65,7 +65,7 @@ const MidFooter = () => {
 
   const handleSignout = async () => {
     localStorage.removeItem("authToken");
-    console.log("authToken Removed");
+
   };
 
   useEffect(() => {

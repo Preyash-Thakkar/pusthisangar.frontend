@@ -16,7 +16,6 @@ const Terms_Condition = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetTermsCondition();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);

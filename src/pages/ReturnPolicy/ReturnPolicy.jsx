@@ -14,7 +14,6 @@ const ReturnPolicy = () => {
 
   const getaboutUsContent = async () => {
     const res = await GeReturnPolicy();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);
