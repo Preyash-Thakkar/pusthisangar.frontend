@@ -74,29 +74,29 @@ const ProductList = () => {
     "currentSubSubCategoryId"
   );
   const getFilteredItems = async (id, subcategoryId, subsubcategoryId) => {
-
-    // Check if subcategoryId is a valid ObjectId
-    const parsedSubcategoryId =
-      subcategoryId.length === 24 ? subcategoryId : null;
+    console.log("id",id);
+    console.log("subcategoryid",subcategoryId);
+    console.log("subsub",subsubcategoryId);
+  
 
     let url;
     if (
       subsubcategoryId !== null &&
-      parsedSubcategoryId !== "null" &&
+      subcategoryId !== "null" &&
       id !== null
     ) {
       // If all three are defined, use this API
       url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${id}/${subcategoryId}/${subsubcategoryId}`;
     } else if (
       id !== null &&
-      parsedSubcategoryId !== "null" &&
+      subcategoryId !== "null" &&
       subsubcategoryId === null
     ) {
       // If subcategoryId and id are defined, and subsubcategoryId is null, use this API
       url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${id}/${subcategoryId}`;
     } else if (
       id !== null &&
-      parsedSubcategoryId === "null" &&
+      subcategoryId === "null" &&
       subsubcategoryId === null
     ) {
       // If only id is defined and subcategoryId and subsubcategoryId are null, use this API
