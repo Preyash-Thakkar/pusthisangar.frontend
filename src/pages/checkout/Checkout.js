@@ -86,7 +86,6 @@ const Checkout = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -96,7 +95,6 @@ const Checkout = () => {
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
-    console.log("get cart", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -113,7 +111,6 @@ const Checkout = () => {
 
   const Getcoupons = async () => {
     const res = await GetallCoupons();
-    console.log(res);
 
     const transformedData = res.coupons.map((coupons, index) => ({
       ...coupons,
@@ -124,7 +121,6 @@ const Checkout = () => {
 
   const handleApplyCoupon = (couponId) => {
     const selectedCoupon = coupons.find((coupon) => coupon._id === couponId);
-    console.log(selectedCoupon);
     setSelectedCoupon(selectedCoupon);
 
     const newDiscountedTotal = calculateDiscountedTotal(
@@ -165,7 +161,6 @@ const Checkout = () => {
 
   const handleRemoveAll = async () => {
     const res = await RemoveAllItemsFromCart(id);
-    console.log("get cart", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -214,7 +209,6 @@ const Checkout = () => {
         );
         const totalPriceWithGST =
           quantity * discountedPrice + (quantity * discountedPrice * gst) / 100;
-        // console.log(`Item: ${item.product.name}, Quantity: ${quantity}, Discounted Price: ${discountedPrice}, GST: ${gst}%, Total Price with GST: ${totalPriceWithGST}`);
         // Check for NaN or invalid values
         if (isNaN(quantity) || isNaN(discountedPrice)) {
           return acc; 
@@ -301,9 +295,7 @@ const handlePayment = async (values) => {
 
       // Make API call
       const response = await axios.post(`${url}/api/payment`, { ...data });
-      console.log(response);
-
-     
+   
       const newTab = window.open(response.data.url, '_blank');
 
       if (newTab) {
@@ -350,7 +342,6 @@ const handlePayment = async (values) => {
     Getcoupons();
   }, [CustomerInfo._id]);
 
-  // console.log(typeof tPwithGST);
 
   return (
     <div>
@@ -425,7 +416,6 @@ const handlePayment = async (values) => {
                 setName(values.firstName);
                 setPhone(values.phone);
                   if (response.success) {
-                    console.log("Order", response);
                     Swal.fire({
                       icon: "success",
                       title:

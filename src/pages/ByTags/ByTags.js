@@ -54,7 +54,6 @@ const ByTags = () => {
             `${url}/product/getproductbytags?tag=${tags}`
           );
           const { success, products } = response.data;
-          console.log(response.data);
           if (success) {
             setProductData(products);
           } else {
@@ -77,7 +76,6 @@ const ByTags = () => {
       }
     
       const updatedQueryParams = { priceRange };
-      console.log("Updated Price Range inside changeQueryparams:", priceRange);
       setQueryParams(updatedQueryParams);
     };
   
@@ -94,7 +92,6 @@ const ByTags = () => {
   
       try {
         const response = await axios.post(fullUrl);
-        console.log(response.data);
         if (response.data.success) setProductData(response.data.products);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -103,25 +100,21 @@ const ByTags = () => {
   
     const GetColors = async () => {
       const res = await getColors();
-      console.log(res);
       setColorData(res.colors);
     };
   
     const GetMaterials = async () => {
       const res = await getMaterials();
-      console.log(res);
       setMaterialData(res.material);
     };
   
     const GetSeasons = async () => {
       const res = await getSeasons();
-      console.log(res);
       setSeasonData(res.season);
     };
   
     const GetLoggedInCustomer = async (token) => {
       const res = await getLoggedInCustomer(token);
-      console.log(res);
       if (res.success) {
         setCustomerInfo(res.customer);
       } else {
@@ -146,6 +139,8 @@ const ByTags = () => {
       setSelectedPriceRange(null); 
       setSelectedCategory("All Categories"); 
       setSelectedShopBy([]); 
+      setSelectedSeason([]);
+      setSelectedMaterial([]);
       setShowFilters(false);
       Getproduct();
     };
@@ -197,9 +192,6 @@ const ByTags = () => {
       changeQueryparams(min, max);
   
       // Log to check the updated state
-      console.log("handlePriceChange Selected Price Range:", range);
-      console.log("handlePriceChange Parsed Min and Max:", [min, max]);
-      console.log("handlePriceChange Updated QueryParams:", QueryParams);
   
       try {
           // Fetch products based on the price range
@@ -213,7 +205,6 @@ const ByTags = () => {
   
     
     const handleMaterialChange = (selectedmaterial) => {
-      // console.log(selectedCategory)
       changeQueryparams("material", selectedmaterial);
       setSelectedMaterial(selectedmaterial);
     };
@@ -240,7 +231,6 @@ const ByTags = () => {
           return priceB - priceA;
         });
       }else if (value === "") {
-        console.log("clicked")
       }
       setProductData(sortedData);
     };
@@ -261,7 +251,6 @@ const ByTags = () => {
     
           if (res.success) {
             // Cart updated successfully
-            console.log("Cart updated successfully");
             Swal.fire({
               icon: 'success',
               title: 'Item Added to Cart',

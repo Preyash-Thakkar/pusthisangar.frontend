@@ -26,6 +26,9 @@ const Header = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
   const [username, setUsername] = useState("");
   const [CartData, setCartData] = useState([]);
+  const [currentSubCategoryId, setCurrentSubCategoryId] = useState(null);
+const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
+
   const {
     createCustomer,
     loginCustomer,
@@ -74,7 +77,7 @@ const Header = () => {
         `${url}/product/getproductbytags?tag=${tag}`
       );
       const { success, products } = response.data;
-      console.log(response.data);
+     
       if (success) {
         setProducts(products);
       } else {
@@ -90,7 +93,7 @@ const Header = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    // console.log(res);
+    
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -100,7 +103,7 @@ const Header = () => {
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
-    // console.log("get cart", res);
+   
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -110,7 +113,7 @@ const Header = () => {
     try {
       const customerId = CustomerInfo._id;
       const res = await removeItemFromCart(customerId, productId);
-      // console.log(productId)
+      
       if (res.success) {
         console.log("Cart updated successfully");
       } else {
@@ -125,7 +128,6 @@ const Header = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("username");
     localStorage.removeItem("loggedIn");
-    console.log("authToken Removed");
   };
 
   const handleModalClose = () => {
@@ -165,27 +167,19 @@ const Header = () => {
     setCategoryDropdownOpen(true);
     setIsOpen(true);
     const data = await GetsubandsubSubcategory(categoryId);
-    console.log("Whole", data.categoriesWithSubCategoriesAndSubSubCategories);
-    // console.log("Latest", data.categoriesWithSubCategoriesAndSubSubCategories);
-    // console.log("ok", data.categoriesWithSubCategoriesAndSubSubCategories);
     setSelectedCategory(data.categoriesWithSubCategoriesAndSubSubCategories);
   };
   // useEffect(() => {
-  //   console.log("Big data", selectedSubCategory);
   // }, [selectedSubCategory]);
 
   const handleSubCategoryHover = async (index, subcategory) => {
     setSubActiveIndex(index);
     setSubSubMenuDropdownOpen(true);
-    console.log("dhr", isSubSubMenuDropdownOpen);
-    console.log("subcategory", subcategory);
-
+  
     try {
       const data = subcategory;
-
-      console.log("data", data); // Log the data for debugging
       setSelectedSubCategory(subcategory.subsubcategories);
-      console.log("Setted", selectedSubCategory);
+      setCurrentSubCategoryId(subcategory._id); // Set the currentSubCategoryId here
     } catch (error) {
       console.error("Error fetching subsubcategories", error);
     }
@@ -209,14 +203,16 @@ const Header = () => {
     setMegaMenuDropdownOpen(false);
   };
 
-  const handleSubSubMenuHover = () => {
+  const handleSubSubMenuHover = (subsubcategory) => {
     setSubSubMenuDropdownOpen(true);
     setMegaMenuDropdownOpen(true);
     setIsOpen(true);
+    setCurrentSubSubCategoryId(subsubcategory._id); // Set the currentSubSubCategoryId here
   };
 
   const handleSuSubMenuLeave = () => {
     setSubSubMenuDropdownOpen(false);
+    //localStorage.removeItem('currentSubSubCategoryId');
   };
 
   const handleCartHover = () => {
@@ -266,7 +262,7 @@ const Header = () => {
 
   const handleLogin = async (Values) => {
     const res = await loginCustomer(Values);
-    // console.log(res);
+    
     if (res.success) {
       window.localStorage.setItem("loggedIn", true);
       window.localStorage.setItem("authToken", res.token);
@@ -283,7 +279,6 @@ const Header = () => {
   const handleForgotPasswordSubmit = async (Values) => {
     try {
       const res = await forgotCustomerPassword(Values);
-      console.log(res);
 
       if (res.success) {
         setSuccess(res.msg);
@@ -308,7 +303,7 @@ const Header = () => {
 
   const handleSignupSubmit = async (Values) => {
     const res = await createCustomer(Values);
-    // console.log(res);
+ 
     if (res.success) {
       handleLoginClick();
     }
@@ -336,20 +331,21 @@ const Header = () => {
     }
   };
 
-  // console.log("get categories 1234",getCategories);
-
   useEffect(() => {
     GetLoggedInCustomer(authToken);
     getLoggedinCustomerCart(CustomerInfo._id);
+    localStorage.setItem('currentSubCategoryId', currentSubCategoryId);
+   // localStorage.setItem('currentSubSubCategoryId', JSON.stringify(currentSubSubCategoryId));
     Getcategories();
     const getStoredUsername = () => {
       const storedUsername = window.localStorage.getItem("username");
       if (storedUsername) {
         setUsername(storedUsername);
       }
+      
     };
     getStoredUsername();
-  }, [CustomerInfo._id, selectedCategory]);
+  }, [CustomerInfo._id, selectedCategory,currentSubCategoryId,currentSubSubCategoryId]);
 
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -1137,7 +1133,7 @@ const Header = () => {
                           <li
                             key={index}
                             onMouseEnter={() =>
-                              handleCategoryHover(category._id, index)
+                              handleCategoryHover(category._id, index,localStorage.removeItem("currentSubSubCategoryId"))
                             }
                             onMouseLeave={() => {
                               handleCategoryLeave();
@@ -1170,18 +1166,18 @@ const Header = () => {
                                           onMouseEnter={() =>
                                             handleSubCategoryHover(
                                               sindex,
-                                              subcategory
+                                              subcategory,
+                                              localStorage.removeItem("currentSubSubCategoryId")
                                             )
+                                            
                                           }
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
 
-                                          <Link
-                                            to={`/product-list/${subcategory._id}/subCategoryId`}
-                                          >
-                                            {subcategory.name}
-                                          </Link>
+                                        <Link to={`/product-list/${currentSubCategoryId}/subCategoryId`}>
+                                          {subcategory.name}
+                                        </Link>
 
                                      
                                         </li>
@@ -1198,12 +1194,17 @@ const Header = () => {
                                             <li
                                               key={subsubcategory._id}
                                               className="sub-category-item"
+                                              onClick={() => {
+                                                setCurrentSubSubCategoryId(subsubcategory._id);
+                                                localStorage.setItem('currentSubSubCategoryId',(subsubcategory._id))
+                                              } }
+                                              // onMouseLeave={() => {
+                                              //   localStorage.removeItem("currentSubSubCategoryId") ;
+                                              // }}
                                             >
-                                              <Link
-                                                to={`/product-list/${subsubcategory._id}/subSubCategory`}
-                                              >
-                                                {subsubcategory.name}
-                                              </Link>
+                                             <Link to={`/product-list/${subsubcategory._id}/subSubCategory`}>
+                                              {subsubcategory.name}
+                                            </Link>
                                             </li>
                                           )
                                         )}

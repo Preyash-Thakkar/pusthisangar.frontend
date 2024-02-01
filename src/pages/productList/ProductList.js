@@ -24,7 +24,7 @@ import SignContext from "../../contextAPI/Context/SignContext";
 const ProductList = () => {
   const originalData = useRef(null);
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  const {filtrationField, id } = useParams();
+  const { filtrationField, id } = useParams();
   const navigate = useNavigate();
   const {
     GetProductsbyCategoryId,
@@ -35,6 +35,7 @@ const ProductList = () => {
     getSeasons,
     addToCart,
   } = useContext(SignContext);
+  // const { _id, subcategoryId, subsubcategoryId } = useParams();
   const [ProductData, setProductData] = useState([]);
   const [ColorData, setColorData] = useState([]);
   const [MaterialData, setMaterialData] = useState([]);
@@ -43,19 +44,15 @@ const ProductList = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
-
-  const Getproduct = async (filtrationField,id) => {
-    const res = await GetProductsbyCategoryId(filtrationField,id);
-    console.log(res);
+  const Getproduct = async (filtrationField, id) => {
+    const res = await GetProductsbyCategoryId(filtrationField, id);
 
     const categoryRes = await getCategories();
-    console.log(categoryRes);
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
         mapping[category._id] = category.name;
       });
-      console.log(mapping);
       setCategoryNameMapping(mapping);
     }
 
@@ -64,7 +61,6 @@ const ProductList = () => {
     //   id: index + 1,
     // }));
     setProductData(res.products);
-    console.log("productd",res.products);
   };
 
   // const changeQueryparams = (parameter, value) => {
@@ -73,22 +69,47 @@ const ProductList = () => {
 
   //   setQueryParams(updatedQueryParams);
   // };
+  const storedSubcategoryId = localStorage.getItem("currentSubCategoryId");
+  const storedSubsubcategoryId = localStorage.getItem(
+    "currentSubSubCategoryId"
+  );
+  const getFilteredItems = async (id, subcategoryId, subsubcategoryId) => {
+    console.log("id",id);
+    console.log("subcategoryid",subcategoryId);
+    console.log("subsub",subsubcategoryId);
+  
 
-  const getFilteredItems = async () => {
-    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
-
-    console.log("what is value", QueryParams);
+    let url;
+    if (
+      subsubcategoryId !== null &&
+      subcategoryId !== "null" &&
+      id !== null
+    ) {
+      // If all three are defined, use this API
+      url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${id}/${subcategoryId}/${subsubcategoryId}`;
+    } else if (
+      id !== null &&
+      subcategoryId !== "null" &&
+      subsubcategoryId === null
+    ) {
+      // If subcategoryId and id are defined, and subsubcategoryId is null, use this API
+      url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${id}/${subcategoryId}`;
+    } else if (
+      id !== null &&
+      subcategoryId === "null" &&
+      subsubcategoryId === null
+    ) {
+      // If only id is defined and subcategoryId and subsubcategoryId are null, use this API
+      url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforpriceByCategory/${id}`;
+    }
     const queryString = Object.entries(QueryParams)
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
 
     const fullUrl = queryString ? `${url}?${queryString}` : url;
 
-    console.log(fullUrl);
-
     try {
       const response = await axios.post(fullUrl);
-      console.log("res filter product by price",response.data);
       if (response.data.success) setProductData(response.data.products);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -97,25 +118,21 @@ const ProductList = () => {
 
   const GetColors = async () => {
     const res = await getColors();
-    console.log(res);
     setColorData(res.colors);
   };
 
   const GetMaterials = async () => {
     const res = await getMaterials();
-    console.log(res);
     setMaterialData(res.material);
   };
 
   const GetSeasons = async () => {
     const res = await getSeasons();
-    console.log(res);
     setSeasonData(res.season);
   };
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -140,6 +157,8 @@ const ProductList = () => {
     setSelectedPriceRange(null);
     setSelectedCategory("All Categories");
     setSelectedShopBy([]);
+    setSelectedSeason([]);
+    setSelectedMaterial([]);
     setShowFilters(false);
     Getproduct();
   };
@@ -180,53 +199,45 @@ const ProductList = () => {
   const handlePriceChange = async (range) => {
     let min, max;
     if (range === "Over ₹5000") {
-        // Specifically handle the "Over ₹5000" case
-        min = '5000';
-        max = undefined;
+      // Specifically handle the "Over ₹5000" case
+      min = "5000";
+      max = undefined;
     } else {
-        // Extract min and max values for other ranges
-        [min, max] = range.match(/\d+/g);
+      // Extract min and max values for other ranges
+      [min, max] = range.match(/\d+/g);
     }
 
     // Update QueryParams with min and max prices
     changeQueryparams(min, max);
 
-    // Log to check the updated state
-    console.log("handlePriceChange Selected Price Range:", range);
-    console.log("handlePriceChange Parsed Min and Max:", [min, max]);
-    console.log("handlePriceChange Updated QueryParams:", QueryParams);
-
     try {
-        // Fetch products based on the price range
-        await getFilteredItems();
+      // Fetch products based on the price range
+      await getFilteredItems();
     } catch (error) {
-        console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error);
     }
 
     setSelectedPriceRange(range);
-};
+  };
 
-const changeQueryparams = (min, max) => {
-  let priceRange;
+  const changeQueryparams = (min, max) => {
+    let priceRange;
 
-  if (min === '5000' && max === undefined) {
+    if (min === "5000" && max === undefined) {
       priceRange = encodeURIComponent("5000+");
-  } else {
+    } else {
       priceRange = `${encodeURIComponent(min)}-${encodeURIComponent(max)}`;
-  }
+    }
 
-  const updatedQueryParams = { priceRange };
-  console.log("Updated Price Range inside changeQueryparams:", priceRange);
-  setQueryParams(updatedQueryParams);
-};
+    const updatedQueryParams = { priceRange };
+    setQueryParams(updatedQueryParams);
+  };
 
   const handleCategoryChange = (selectedCategory) => {
-    // console.log(selectedCategory)
     changeQueryparams("category", selectedCategory);
     setSelectedCategory(selectedCategory);
   };
   const handleMaterialChange = (selectedmaterial) => {
-    // console.log(selectedCategory)
     changeQueryparams("material", selectedmaterial);
     setSelectedMaterial(selectedmaterial);
   };
@@ -267,7 +278,6 @@ const changeQueryparams = (min, max) => {
     // If original data is not set, store the current order as the original order
     if (!originalData.current) {
       originalData.current = [...ProductData];
-      console.log("preyash",ProductData)
     }
 
     setSelectedSortBy(value);
@@ -337,16 +347,16 @@ const changeQueryparams = (min, max) => {
   };
 
   useEffect(() => {
-    Getproduct(filtrationField,id);
+    Getproduct(filtrationField, id);
     GetLoggedInCustomer(authToken);
     GetMaterials();
     GetSeasons();
     GetColors();
   }, [id, authToken]);
 
-  // useEffect(() => {
-  //   getFilteredItems();
-  // }, [selectedCategory, QueryParams, selectedColors]);
+  useEffect(() => {
+    getFilteredItems(id, storedSubcategoryId, storedSubsubcategoryId);
+  }, [id, QueryParams, selectedColors]);
 
   return (
     <div>

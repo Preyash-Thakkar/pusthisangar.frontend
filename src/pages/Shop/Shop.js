@@ -48,16 +48,14 @@ const Shop = () => {
 
   const Getproduct = async () => {
     const res = await getProducts();
-    console.log(res);
 
     const categoryRes = await getCategories();
-    console.log(categoryRes);
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
         mapping[category._id] = category.name;
       });
-      console.log(mapping);
+
       setCategoryNameMapping(mapping);
     }
     setProductData(res.products);
@@ -90,26 +88,20 @@ const Shop = () => {
 //    } catch (error) {
 //      console.error("Error fetching data:", error);
 //    }
-//  };
-
-
-  // console.log(CategoryData)
+//  }
 
   const GetColors = async () => {
     const res = await getColors();
-    console.log(res);
     setColorData(res.colors);
   };
 
   const GetMaterials = async () => {
     const res = await getMaterials();
-    console.log(res);
     setMaterialData(res.material);
   };
 
   const GetSeasons = async () => {
     const res = await getSeasons();
-    console.log(res);
     setSeasonData(res.season);
   };
 
@@ -117,7 +109,6 @@ const Shop = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -142,6 +133,8 @@ const Shop = () => {
     setSelectedPriceRange(null);
     setSelectedCategory([]);
     setSelectedShopBy([]);
+    setSelectedSeason([]);
+    setSelectedMaterial([]);
     setShowFilters(false);
     Getproduct();
   };
@@ -164,22 +157,12 @@ const Shop = () => {
     // Update the selected colors state
     setSelectedColors(updatedColors);
   
-    // Log the updated colors for debugging
-    console.log("Updated Colors:", updatedColors);
-  
     // Filter products based on the selected colors locally
     const filteredProducts = ProductData.filter((product) => {
       const isIncluded = updatedColors.includes(product.productColor);
-      console.log(
-        `Product: ${product.productName}, Color: ${product.productColor}, Included: ${isIncluded}`
-      );
       return isIncluded;
     });
-    
-    // Log the filtered products for debugging
-    console.log("Filtered Products:", filteredProducts);
-  
-    // Update the displayed products
+
     setProductData(filteredProducts);
   };
   
@@ -211,11 +194,6 @@ const Shop = () => {
     // Update QueryParams with min and max prices
     changeQueryparams(min, max);
 
-    // Log to check the updated state
-    console.log("handlePriceChange Selected Price Range:", range);
-    console.log("handlePriceChange Parsed Min and Max:", [min, max]);
-    console.log("handlePriceChange Updated QueryParams:", QueryParams);
-
     try {
         // Fetch products based on the price range
         await getFilteredItems();
@@ -237,14 +215,12 @@ const changeQueryparams = (min, max) => {
   }
 
   const updatedQueryParams = { priceRange };
-  console.log("Updated Price Range inside changeQueryparams:", priceRange);
   setQueryParams(updatedQueryParams);
 };
 
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
 
-    console.log("what is value", QueryParams);
     const queryString = Object.entries(QueryParams)
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
@@ -255,19 +231,16 @@ const changeQueryparams = (min, max) => {
 
     try {
       const response = await axios.post(fullUrl);
-      console.log("res filter product by price",response.data);
       if (response.data.success) setProductData(response.data.products);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   const handleCategoryChange = (selectedCategory) => {
-    // console.log(selectedCategory)
     changeQueryparams("category", selectedCategory);
     setSelectedCategory(selectedCategory);
   };
   const handleMaterialChange = (selectedmaterial) => {
-    // console.log(selectedCategory)
     changeQueryparams("material", selectedmaterial);
     setSelectedMaterial(selectedmaterial);
   };
@@ -325,7 +298,6 @@ const changeQueryparams = (min, max) => {
 
   const handleCartClick = async (products) => {
     try {
-      console.log("Quantity", products.productStock[0].quantity);
       if (authToken) {
         if (products.productStock[0].quantity < 1) {
           // Show message if item is sold out

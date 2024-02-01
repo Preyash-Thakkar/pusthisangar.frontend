@@ -65,8 +65,6 @@ const ProductDetails = () => {
   const getspecificProduct = async (ProductId) => {
     const res = await getSpecificProduct(ProductId);
 
-    console.log("Whole object",res)
-
     if (res.success) {
       setProductData(res.product);
     }
@@ -83,10 +81,8 @@ const ProductDetails = () => {
   };
 
   const GetALLvarProducts = async () => {
-    console.log("GetALLvarProducts",ProductData.OtherVariations);
     const res = await GetAllVarProducts(ProductData.OtherVariations);
     setOtherProductData(res.products);
-    console.log(res);
   };
 
   const getproductsbyCategoryId = async (id) => {
@@ -141,8 +137,6 @@ const ProductDetails = () => {
       };
       const res = await addToWishlist(customerId, cartInfo);
       if (res.success) {
-        // Cart updated successfully
-        console.log("Added in Wishlist successfully");
         setWishlistMessageVisible(true);
         // navigate(`/cart/${customerId}`);
       } else {
@@ -233,8 +227,6 @@ const ProductDetails = () => {
   const closeWishlistMessage = () => {
     setWishlistMessageVisible(false);
   };
-
-  console.log(OtherProductData);
 
   return (
     <div>

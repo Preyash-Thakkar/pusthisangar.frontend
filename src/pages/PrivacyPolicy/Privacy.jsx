@@ -14,7 +14,6 @@ const Privacy = () => {
 
   const getaboutUsContent = async () => {
     const res = await GetPrivacyPolicy();
-    console.log(res);
 
     if (res.success) {
       setContentData(res.content);

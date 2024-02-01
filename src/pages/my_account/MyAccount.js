@@ -13,7 +13,6 @@ const MyAccount = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    console.log(res);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -25,7 +24,6 @@ const MyAccount = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("username");
     localStorage.removeItem("loggedIn");
-    console.log("authToken Removed");
     
   };
 
