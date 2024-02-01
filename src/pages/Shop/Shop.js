@@ -133,6 +133,8 @@ const Shop = () => {
     setSelectedPriceRange(null);
     setSelectedCategory([]);
     setSelectedShopBy([]);
+    setSelectedSeason([]);
+    setSelectedMaterial([]);
     setShowFilters(false);
     Getproduct();
   };
