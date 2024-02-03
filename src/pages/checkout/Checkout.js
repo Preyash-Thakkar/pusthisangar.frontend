@@ -11,7 +11,6 @@ import SignContext from "../../contextAPI/Context/SignContext";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-
 const allStates = [
   "Andhra Pradesh",
   "Arunachal Pradesh",
@@ -76,16 +75,19 @@ const Checkout = () => {
   const [coupons, setCoupons] = useState([]);
   // const [appliedCoupon, setAppliedCoupon] = useState("");
   const [selectedCoupon, setSelectedCoupon] = useState(null);
+  // const [fieldValue,setFieldValue] = useState(null);
 
   const [totalAmount, setTotalAmount] = useState(0);
   const [discountedTotal, setDiscountedTotal] = useState(0);
   const [Name, setName] = useState("");
   const [Phone, setPhone] = useState("");
+  const [tid,setTid] = useState(null);
 
   const ShippingCharge = 0;
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
+    console.log("hhh", token);
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -95,9 +97,11 @@ const Checkout = () => {
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
+    console.log("ressss", res);
     if (res.success) {
       setCartData(res.cartItems);
     }
+    // localStorage.setItem("CustomerId")
   };
 
   const showEmptyCartMessage = () => {
@@ -169,7 +173,7 @@ const Checkout = () => {
   function calculateDiscountedTotal(total, coupon) {
     if (coupon && coupon.type === "%") {
       const discountAmount = (total * coupon.discount) / 100;
-      return total - discountAmount-75;
+      return total - discountAmount - 75;
     } else if (coupon && coupon.discount !== null) {
       return total - coupon.discount;
     } else {
@@ -211,7 +215,7 @@ const Checkout = () => {
           quantity * discountedPrice + (quantity * discountedPrice * gst) / 100;
         // Check for NaN or invalid values
         if (isNaN(quantity) || isNaN(discountedPrice)) {
-          return acc; 
+          return acc;
         }
 
         return acc + totalPriceWithGST;
@@ -228,92 +232,106 @@ const Checkout = () => {
   //     transactionId: 'T' + Date.now(),
   // }
 
-  
+  //   const handlePayment = async () => {
+  //     setLoading2(true);
 
-//   const handlePayment = async () => {
-//     setLoading2(true);
+  //     try {
+  //         const response = await axios.post(`${url}/api/payment`, { ...data });
+  //         console.log(response);
 
-//     try {
-//         const response = await axios.post(`${url}/api/payment`, { ...data });
-//         console.log(response);
+  //         const newTab = window.open(response.data.url, '_blank');
 
-//         const newTab = window.open(response.data.url, '_blank');
+  //         if (newTab) {
+  //             newTab.focus();
+  //         } else {
+  //             console.error("Popup blocked. Please enable popups to view the payment page.");
+  //         }
+  //     } catch (error) {
+  //         console.error(error);
+  //     } finally {
+  //         setTimeout(() => {
+  //             setLoading2(false);
+  //         }, 1500);
+  //     }
+  // };
 
-//         if (newTab) {
-//             newTab.focus();
-//         } else {
-//             console.error("Popup blocked. Please enable popups to view the payment page.");
-//         }
-//     } catch (error) {
-//         console.error(error);
-//     } finally {
-//         setTimeout(() => {
-//             setLoading2(false);
-//         }, 1500);
-//     }
-// };
+  //   const handlePayment = async (e)=>{
+  //     e.preventDefault();
+  //     setLoading2(true);
+  //     await axios.post(`${url}/api/payment`, {...data}).then(res => {
+  //     setTimeout(() => {
+  //         setLoading2(false);
+  //     }, 1500);
+  //     })
+  //     .catch(error => {
+  //         setLoading2(false)
+  //         console.error(error);
+  //     });
+  // }
 
-  
-//   const handlePayment = async (e)=>{
-//     e.preventDefault();
-//     setLoading2(true);
-//     await axios.post(`${url}/api/payment`, {...data}).then(res => {  
-//     setTimeout(() => {
-//         setLoading2(false);
-//     }, 1500);
-//     })
-//     .catch(error => {
-//         setLoading2(false)
-//         console.error(error);
-//     });   
-// }
+  const handlePayment = async (values) => {
+    setLoading2(true);
 
-const handlePayment = async (values) => {
-  setLoading2(true);
-
-  try {
-   
+    try {
       if (values.paymentMethod === "UPI") {
-      
-          if (!values.firstName || !values.phone) {
-             
-              console.error("Please fill out the required fields for UPI payment.");
-              return;
-          }
+        if (!values.firstName || !values.phone) {
+          console.error("Please fill out the required fields for UPI payment.");
+          return;
+        } 
       }
-
-      
+      // let transactionId = ;
       const data = {
-          name: CustomerInfo?CustomerInfo.name:null,
-          amount: discountedTotal
-              ? (discountedTotal + (ShippingCharge || 0)).toFixed(2)
-              : (tPwithGST + (ShippingCharge || 0)).toFixed(2),
-          number: CustomerInfo.phone,
-          MUID: "MUID" + Date.now(),
-          transactionId: 'T' + Date.now(),
+        name: CustomerInfo ? CustomerInfo.name : null,
+        amount: discountedTotal
+          ? (discountedTotal + (ShippingCharge || 0)).toFixed(2)
+          : (tPwithGST + (ShippingCharge || 0)).toFixed(2),
+        number: CustomerInfo.phone,
+        MUID: "MUID" + Date.now(),
+        transactionId: "T" + Date.now(),
       };
+      // setTid(data.transactionId);
 
+      // console.log("tid",tid)
+      console.log("ssssss", data);
+      // setFieldValue(data.transactionId);
+      // setTid(data.transactionId);
       // Make API call
       const response = await axios.post(`${url}/api/payment`, { ...data });
-   
-      const newTab = window.open(response.data.url, '_blank');
+      // console.log(response);
+
+      const tidiii = response.config.data;
+      console.log(tidiii);
+      const parsedtid = JSON.parse(tidiii);
+      console.log("Transactionid", parsedtid);
+      console.log("tid", parsedtid.transactionId);
+      setTid(parsedtid.transactionId);
+
+      // const res = await axios.get(`${url}/api/status/${parsedtid.transactionId}`)
+
+      // Poll every 5 seconds
+      const pollingInterval = setInterval(() => {
+        checkPaymentStatus(parsedtid.transactionId, pollingInterval);
+    }, 680000);
+
+      const newTab = window.open(response.data.url, "_blank");
 
       if (newTab) {
-          newTab.focus();
+        newTab.focus();
       } else {
-          console.error("Popup blocked. Please enable popups to view the payment page.");
+        console.error(
+          "Popup blocked. Please enable popups to view the payment page."
+        );
       }
-  } catch (error) {
+            return parsedtid.transactionId;
+    } catch (error) {
       console.error(error);
-  } finally {
+    } finally {
       // Set loading state to false after a delay
       setTimeout(() => {
-          setLoading2(false);
+        setLoading2(false);
       }, 1500);
-  }
-};
-
-  
+    }
+  };
 
   const validationSchema = Yup.object().shape({
     // email: Yup.string()
@@ -330,6 +348,19 @@ const handlePayment = async (values) => {
       .required("Phone is required")
       .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   });
+  const checkPaymentStatus = async (transactionId,pollingInterval) => {
+    try {
+      const response = await axios.post(`${url}/api/status/${transactionId}`);
+      console.log("Response", response);
+      if (response.data.status === "Success") {
+        // Handle success, stop polling
+        console.log("Payment successful");
+        clearInterval(pollingInterval);
+      }
+    } catch (error) {
+      console.error("Error checking payment status:", error);
+    }
+  };
 
   useEffect(() => {
     const fetchCustomerData = async () => {
@@ -342,6 +373,7 @@ const handlePayment = async (values) => {
     Getcoupons();
   }, [CustomerInfo._id]);
 
+  console.log("transactionss",tid);
 
   return (
     <div>
@@ -383,11 +415,17 @@ const handlePayment = async (values) => {
               postcode: "",
               phone: "",
               paymentMethod: "COD",
+              // transactionId:tid
             }}
             validationSchema={validationSchema}
-            onSubmit={async (values, { resetForm }) => {
+            onSubmit={async (values, {resetForm }) => {
               try {
                 if (CartData?.length > 0) {
+                  let transactionId = null; 
+                  if (values.paymentMethod === "UPI") {
+                    transactionId = await handlePayment(values); 
+                    console.log("inner t",transactionId);
+                  }
                   const response = await CreateOrder({
                     customer: CustomerInfo._id,
                     FirstName: values.firstName,
@@ -409,30 +447,32 @@ const handlePayment = async (values) => {
                     shippingAddress: values.address,
                     couponCode: selectedCoupon ? selectedCoupon._id : null,
                     paymentMethod: values.paymentMethod,
-
-                    
+                    transactionId: transactionId,
                   });
                   
-                setName(values.firstName);
-                setPhone(values.phone);
+                  setName(values.firstName);
+                  setPhone(values.phone);
                   if (response.success) {
-                    Swal.fire({
-                      icon: "success",
-                      title:
-                        "Order placed successfully! Invoice will send to you later",
-                      showConfirmButton: false,
-                      timer: 3000,
-                    });
+                    if (values.paymentMethod === "UPI") {
+                      console.log("UPI");
+                    } else {
+                      Swal.fire({
+                        icon: "success",
+                        title:
+                          "Order placed successfully! Invoice will send to you later",
+                        showConfirmButton: false,
+                        timer: 3000,
+                      });
 
-                    handleRemoveAll();
-                    resetForm();
-                    navigate("/");
+                      handleRemoveAll();
+                      resetForm();
+                      navigate("/");
+                    }
                   } else {
                     console.error("Error creating order:", response.msg);
                     Swal.fire({
                       icon: "warning",
-                      title:
-                        "Product is Out of Stock",
+                      title: "Product is Out of Stock",
                       showConfirmButton: false,
                       timer: 3000,
                     });
@@ -457,8 +497,8 @@ const handlePayment = async (values) => {
               handleChange,
               handleBlur,
               handleSubmit,
-              setFieldValue, 
-              setFieldTouched, 
+              setFieldValue,
+              setFieldTouched,
               isSubmitting,
             }) => (
               <form onSubmit={handleSubmit}>
@@ -800,7 +840,6 @@ const handlePayment = async (values) => {
                                           (!isNaN(ShippingCharge)
                                             ? ShippingCharge
                                             : 0)
-                                          
                                       )}
                                     </span>
                                   </td>
@@ -811,121 +850,98 @@ const handlePayment = async (values) => {
                         </table>
                       </div>
                       <div className="payment-box">
-    <div className="payment-method">
-        <p>
-            <input
-                type="radio"
-                id="cash-on-delivery"
-                name="paymentMethod"
-                value="COD"
-                checked={values.paymentMethod === "COD"}
-                onChange={() => setFieldValue("paymentMethod", "COD")}
-                onBlur={() => setFieldTouched("paymentMethod", true)}
-                className="me-2"
-            />
-            <label htmlFor="cash-on-delivery">
-                Cash on Delivery
-            </label>
-        </p>
-        
-        <p>
-            <input
-                type="radio"
-                id="upi-payment"
-                name="paymentMethod"
-                value="UPI"
-                checked={values.paymentMethod === "UPI"}
-                onChange={() => setFieldValue("paymentMethod", "UPI")}
-                onBlur={() => setFieldTouched("paymentMethod", true)}
-                className="me-2"
-            />
-            <label htmlFor="upi-payment">
-                UPI Payment
-            </label>
-        </p>
-    </div>
+                        <div className="payment-method">
+                          <p>
+                            <input
+                              type="radio"
+                              id="cash-on-delivery"
+                              name="paymentMethod"
+                              value="COD"
+                              checked={values.paymentMethod === "COD"}
+                              onChange={() =>
+                                setFieldValue("paymentMethod", "COD")
+                              }
+                              onBlur={() =>
+                                setFieldTouched("paymentMethod", true)
+                              }
+                              className="me-2"
+                            />
+                            <label htmlFor="cash-on-delivery">
+                              Cash on Delivery
+                            </label>
+                          </p>
 
-    {/* {!loading2 ? (
-        values.paymentMethod === "COD" ? (
-            <div className="payment-method">
-                <button
-                    onClick={handleSubmit}
-                    type="submit"
-                    className="default-btn order-btn"
-                >
-                    Place Order
-                    <span />
-                </button>
-            </div>
-        ) : values.paymentMethod === "UPI" ? (
-            <div className="payment-method">
-                <button
-                    onClick={handlePayment}
-                    type="submit"
-                    className="default-btn order-btn"
-                >
-                    Pay {discountedTotal
-                        ? (discountedTotal + (ShippingCharge || 0)).toFixed(2)
-                        : (tPwithGST + (ShippingCharge || 0)).toFixed(2)}
-                    <span />
-                </button>
-            </div>
-        ) : null
-    ) : (
-        <div className='col-12 center'>
-            <button className='w-100 text-center' type="submit">
-                <div className="spinner-border" role="status">
-                    <span className="visually-hidden ">Wait...</span>
-                </div>
-            </button>
-        </div>
-    )} */}
-    {!loading2 ? (
-  values.paymentMethod === "COD" ? (
-    <div className="payment-method">
-      <button
-        type="submit"
-        className="default-btn order-btn"
-        disabled={isSubmitting}  // Disable the button during form submission
-      >
-        Place Order
-        <span />
-      </button>
-    </div>
-  ) : values.paymentMethod === "UPI" ? (
-    <div className="payment-method">
-      <button
-        type="button"  // Change to type="button" to prevent form submission
-        onClick={() => handlePayment(values)}
-        className="default-btn order-btn"
-        disabled={isSubmitting}  // Disable the button during form submission
-      >
-        Pay {discountedTotal
-          ? (discountedTotal + (ShippingCharge || 0)).toFixed(2)
-          : (tPwithGST + (ShippingCharge || 0)).toFixed(2)}
-        <span />
-      </button>
-    </div>
-  ) : null
-) : (
-  <div className='col-12 center'>
-    <button className='w-100 text-center' type="button" disabled>
-      <div className="spinner-border" role="status">
-        <span className="visually-hidden">Wait...</span>
-      </div>
-    </button>
-  </div>
-)}
+                          <p>
+                            <input
+                              type="radio"
+                              id="upi-payment"
+                              name="paymentMethod"
+                              value="UPI"
+                              checked={values.paymentMethod === "UPI"}
+                              onChange={() =>
+                                setFieldValue("paymentMethod", "UPI")
+                              }
+                              onBlur={() =>
+                                setFieldTouched("paymentMethod", true)
+                              }
+                              className="me-2"
+                            />
+                            <label htmlFor="upi-payment">UPI Payment</label>
+                          </p>
+                        </div>
 
-</div>
-
+                        {!loading2 ? (
+                          values.paymentMethod === "COD" ? (
+                            <div className="payment-method">
+                              <button
+                                type="submit"
+                                className="default-btn order-btn"
+                                disabled={isSubmitting} // Disable the button during form submission
+                              >
+                                Place Order
+                                <span />
+                              </button>
+                            </div>
+                          ) : values.paymentMethod === "UPI" ? (
+                            <div className="payment-method">
+                              <button
+                                type="submit" // Change to type="button" to prevent form submission
+                                className="default-btn order-btn"
+                                disabled={isSubmitting}
+                                // Disable the button during form submission
+                              >
+                                Pay{" "}
+                                {discountedTotal
+                                  ? (
+                                      discountedTotal + (ShippingCharge || 0)
+                                    ).toFixed(2)
+                                  : (tPwithGST + (ShippingCharge || 0)).toFixed(
+                                      2
+                                    )}
+                                <span />
+                              </button>
+                            </div>
+                          ) : null
+                        ) : (
+                          <div className="col-12 center">
+                            <button
+                              className="w-100 text-center"
+                              type="button"
+                              disabled
+                            >
+                              <div className="spinner-border" role="status">
+                                <span className="visually-hidden">Wait...</span>
+                              </div>
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </form>
             )}
           </Formik>
-         
         </div>
       </section>
       <MidFooter />
