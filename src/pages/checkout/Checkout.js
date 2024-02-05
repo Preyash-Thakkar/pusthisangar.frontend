@@ -281,7 +281,7 @@ const Checkout = () => {
       }
       // let transactionId = ;
       const data = {
-        name: CustomerInfo ? CustomerInfo.name : null,
+        name: CustomerInfo ? CustomerInfo.username : null,
         amount: discountedTotal
           ? (discountedTotal + (ShippingCharge || 0)).toFixed(2)
           : (tPwithGST + (ShippingCharge || 0)).toFixed(2),
