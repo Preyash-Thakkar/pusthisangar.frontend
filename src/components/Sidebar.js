@@ -155,6 +155,8 @@ const Sidebar = () => {
     }
   };
 
+  
+
   const handleSignout = async () => {
     localStorage.removeItem("authToken");
   };
@@ -165,6 +167,20 @@ const Sidebar = () => {
       setCustomerInfo(res.customer);
     } else {
       console.log(res.msg);
+    }
+  };
+
+  const checkIfUserIsLoggedIn = async () => {
+    // Assuming you have the token stored somewhere, retrieve it from your storage
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      // If token is available, check if the user is logged in
+      await GetLoggedInCustomer(token);
+      // If GetLoggedInCustomer sets the customer info, it means the user is logged in
+      // You might need to modify this logic based on your API response structure
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -190,6 +206,21 @@ const Sidebar = () => {
       // Handle unexpected errors
       console.error("Unexpected error:", error);
     }
+  };
+
+  const handleCartClick =async () => {
+    // Check if the user is logged in (you need to implement this)
+    const isLoggedIn = await checkIfUserIsLoggedIn(); // You need to implement this function
+    console.log("iss",isLoggedIn);
+    // If user is not logged in, redirect to the sign-in page
+    if (!isLoggedIn) {
+      // Redirect to the sign-in page
+      window.location.href = "/login"; // Directly change window location
+      return; // Make sure to return to exit the function
+    }
+
+    // Proceed with showing the cart tooltip
+    toggleCartTooltip();
   };
 
   const showSidebar = () => setSidebar(!sidebar);
@@ -229,8 +260,8 @@ const Sidebar = () => {
           </Link>
           <CartButton
             className="nav-cart"
-            onMouseEnter={toggleCartTooltip}
-            onMouseLeave={toggleCartTooltip}
+            onClick={handleCartClick}
+            
           >
             <FaIcons.FaShoppingCart color="#5a5757" style={{marginRight : '10px' , fontSize :"30px"}} />
             {cartCount > 0 && <CartCount>{cartCount}</CartCount>}
