@@ -57,7 +57,7 @@ const GalleryDetails = () => {
     };
 
     fetchData();
-  }, [id]);
+  }, [filteredArray]);
 
   const openSlider = (index) => {
     setSelectedImageIndex(index);
