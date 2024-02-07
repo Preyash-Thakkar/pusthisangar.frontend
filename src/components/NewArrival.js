@@ -17,6 +17,8 @@ const NewArrival = (props) => {
     getProducts,
     getCategories,
     getLoggedInCustomer,
+    GetLoggedInCartItems,
+
     addToCart,
     OpenLoginModal,
     setOpenLoginModal,
@@ -35,6 +37,7 @@ const NewArrival = (props) => {
 
   const Getproduct = async () => {
     const res = await getProducts();
+    console.log("Products", res);
 
     const categoryRes = await getCategories();
     if (categoryRes) {
@@ -123,13 +126,49 @@ const NewArrival = (props) => {
 
   const handleCartClick = async (id) => {
     try {
+      const product = ProductData.find((p) => p._id === id);
+      console.log("PPP", product); // Find the product by ID
+      if (
+        !product ||
+        product.productStock.length === 0 ||
+        product.productStock[0].quantity <= 0
+      ) {
+        // Assuming productStock is an array and quantity indicates the stock level
+        Swal.fire({
+          icon: "error",
+          title: "Not available",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
+        return; // Exit the function to prevent adding to cart
+      }
       if (authToken) {
-        // Check if the user is authenticated
-        const customerId = CustomerInfo._id; // Replace with the actual customer ID
+        const customerId = CustomerInfo._id;
         const cartInfo = {
           productId: id,
           quantity: 1,
         };
+
+        const response = await GetLoggedInCartItems(customerId);
+
+        if (response.success) {
+          const cartItems = response.cartItems;
+          const currentCartQuantity = cartItems.reduce(
+            (total, item) =>
+              item.product._id === id ? total + item.quantity : total,
+            0
+          );
+          if (currentCartQuantity >= product.productStock[0].quantity) {
+            Swal.fire({
+              icon: "error",
+              title: "Out of Stock",
+              text: "You've reached the maximum available quantity for this product.",
+              confirmButtonText: "OK",
+            });
+            return;
+          }
+        }
+
         const res = await addToCart(customerId, cartInfo);
 
         if (res.success) {
@@ -146,14 +185,11 @@ const NewArrival = (props) => {
         }
       } else {
         setOpenLoginModal(true);
-        props.handleLoginClick();
       }
     } catch (error) {
-      // Handle unexpected errors
       console.error("Unexpected error:", error);
     }
   };
-
   useEffect(() => {
     Getproduct();
     GetLoggedInCustomer(authToken);
@@ -240,7 +276,25 @@ const NewArrival = (props) => {
                               >
                                 {product.name}
                               </Link>
+
+                              
                             </h2>
+                              <h5>
+                              {product.productStock.length === 0 ? (
+                                <span className="stock-message3">
+                                  Not available
+                                </span>
+                              ) : product.productStock[0].quantity <= 0 ? (
+                                <span className="stock-message3">
+                                  Out of stock
+                                </span>
+                              ) : product.productStock[0].quantity < 5 ? (
+                                <span className="stock-message3">
+                                  Only {product.productStock[0].quantity} left
+                                </span>
+                              ) : null}
+                              </h5>
+                            
 
                             <div class="product-card-bottom new-arrival-card-bottom">
                               <div class="product-price popular-card-price new-arrival-price">
@@ -265,7 +319,6 @@ const NewArrival = (props) => {
                                   onClick={() => {
                                     handleCartClick(product._id);
                                   }}
-                                  
                                   rel="noopener noreferrer"
                                 >
                                   <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>

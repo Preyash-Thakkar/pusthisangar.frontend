@@ -17,6 +17,8 @@ const Vastra = () => {
     getCategories,
     getLoggedInCustomer,
     addToCart,
+    GetLoggedInCartItems,
+
     OpenLoginModal,
     setOpenLoginModal,
   } = useContext(SignContext);
@@ -118,15 +120,53 @@ const Vastra = () => {
 
   const handleCartClick = async (id) => {
     try {
+      const product = products.find((p) => p._id === id);
+      console.log("PPP", product); // Find the product by ID
+      if (
+        !product ||
+        product.productStock.length === 0 ||
+        product.productStock[0].quantity <= 0
+      ) {
+        // Assuming productStock is an array and quantity indicates the stock level
+        Swal.fire({
+          icon: "error",
+          title: "Not available",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
+        return; // Exit the function to prevent adding to cart
+      }
       if (authToken) {
         const customerId = CustomerInfo._id;
         const cartInfo = {
           productId: id,
           quantity: 1,
         };
+
+        const response = await GetLoggedInCartItems(customerId);
+
+        if (response.success) {
+          const cartItems = response.cartItems;
+          const currentCartQuantity = cartItems.reduce(
+            (total, item) =>
+              item.product._id === id ? total + item.quantity : total,
+            0
+          );
+          if (currentCartQuantity >= product.productStock[0].quantity) {
+            Swal.fire({
+              icon: "error",
+              title: "Out of Stock",
+              text: "You've reached the maximum available quantity for this product.",
+              confirmButtonText: "OK",
+            });
+            return;
+          }
+        }
+
         const res = await addToCart(customerId, cartInfo);
 
         if (res.success) {
+          // Cart updated successfully
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",
@@ -248,6 +288,22 @@ const Vastra = () => {
                               >
                                 {product.name}
                               </Link>
+
+                              {product.productStock.length === 0 ? (
+                                <span className="stock-message">
+                                  Not available
+                                </span>
+                              ) : product.productStock[0].quantity <= 0 ? (
+                                <span className="stock-message">
+                                  Out of stock
+                                </span>
+                              ) : product.productStock[0].quantity < 5 ? (
+                                <span className="stock-message">
+                                  Only {product.productStock[0].quantity} left
+                                </span>
+                              ) : (
+                                null
+                              )}
                             </h2>
                             <div className="product-price mt-10 mb-2">
                               <span>
