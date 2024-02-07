@@ -35,6 +35,8 @@ const Shop = () => {
     getColors,
     getMaterials,
     getSeasons,
+    GetLoggedInCartItems,
+    setOpenLoginModal,
   } = useContext(SignContext);
   const [ProductData, setProductData] = useState([]);
   const [CategoryData, setCategoryData] = useState([]);
@@ -62,33 +64,32 @@ const Shop = () => {
     setCategoryData(categoryRes);
   };
 
+  //  const changeQueryparams = (parameter, value) => {
+  //    const updatedQueryParams = { ...QueryParams };
+  //    updatedQueryParams[parameter] = value;
 
-//  const changeQueryparams = (parameter, value) => {
-//    const updatedQueryParams = { ...QueryParams };
-//    updatedQueryParams[parameter] = value;
+  //    setQueryParams(updatedQueryParams);
+  //  };
 
-//    setQueryParams(updatedQueryParams);
-//  };
+  //  const getFilteredItems = async () => {
+  //    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
 
-//  const getFilteredItems = async () => {
-//    const url = `${process.env.REACT_APP_BASE_URL}/product/getallproducts`;
+  //    const queryString = Object.keys(QueryParams)
+  //      .map((key) => `${key}=${QueryParams[key]}`)
+  //     .join("&");
 
-//    const queryString = Object.keys(QueryParams)
-//      .map((key) => `${key}=${QueryParams[key]}`)
-//     .join("&");
+  //    const fullUrl = queryString ? `${url}?${queryString}` : url;
 
-//    const fullUrl = queryString ? `${url}?${queryString}` : url;
+  //    console.log(fullUrl);
 
-//    console.log(fullUrl);
-
-//    try {
-//      const response = await axios.post(fullUrl);
-//      console.log("Main response", response.data);
-//      if (response.data.success) setProductData(response.data.products);
-//    } catch (error) {
-//      console.error("Error fetching data:", error);
-//    }
-//  }
+  //    try {
+  //      const response = await axios.post(fullUrl);
+  //      console.log("Main response", response.data);
+  //      if (response.data.success) setProductData(response.data.products);
+  //    } catch (error) {
+  //      console.error("Error fetching data:", error);
+  //    }
+  //  }
 
   const GetColors = async () => {
     const res = await getColors();
@@ -109,10 +110,12 @@ const Shop = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
+
     if (res.success) {
       setCustomerInfo(res.customer);
+      console.log("success");
     } else {
-      console.log(res.msg);
+      console.log("err",res.msg);
     }
   };
 
@@ -153,10 +156,10 @@ const Shop = () => {
     const updatedColors = selectedColors.includes(selectedColor)
       ? selectedColors.filter((color) => color !== selectedColor)
       : [...selectedColors, selectedColor];
-  
+
     // Update the selected colors state
     setSelectedColors(updatedColors);
-  
+
     // Filter products based on the selected colors locally
     const filteredProducts = ProductData.filter((product) => {
       const isIncluded = updatedColors.includes(product.productColor);
@@ -165,9 +168,6 @@ const Shop = () => {
 
     setProductData(filteredProducts);
   };
-  
-  
-  
 
   const handleSeasonChange = (selectedseason) => {
     const updatedColors = selectedSeason.includes(selectedseason)
@@ -183,40 +183,39 @@ const Shop = () => {
   const handlePriceChange = async (range) => {
     let min, max;
     if (range === "Over ₹5000") {
-        // Specifically handle the "Over ₹5000" case
-        min = '5000';
-        max = undefined;
+      // Specifically handle the "Over ₹5000" case
+      min = "5000";
+      max = undefined;
     } else {
-        // Extract min and max values for other ranges
-        [min, max] = range.match(/\d+/g);
+      // Extract min and max values for other ranges
+      [min, max] = range.match(/\d+/g);
     }
 
     // Update QueryParams with min and max prices
     changeQueryparams(min, max);
 
     try {
-        // Fetch products based on the price range
-        await getFilteredItems();
+      // Fetch products based on the price range
+      await getFilteredItems();
     } catch (error) {
-        console.error("Error fetching data:", error);
+      console.error("Error fetching data:", error);
     }
 
     setSelectedPriceRange(range);
-};
+  };
 
+  const changeQueryparams = (min, max) => {
+    let priceRange;
 
-const changeQueryparams = (min, max) => {
-  let priceRange;
-
-  if (min === '5000' && max === undefined) {
+    if (min === "5000" && max === undefined) {
       priceRange = encodeURIComponent("5000+");
-  } else {
+    } else {
       priceRange = `${encodeURIComponent(min)}-${encodeURIComponent(max)}`;
-  }
+    }
 
-  const updatedQueryParams = { priceRange };
-  setQueryParams(updatedQueryParams);
-};
+    const updatedQueryParams = { priceRange };
+    setQueryParams(updatedQueryParams);
+  };
 
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
@@ -260,22 +259,23 @@ const changeQueryparams = (min, max) => {
     // Sort the product data based on the selected option
     const sortedData = [...ProductData];
     const newSortedData = [...ProductData];
-    
+
     if (value === "newIn") {
       sortedData.sort((a, b) => {
         // Sort by creation date in descending order
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-    
+
       // Filter products that are marked as new
-      const newInProducts = sortedData.filter(product => product.isProductNew);
-    
+      const newInProducts = sortedData.filter(
+        (product) => product.isProductNew
+      );
+
       // Update the sorted data with only new products
       // Assuming you want to update the sortedData array directly
       // If you use sortedData(newInProducts), it will result in an error
       sortedData.length = 0; // Clear the original array
       sortedData.push(...newInProducts); // Push new products into the array
-    
     } else if (value === "priceLowestFirst") {
       sortedData.sort((a, b) => {
         const priceA = a.prices.discounted || a.prices.calculatedPrice;
@@ -296,30 +296,61 @@ const changeQueryparams = (min, max) => {
     setProductsToShow(ProductData.length);
   };
 
-  const handleCartClick = async (products) => {
+  const handleCartClick = async (id) => {
+    GetLoggedInCustomer();
     try {
+      console.log("My data",ProductData);
+      const product = ProductData.find((p) => p._id === id);
+      console.log("PPP", product); // Find the product by ID
+      if (
+        !product ||
+        product.productStock.length === 0 ||
+        product.productStock[0].quantity <= 0
+      ) {
+        // Assuming productStock is an array and quantity indicates the stock level
+        Swal.fire({
+          icon: "error",
+          title: "Not available",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
+        return; // Exit the function to prevent adding to cart
+      }
+      console.log("ci",CustomerInfo);
       if (authToken) {
-        if (products.productStock[0].quantity < 1) {
-          // Show message if item is sold out
-          Swal.fire({
-            icon: "error",
-            title: "Item Sold Out",
-            text: "This item is no longer available.",
-            showConfirmButton: true,
-          });
-          return; // Stop the function here
-        }
-
         const customerId = CustomerInfo._id;
         const cartInfo = {
-          productId: products._id,
+          productId: id,
           quantity: 1,
         };
-        const res = await addToCart(customerId, cartInfo);
+
+        const response = await GetLoggedInCartItems(customerId);
+
+        if (response.success) {
+          const cartItems = response.cartItems;
+          const currentCartQuantity = cartItems.reduce(
+            (total, item) =>
+              item.product._id === id ? total + item.quantity : total,
+            0
+          );
+          if (currentCartQuantity >= product.productStock[0].quantity) {
+            Swal.fire({
+              icon: "error",
+              title: "Out of Stock",
+              text: "You've reached the maximum available quantity for this product.",
+              confirmButtonText: "OK",
+            });
+            return;
+          }
+        }
+
+        const res = await addToCart(customerId,cartInfo);
+        console.log(customerId);
+        console.log(cartInfo);
+        console.log("m response",res)
 
         if (res.success) {
           // Cart updated successfully
-          console.log("Cart updated successfully");
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",
@@ -331,12 +362,7 @@ const changeQueryparams = (min, max) => {
           console.error(res.msg);
         }
       } else {
-        Swal.fire({
-          icon: "warning",
-          title: "Please Login First",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        setOpenLoginModal(true);
       }
     } catch (error) {
       console.error("Unexpected error:", error);
@@ -353,7 +379,7 @@ const changeQueryparams = (min, max) => {
 
   useEffect(() => {
     getFilteredItems();
-  }, [selectedCategory, QueryParams, selectedColors,selectedPriceRange]);
+  }, [selectedCategory, QueryParams, selectedColors, selectedPriceRange]);
 
   return (
     <div>
@@ -620,7 +646,7 @@ const changeQueryparams = (min, max) => {
                           to={`/product-details/${product._id}`}
                           tabIndex={0}
                           target="_blank"
-        rel="noopener noreferrer"
+                          rel="noopener noreferrer"
                         >
                           <img
                             className="default-img"
@@ -643,17 +669,35 @@ const changeQueryparams = (min, max) => {
                     </div>
                     <div class="product-content-wrap">
                       <div class="product-category">
-                        <Link to={`/product-details/${product._id}`} target="_blank"
-        rel="noopener noreferrer">
+                        <Link
+                          to={`/product-details/${product._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {categoryNameMapping[product.category]}
                         </Link>
                       </div>
                       <h2>
-                        <Link to={`/product-details/${product._id}`} target="_blank"
-        rel="noopener noreferrer">
+                        <Link
+                          to={`/product-details/${product._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {product.name}
                         </Link>
                       </h2>
+
+                      <h5>
+                        {product.productStock.length === 0 ? (
+                          <span className="stock-message3">Not available</span>
+                        ) : product.productStock[0].quantity <= 0 ? (
+                          <span className="stock-message3">Out of stock</span>
+                        ) : product.productStock[0].quantity < 5 ? (
+                          <span className="stock-message3">
+                            Only {product.productStock[0].quantity} left
+                          </span>
+                        ) : null}
+                      </h5>
 
                       <div class="product-card-bottom">
                         <div class="product-price popular-card-price">
@@ -674,11 +718,11 @@ const changeQueryparams = (min, max) => {
                             class="add add-cart-btn"
                             id="shop-cart"
                             onClick={() => {
-                              handleCartClick(product);
+                              handleCartClick(product._id);
                             }}
                           >
                             <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add 
+                            Add
                           </Link>
                         </div>
                       </div>

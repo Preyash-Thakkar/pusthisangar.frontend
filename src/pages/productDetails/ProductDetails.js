@@ -41,6 +41,8 @@ const ProductDetails = () => {
     addToWishlist,
     GetProductsbyCategoryId,
     GetAllVarProducts,
+    GetLoggedInCartItems,
+
     OpenLoginModal,
     setOpenLoginModal,
   } = useContext(SignContext);
@@ -48,7 +50,7 @@ const ProductDetails = () => {
   const [OtherProductData, setOtherProductData] = useState([]);
   const [CategorybyProductsData, setCategorybyProductsData] = useState([]);
   const [DailyPrice, setDailyPrice] = useState([]);
-  const [Quantity, setQuantity] = useState(1);
+  const [Quantity, setQuantity] = useState(0);
   const [selectedImage, setSelectedImage] = useState(""); // Default selected image
   const [selectedColors, setSelectedColors] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
@@ -64,6 +66,7 @@ const ProductDetails = () => {
 
   const getspecificProduct = async (ProductId) => {
     const res = await getSpecificProduct(ProductId);
+    console.log("Specific", res);
 
     if (res.success) {
       setProductData(res.product);
@@ -114,6 +117,21 @@ const ProductDetails = () => {
         productId: ProductData._id,
         quantity: Quantity,
       };
+
+      if (
+        ProductData.productStock.length === 0 ||
+        Quantity > ProductData.productStock[0].quantity
+      ) {
+        // Assuming productStock is an array and quantity indicates the stock level
+        Swal.fire({
+          icon: "error",
+          title: "Not available",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
+        return; // Exit the function to prevent adding to cart
+      }
+
       const res = await addToCart(customerId, cartInfo);
 
       if (res.success) {
@@ -156,8 +174,16 @@ const ProductDetails = () => {
   };
 
   const handleIncrement = () => {
+    if (
+      ProductData.productStock.length === 0 ||
+      Quantity >= ProductData.productStock[0].quantity
+    ) {
+      // Disable increment if product stock is not available or if current quantity is equal to or greater than product stock
+      return;
+    }
     setQuantity(Quantity + 1);
   };
+
   const handleDecrement = () => {
     if (Quantity > 1) {
       setQuantity(Quantity - 1);
@@ -315,6 +341,16 @@ const ProductDetails = () => {
                       {categoryNameMapping[ProductData.category]}{" "}
                     </span>
                     <h2 className="title-detail mb-4">{ProductData.name}</h2>
+
+                    {ProductData.productStock.length === 0 ? (
+                      <span className="stock-message">Not available</span>
+                    ) : ProductData.productStock[0].quantity <= 0 ? (
+                      <span className="stock-message">Out of stock</span>
+                    ) : ProductData.productStock[0].quantity < 5 ? (
+                      <span className="stock-message">
+                        Only {ProductData.productStock[0].quantity} left
+                      </span>
+                    ) : null}
                     <span className="mb-5 mt-3">
                       SKU: <Link to="#">{ProductData.sku}</Link>
                     </span>
@@ -366,7 +402,7 @@ const ProductDetails = () => {
                           name="Quantity"
                           className="qty-val"
                           value={Quantity}
-                          min={1}
+                          min={0}
                           readOnly
                         />
                         <Link
@@ -387,7 +423,7 @@ const ProductDetails = () => {
                           onClick={handleCartClick}
                         >
                           <i className="fi-rs-shopping-cart" />
-                          Add to cart 
+                          Add to cart
                         </button>
                         <Link
                           aria-label="Add To Wishlist"
@@ -1041,7 +1077,10 @@ const ProductDetails = () => {
               </h1>
             </div>
             <div className="col text-end d-flex align-items-center justify-content-end">
-              <Link to={`/product-list/${CategoryId}/categoryId`} className="mb-2">
+              <Link
+                to={`/product-list/${CategoryId}/categoryId`}
+                className="mb-2"
+              >
                 view all Products
               </Link>
             </div>
@@ -1057,7 +1096,6 @@ const ProductDetails = () => {
                   <div className="product-cart-wrap popular-card" tabIndex={0}>
                     <div className="product-img-action-wrap">
                       <div className="product-img product-img-zoom">
-                        
                         <Link
                           to={`/product-details/${product._id}`}
                           tabIndex={0}

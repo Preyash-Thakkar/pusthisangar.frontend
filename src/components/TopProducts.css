@@ -126,3 +126,8 @@
 .new-arrival-price span.old-price {
   font-size: 14px !important;
 }
+
+.stock-message3{
+  color: red;
+  margin-left: -9rem;
+}

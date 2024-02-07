@@ -264,6 +264,10 @@ shop-product-fillter .sort-by-product-area .sort-by-product-wrap .sort-by-dropdo
   position: relative;
   color: #7E7E7E;
 }
+.stock-message1{
+  color: red;
+  margin-left: -7rem;
+}
 
 @media (max-width: 767.98px) {
   .shop-filter-toogle {

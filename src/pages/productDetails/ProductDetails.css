@@ -560,7 +560,11 @@ p {
   display: block;
   margin: 0 auto;
 }
-
+.stock-message{
+  color: red;
+  margin-right: 1.5rem;
+  
+}
 @media (max-width: 767.98px) {
   .responsive-div {
     /* padding: 40px; */

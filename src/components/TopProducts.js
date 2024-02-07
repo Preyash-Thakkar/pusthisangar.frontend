@@ -15,6 +15,8 @@ const TopProducts = () => {
     getCategories,
     getLoggedInCustomer,
     addToCart,
+    GetLoggedInCartItems,
+
     OpenLoginModal,
     setOpenLoginModal,
   } = useContext(SignContext);
@@ -27,13 +29,13 @@ const TopProducts = () => {
     const res = await getProducts();
 
     const categoryRes = await getCategories();
-   
+
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
         mapping[category._id] = category.name;
       });
-    
+
       setCategoryNameMapping(mapping);
     }
 
@@ -45,7 +47,6 @@ const TopProducts = () => {
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
-     
     }
   };
 
@@ -117,15 +118,53 @@ const TopProducts = () => {
 
   const handleCartClick = async (id) => {
     try {
+      const product = ProductData.find((p) => p._id === id);
+      console.log("PPP", product); // Find the product by ID
+      if (
+        !product ||
+        product.productStock.length === 0 ||
+        product.productStock[0].quantity <= 0
+      ) {
+        // Assuming productStock is an array and quantity indicates the stock level
+        Swal.fire({
+          icon: "error",
+          title: "Not available",
+          text: "This product is currently out of stock.",
+          confirmButtonText: "OK",
+        });
+        return; // Exit the function to prevent adding to cart
+      }
       if (authToken) {
         const customerId = CustomerInfo._id;
         const cartInfo = {
           productId: id,
           quantity: 1,
         };
+
+        const response = await GetLoggedInCartItems(customerId);
+
+        if (response.success) {
+          const cartItems = response.cartItems;
+          const currentCartQuantity = cartItems.reduce(
+            (total, item) =>
+              item.product._id === id ? total + item.quantity : total,
+            0
+          );
+          if (currentCartQuantity >= product.productStock[0].quantity) {
+            Swal.fire({
+              icon: "error",
+              title: "Out of Stock",
+              text: "You've reached the maximum available quantity for this product.",
+              confirmButtonText: "OK",
+            });
+            return;
+          }
+        }
+
         const res = await addToCart(customerId, cartInfo);
 
         if (res.success) {
+          // Cart updated successfully
           Swal.fire({
             icon: "success",
             title: "Item Added to Cart",
@@ -223,6 +262,18 @@ const TopProducts = () => {
                             {product.name}
                           </Link>
                         </h2>
+
+                        <h5>
+                          {product.productStock.length === 0 ? (
+                            <span className="stock-message3">Not available</span>
+                          ) : product.productStock[0].quantity <= 0 ? (
+                            <span className="stock-message3">Out of stock</span>
+                          ) : product.productStock[0].quantity < 5 ? (
+                            <span className="stock-message3">
+                              Only {product.productStock[0].quantity} left
+                            </span>
+                          ) : null}
+                        </h5>
 
                         <div class="product-card-bottom new-arrival-card-bottom">
                           <div class="product-price popular-card-price new-arrival-price">
