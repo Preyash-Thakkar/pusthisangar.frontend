@@ -2,3 +2,8 @@
 .vastra-title{
     font-size: 15px !important;
 }
+
+.stock-message-vastra{
+    color: red;
+    margin-right: 4.9rem;
+}

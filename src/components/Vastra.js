@@ -117,7 +117,7 @@ const Vastra = () => {
       },
     ],
   };
-
+ 
   const handleCartClick = async (id) => {
     try {
       const product = products.find((p) => p._id === id);
@@ -192,6 +192,14 @@ const Vastra = () => {
 
   const products = ProductData;
 
+  const sliderSettings = {
+    ...settings, // Your existing settings
+    infinite: products && products.length > 4 ? true : false, // Only enable infinite if more than one product
+    // Any other settings adjustments based on the number of products
+  };
+
+  console.log("Vastra prods",products);
+
   return (
     <div style={{ background: "rgb(251 248 240 / 74%)" }}>
       <div className="container mb-4">
@@ -231,7 +239,7 @@ const Vastra = () => {
           </div>
 
           <div className="col-lg-9 col-md-12 mb-4">
-            <Slider {...settings}>
+            <Slider {...sliderSettings}>
               {products
                 ? products.map((product) => (
                     <div key={product.id}>
@@ -289,22 +297,26 @@ const Vastra = () => {
                                 {product.name}
                               </Link>
 
-                              {product.productStock.length === 0 ? (
-                                <span className="stock-message">
+                              
+                            </h2>
+                            <h5>
+                            {product.productStock.length === 0 ? (
+                                <span className="stock-message-vastra">
                                   Not available
                                 </span>
                               ) : product.productStock[0].quantity <= 0 ? (
-                                <span className="stock-message">
+                                <span className="stock-message-vastra">
                                   Out of stock
                                 </span>
                               ) : product.productStock[0].quantity < 5 ? (
-                                <span className="stock-message">
+                                <span className="stock-message-vastra">
                                   Only {product.productStock[0].quantity} left
                                 </span>
                               ) : (
                                 null
                               )}
-                            </h2>
+                            </h5>
+                            
                             <div className="product-price mt-10 mb-2">
                               <span>
                                 ₹
