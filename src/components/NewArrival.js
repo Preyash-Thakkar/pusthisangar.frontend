@@ -221,8 +221,11 @@ const NewArrival = (props) => {
         <div className="row">
           <Slider {...settings}>
             {ProductData
-              ? ProductData.filter((product) => product.isProductNew)
-                  .slice(-10)
+              ? ProductData.sort(
+                  (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+                )
+                  .filter((product) => product.isProductNew)
+                  .slice(0,20)
                   .map((product) => (
                     <div
                       className="col-xxl-2 col-lg-3 col-md-4 col-sm-6 mb-4 popular-card"
@@ -276,10 +279,8 @@ const NewArrival = (props) => {
                               >
                                 {product.name}
                               </Link>
-
-                              
                             </h2>
-                              <h5>
+                            <h5>
                               {product.productStock.length === 0 ? (
                                 <span className="stock-message3">
                                   Not available
@@ -293,8 +294,7 @@ const NewArrival = (props) => {
                                   Only {product.productStock[0].quantity} left
                                 </span>
                               ) : null}
-                              </h5>
-                            
+                            </h5>
 
                             <div class="product-card-bottom new-arrival-card-bottom">
                               <div class="product-price popular-card-price new-arrival-price">

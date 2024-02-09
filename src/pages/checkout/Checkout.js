@@ -83,7 +83,7 @@ const Checkout = () => {
   const [Phone, setPhone] = useState("");
   const [tid,setTid] = useState(null);
 
-  const ShippingCharge = 0;
+  const ShippingCharge = 150;
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
