@@ -58,7 +58,7 @@ function App() {
           <Route path="/failure" element={<Failure />} />
 
           <Route path="/order-statement" element={<OrderStatement />} />
-          <Route path="/print-statement" element={<PrintStatement />} />
+          <Route path="/print-statement/:id" element={<PrintStatement />} />
           <Route path="/my-order/:id" element={<MyOrder />} />
           <Route path="/track-order" element={<TrackOrder />} />
           <Route path="/my-account" element={<MyAccount />} />
