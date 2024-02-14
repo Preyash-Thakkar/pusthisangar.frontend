@@ -7,8 +7,7 @@ export const SignState = (props) => {
   // const url = `http://localhost:5000`;
 
   // create customer
-const [OpenLoginModal, setOpenLoginModal] = useState(false);
-
+  const [OpenLoginModal, setOpenLoginModal] = useState(false);
 
   const createCustomer = async (customerInfo) => {
     try {
@@ -137,6 +136,18 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
       return response.data;
     } catch (error) {
       return { success: false, msg: "server Error" };
+    }
+  };
+
+  const getSpecificOrderbyId = async (id) => {
+    try {
+      const response = await axios.post(
+        `${url}/orders/getspecificorder/${id}`,
+        {}
+      );
+      return response;
+    } catch (error) {
+      console.error("Error during API call:", error);
     }
   };
 
@@ -297,10 +308,10 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
   };
 
   // GetProductsbyCategoryId
-  const GetProductsbyCategoryId = async (filtrationField,CategoryId) => {
+  const GetProductsbyCategoryId = async (filtrationField, CategoryId) => {
     try {
       const response = await axios.post(
-        `${url}/product/getproductsbycategoryid?${filtrationField }=${CategoryId}`,
+        `${url}/product/getproductsbycategoryid?${filtrationField}=${CategoryId}`,
         {}
       );
       return response.data;
@@ -661,6 +672,18 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
     }
   };
 
+  const GetSpecificCouponbyId = async (id) => {
+    try {
+      const response = await axios.post(
+        `${url}/coupons/getspecificcoupon/${id}`,
+        {}
+      );
+      return response;
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  };
+
   return (
     <SignContext.Provider
       value={{
@@ -715,7 +738,9 @@ const [OpenLoginModal, setOpenLoginModal] = useState(false);
         AddContact,
         GetsubandsubSubcategory,
         OpenLoginModal,
-        setOpenLoginModal
+        setOpenLoginModal,
+        getSpecificOrderbyId,
+        GetSpecificCouponbyId,
       }}
     >
       {props.children}
