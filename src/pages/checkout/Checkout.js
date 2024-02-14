@@ -81,7 +81,7 @@ const Checkout = () => {
   const [discountedTotal, setDiscountedTotal] = useState(0);
   const [Name, setName] = useState("");
   const [Phone, setPhone] = useState("");
-  const [tid,setTid] = useState(null);
+  const [tid, setTid] = useState(null);
 
   const ShippingCharge = 150;
 
@@ -277,7 +277,7 @@ const Checkout = () => {
         if (!values.firstName || !values.phone) {
           console.error("Please fill out the required fields for UPI payment.");
           return;
-        } 
+        }
       }
       // let transactionId = ;
       const data = {
@@ -311,7 +311,7 @@ const Checkout = () => {
       // Poll every 5 seconds
       const pollingInterval = setInterval(() => {
         checkPaymentStatus(parsedtid.transactionId, pollingInterval);
-    }, 680000);
+      }, 680000);
 
       const newTab = window.open(response.data.url, "_blank");
 
@@ -322,7 +322,7 @@ const Checkout = () => {
           "Popup blocked. Please enable popups to view the payment page."
         );
       }
-            return parsedtid.transactionId;
+      return parsedtid.transactionId;
     } catch (error) {
       console.error(error);
     } finally {
@@ -348,7 +348,7 @@ const Checkout = () => {
       .required("Phone is required")
       .matches(/^\d{10}$/, "Phone number must be exactly 10 digits"),
   });
-  const checkPaymentStatus = async (transactionId,pollingInterval) => {
+  const checkPaymentStatus = async (transactionId, pollingInterval) => {
     try {
       const response = await axios.post(`${url}/api/status/${transactionId}`);
       console.log("Response", response);
@@ -373,7 +373,7 @@ const Checkout = () => {
     Getcoupons();
   }, [CustomerInfo._id]);
 
-  console.log("transactionss",tid);
+  console.log("transactionss", tid);
 
   return (
     <div>
@@ -418,13 +418,13 @@ const Checkout = () => {
               // transactionId:tid
             }}
             validationSchema={validationSchema}
-            onSubmit={async (values, {resetForm }) => {
+            onSubmit={async (values, { resetForm }) => {
               try {
                 if (CartData?.length > 0) {
-                  let transactionId = null; 
+                  let transactionId = null;
                   if (values.paymentMethod === "UPI") {
-                    transactionId = await handlePayment(values); 
-                    console.log("inner t",transactionId);
+                    transactionId = await handlePayment(values);
+                    console.log("inner t", transactionId);
                   }
                   const response = await CreateOrder({
                     customer: CustomerInfo._id,
@@ -449,7 +449,7 @@ const Checkout = () => {
                     paymentMethod: values.paymentMethod,
                     transactionId: transactionId,
                   });
-                  
+
                   setName(values.firstName);
                   setPhone(values.phone);
                   if (response.success) {
@@ -677,7 +677,97 @@ const Checkout = () => {
                   </div>
                   <div className="col-lg-5 col-md-12">
                     <div className="order-details">
-                      <h3 className="title">Order Summary</h3>
+                      <section className="cart-area ptb-50">
+                        <div className="container">
+                          <div className="row">
+                            <div className="col-lg-38 col-md-12">
+                              <div
+                                className="cart-table table-responsive"
+                                style={{ width: "fit-content" }}
+                              >
+                                <table className="table table-bordered">
+                                  <thead>
+                                    <tr>
+                                      <th scope="col">Product</th>
+                                      <th scope="col">Name</th>
+                                      <th scope="col" className="text-center">
+                                        Unit Price
+                                      </th>
+                                      <th scope="col" className="text-center">
+                                        QTY
+                                      </th>
+                                      <th scope="col">Total</th>
+                                      {/* <th scope="col">Total</th> */}
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {CartData
+                                      ? CartData.map((item) => (
+                                          <tr key={item.product.key}>
+                                            <td className="product-thumbnail">
+                                              <Link to="#">
+                                                <img
+                                                  src={`${url}/products/${item.product.imageGallery[0]}`}
+                                                  alt="item"
+                                                />
+                                              </Link>
+                                            </td>
+                                            <td className="product-name">
+                                              <Link to="#">
+                                                {item.product.name} <br />{" "}
+                                              </Link>
+                                            </td>
+
+                                            <td className="product-price text-center">
+                                              <span className="unit-amount">
+                                                ₹
+                                                {item.product.prices &&
+                                                  (item.product.prices
+                                                    .discounted
+                                                    ? item.product.prices
+                                                        .discounted
+                                                    : item.product.prices
+                                                        .calculatedPrice)}
+                                              </span>
+                                            </td>
+
+                                            <td className="product-quantity text-center">
+                                              <div className="input-counter">
+                                                <input
+                                                  type="text"
+                                                  value={Math.min(
+                                                    item.quantity,
+                                                    item.stock.quantity
+                                                  )}
+                                                  readOnly
+                                                />
+                                              </div>
+                                            </td>
+
+                                            <td>
+                                              ₹
+                                              {item.product.prices &&
+                                                (item.product.prices.discounted
+                                                  ? item.product.prices
+                                                      .discounted *
+                                                    item.quantity
+                                                  : item.product.prices
+                                                      .calculatedPrice *
+                                                    item.quantity)}
+                                            </td>
+                                          </tr>
+                                        ))
+                                      : null}
+                                  </tbody>
+                                </table>
+                              </div>
+                              <div className="cart-buttons">
+                                <div className="row align-items-center"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
 
                       {totalPrice > 10000 && (
                         <div className="row">
@@ -786,6 +876,31 @@ const Checkout = () => {
                               <td className="product-subtotal">
                                 <span className="subtotal-amount">
                                   ₹ {ShippingCharge}
+                                </span>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td className="total-price" colSpan={2}>
+                                <span>Subtotal</span>
+                              </td>
+                              <td className="product-subtotal">
+                                <span className="subtotal-amount">
+                                  ₹ {totalPrice}
+                                </span>
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <td className="total-price" colSpan={2}>
+                                <span>Tax</span>
+                              </td>
+                              <td className="product-subtotal">
+                                <span className="subtotal-amount">
+                                  ₹{" "}
+                                  {tPwithGST
+                                    ? (tPwithGST - totalPrice).toFixed(2)
+                                    : null}
                                 </span>
                               </td>
                             </tr>

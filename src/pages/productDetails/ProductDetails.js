@@ -50,7 +50,7 @@ const ProductDetails = () => {
   const [OtherProductData, setOtherProductData] = useState([]);
   const [CategorybyProductsData, setCategorybyProductsData] = useState([]);
   const [DailyPrice, setDailyPrice] = useState([]);
-  const [Quantity, setQuantity] = useState(0);
+  const [Quantity, setQuantity] = useState(1);
   const [selectedImage, setSelectedImage] = useState(""); // Default selected image
   const [selectedColors, setSelectedColors] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Add isLoading state
@@ -402,8 +402,8 @@ const ProductDetails = () => {
                           name="Quantity"
                           className="qty-val"
                           value={Quantity}
-                          min={0}
-                          readOnly
+                          min={1}
+                          
                         />
                         <Link
                           to="#"
