@@ -7,12 +7,12 @@ import MobileSidebar from "../../components/MobileSidebar";
 import SignContext from "../../contextAPI/Context/SignContext";
 
 const MyOrder = () => {
-  // const { id1 } = useParams();
+  const { id } = useParams();
   const { GetorderHistorybyId } = useContext(SignContext);
   const [OrderData, setOrderData] = useState([]);
-  const id1 = localStorage.getItem("id");
+  // const id1 = localStorage.getItem("id");
 
-  console.log("MY id1", id1);
+  console.log("MY id", id);
 
   const getOrderHistorybyId = async (customerId) => {
     const res = await GetorderHistorybyId(customerId);
@@ -22,11 +22,9 @@ const MyOrder = () => {
   };
 
   useEffect(() => {
-    getOrderHistorybyId(id1);
-  }, [id1]);
-  const printInvoice = () => {
-    window.print();
-  };
+    getOrderHistorybyId(id);
+  }, [id]);
+
 
   return (
     <div>
