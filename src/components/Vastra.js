@@ -299,17 +299,17 @@ const Vastra = () => {
 
                               
                             </h2>
-                            <h5>
+                            <h5 className="notAvailableTitle">
                             {product.productStock.length === 0 ? (
-                                <span className="stock-message-vastra">
+                                <span>
                                   Not available
                                 </span>
                               ) : product.productStock[0].quantity <= 0 ? (
-                                <span className="stock-message-vastra">
+                                <span>
                                   Out of stock
                                 </span>
                               ) : product.productStock[0].quantity < 5 ? (
-                                <span className="stock-message-vastra">
+                                <span>
                                   Only {product.productStock[0].quantity} left
                                 </span>
                               ) : (

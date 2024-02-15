@@ -1,5 +1,4 @@
-.stock-message2{
-    color: red;
-    margin-left: -6rem;
-    
-  }
+.notAvailableTitle{
+  text-align: start;
+  color: red;
+}

@@ -66,4 +66,7 @@
 }
 
 
-
+.notAvailableTitle{
+  text-align: start;
+  color: red;
+}

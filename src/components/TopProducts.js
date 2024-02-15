@@ -263,13 +263,13 @@ const TopProducts = () => {
                           </Link>
                         </h2>
 
-                        <h5>
+                        <h5 className="notAvailableTitle">
                           {product.productStock.length === 0 ? (
-                            <span className="stock-message3">Not available</span>
+                            <span className="stock-message-season">Not available</span>
                           ) : product.productStock[0].quantity <= 0 ? (
-                            <span className="stock-message3">Out of stock</span>
+                            <span className="stock-message-season">Out of stock</span>
                           ) : product.productStock[0].quantity < 5 ? (
-                            <span className="stock-message3">
+                            <span className="stock-message-season">
                               Only {product.productStock[0].quantity} left
                             </span>
                           ) : null}

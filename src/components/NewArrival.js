@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 
 import "./SeasonalProducts.css";
 import "./TopProducts.css";
+import "./NewArrival.css"
 
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
@@ -280,17 +281,17 @@ const NewArrival = (props) => {
                                 {product.name}
                               </Link>
                             </h2>
-                            <h5>
+                            <h5 className="notAvailableTitle">
                               {product.productStock.length === 0 ? (
-                                <span className="stock-message3">
+                                <span className="stock-message-new">
                                   Not available
                                 </span>
                               ) : product.productStock[0].quantity <= 0 ? (
-                                <span className="stock-message3">
+                                <span className="stock-message-new">
                                   Out of stock
                                 </span>
                               ) : product.productStock[0].quantity < 5 ? (
-                                <span className="stock-message3">
+                                <span className="stock-message-new">
                                   Only {product.productStock[0].quantity} left
                                 </span>
                               ) : null}
