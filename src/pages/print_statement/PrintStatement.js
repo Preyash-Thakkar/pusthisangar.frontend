@@ -9,9 +9,8 @@ import SignContext from "../../contextAPI/Context/SignContext";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const PrintStatement = () => {
+const   PrintStatement = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
-  const id1 = localStorage.getItem("id");
 
   const { id } = useParams();
   const { getSpecificOrderbyId, GetSpecificCustomer, GetSpecificCouponbyId } =
@@ -31,12 +30,12 @@ const PrintStatement = () => {
 
   const GetspecificOrderbyId = async (id) => {
     const res = await getSpecificOrderbyId(id);
-    console.log("My response", res);
 
     if (res.data.success) {
       setOrderData(res.data.orderWithProductDetails.order);
       setProductData(res.data.orderWithProductDetails.products);
     }
+    console.log("My response", res);
 
     console.log("image url", url);
   };
@@ -50,9 +49,10 @@ const PrintStatement = () => {
   };
   // console.log(CouponData);
 
-  const getSpecificCustomer = async (id1) => {
+  const getSpecificCustomer = async (customerId) => {
     try {
-      const res = await GetSpecificCustomer(id1);
+      console.log("invoked")
+      const res = await GetSpecificCustomer(customerId);
       console.log("My customer response", res);
       if (res.data.success) {
         setCustomerInfo(res.data.customer);
@@ -61,6 +61,7 @@ const PrintStatement = () => {
       console.error("Error fetching customer:", error);
     }
   };
+
 
   const totalPrice = ProductData
     ? ProductData.reduce((acc, item) => {
@@ -114,8 +115,8 @@ const PrintStatement = () => {
 
   useEffect(() => {
     GetspecificOrderbyId(id);
-    if (id1) {
-      getSpecificCustomer(id1);
+    if (customerId) {
+      getSpecificCustomer(customerId);
     }
     getspecificCouponbyId(OrderData.couponCode);
     const getFormattedDate = () => {
@@ -140,6 +141,9 @@ const PrintStatement = () => {
   if (ProductData) {
     console.log("Me product", ProductData);
   }
+
+  console.log("Setted customer info",CustomerInfo);
+
   return (
     <div>
       <section class="pt-4 vmobile-tag-kl">
@@ -237,10 +241,7 @@ const PrintStatement = () => {
                         <th>Name</th>
                         <td>{CustomerInfo.username}</td>
                       </tr>
-                      <tr>
-                        <th>Address </th>
-                        <td>{OrderData.shippingAddress}</td>
-                      </tr>
+                    
                       <tr>
                         <th>Email Id</th>
                         <td>{CustomerInfo.email}</td>
@@ -258,19 +259,16 @@ const PrintStatement = () => {
                     <tbody className="text-start">
                       <tr>
                         <th>Name</th>
-                        <td>{CustomerInfo.username}</td>
+                        <td>{OrderData.FirstName} {OrderData.LastName}</td>
                       </tr>
                       <tr>
                         <th>Address </th>
                         <td>{OrderData.shippingAddress}</td>
                       </tr>
-                      <tr>
-                        <th>Email Id</th>
-                        <td>{CustomerInfo.email}</td>
-                      </tr>
+                  
                       <tr>
                         <th>Mobile No</th>
-                        <td>+91 {CustomerInfo.phone}</td>
+                        <td>+91 {OrderData.phone}</td>
                       </tr>
                     </tbody>
                   </table>
