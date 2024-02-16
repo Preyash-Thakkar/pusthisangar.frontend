@@ -426,6 +426,8 @@ const Checkout = () => {
                     transactionId = await handlePayment(values);
                     console.log("inner t", transactionId);
                   }
+
+                  console.log("Phone values",values.phone);
                   const response = await CreateOrder({
                     customer: CustomerInfo._id,
                     FirstName: values.firstName,
@@ -448,7 +450,10 @@ const Checkout = () => {
                     couponCode: selectedCoupon ? selectedCoupon._id : null,
                     paymentMethod: values.paymentMethod,
                     transactionId: transactionId,
+                    phone: values.phone
                   });
+                  console.log("Values",values);
+                  console.log("Phone k",values.phone);
 
                   setName(values.firstName);
                   setPhone(values.phone);
