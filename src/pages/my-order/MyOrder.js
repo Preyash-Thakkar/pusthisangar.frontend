@@ -108,7 +108,7 @@ const MyOrder = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {OrderData.slice(-4).map((order, index) => (
+                            {OrderData.map((order, index) => (
                               <tr key={index}>
                                 <td className="product-name">{order._id}</td>
                                 <td className="product-name">
