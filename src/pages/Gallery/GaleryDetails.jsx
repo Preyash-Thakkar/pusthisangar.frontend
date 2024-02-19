@@ -12,8 +12,7 @@ import axios from "axios";
 import MobileSidebar from "../../components/MobileSidebar";
 import { storeGallery, storeGalleryCategory } from "../../state/action";
 import Gallery from "react-image-gallery";
-import 'react-image-gallery/styles/css/image-gallery.css';
-
+import "react-image-gallery/styles/css/image-gallery.css";
 
 const GalleryDetails = () => {
   const { id } = useParams();
@@ -26,10 +25,6 @@ const GalleryDetails = () => {
   const [filterdPosts, setGalleryFilterdPosts] = useState([]);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-
-
-
-
 
   const getAllGallerys = () => {
     if (arrayOfGallery) {
@@ -50,14 +45,22 @@ const GalleryDetails = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      // Fetch gallery categories only if the array is empty
       if (arrayOfGallery.length === 0) {
         await getAllGallerys();
       }
-      setGalleryFilterdPosts(filteredArray);
     };
 
     fetchData();
-  }, [filteredArray]);
+  }, [arrayOfGallery.length, getAllGallerys]); // Depend on arrayOfGallery.length and getAllGallerys function
+
+  useEffect(() => {
+    // Directly filter and set filtered posts whenever arrayOfGallery updates
+    const newFilteredArray = arrayOfGallery.filter(
+      (item) => item.galleryCategory === id && item.active
+    );
+    setGalleryFilterdPosts(newFilteredArray);
+  }, [arrayOfGallery, id]); // Depend on arrayOfGallery and id to re-filter when necessary
 
   const openSlider = (index) => {
     setSelectedImageIndex(index);
@@ -92,54 +95,49 @@ const GalleryDetails = () => {
             <h2>Gallery Details</h2>
           </div>
           <div className="row clearfix">
-            {filterdPosts.filter(item => item.active).map((item, index) => (
-              <div
-                key={index}
-                className="col-lg-3 col-md-6 col-sm-12 team-block"
-              >
-                <Link>
-                  <div className="galleryCard">
-                    <div className="inner-box">
-                      <Link>
-                        <div
-                          className="image-box"
-                         
-                        >
-                          <figure className="image" >
-                            <Link onClick={() => openSlider(index)}>
-                            <img
-                              src={`${url}/gallery-images/${item.imagePath}`}
-                              onError={(e) => {
-                                e.target.src =
-                                  "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
-                              }}
-                              alt=""
-                            />
-                            </Link>
-                          </figure>
-                          <h5 className="imageTitle">{item.imageTitle}</h5>
+            {filterdPosts
+              .filter((item) => item.active)
+              .map((item, index) => (
+                <div
+                  key={index}
+                  className="col-lg-3 col-md-6 col-sm-12 team-block"
+                >
+                  <Link>
+                    <div className="galleryCard">
+                      <div className="inner-box">
+                        <Link>
+                          <div className="image-box">
+                            <figure className="image">
+                              <Link onClick={() => openSlider(index)}>
+                                <img
+                                  src={`${url}/gallery-images/${item.imagePath}`}
+                                  onError={(e) => {
+                                    e.target.src =
+                                      "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                                  }}
+                                  alt=""
+                                />
+                              </Link>
+                            </figure>
+                            <h5 className="imageTitle">{item.imageTitle}</h5>
+                          </div>
+                        </Link>
+                        <div className="lower-content">
+                          <h3 className="titleLink">
+                            <Link>{item.gallaryCategoryTitle}</Link>
+                          </h3>
                         </div>
-                      </Link>
-                      <div className="lower-content">
-                        <h3 className="titleLink">
-                          <Link>
-                            {item.gallaryCategoryTitle}
-                          </Link>
-                        </h3>
                       </div>
                     </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                  </Link>
+                </div>
+              ))}
           </div>
         </div>
       </section>
       <Subscribe />
       <Featured />
       <MidFooter />
-
-      
 
       {isOpen && (
         <div className="overlay">
@@ -148,7 +146,7 @@ const GalleryDetails = () => {
               X
             </button>
             <Gallery
-              items={filterdPosts.map(item => ({
+              items={filterdPosts.map((item) => ({
                 original: `${url}/gallery-images/${item.imagePath}`,
                 thumbnail: `${url}/gallery-images/${item.imagePath}`,
                 description: item.imageTitle,
@@ -159,12 +157,10 @@ const GalleryDetails = () => {
               showPlayButton={false}
               showBullets
               onClose={closeSlider}
-              
             />
           </div>
         </div>
       )}
-      
     </React.Fragment>
   );
 };
