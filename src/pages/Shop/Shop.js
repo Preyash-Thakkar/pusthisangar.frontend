@@ -48,10 +48,15 @@ const Shop = () => {
   const authToken = localStorage.getItem("authToken");
   const [QueryParams, setQueryParams] = useState({});
 
+  const [loading, setLoading] = useState(false);
+
   const Getproduct = async () => {
     const res = await getProducts();
 
+    console.log("res", res);
+
     const categoryRes = await getCategories();
+    console.log("categories", categoryRes);
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
@@ -115,7 +120,7 @@ const Shop = () => {
       setCustomerInfo(res.customer);
       console.log("success");
     } else {
-      console.log("err",res.msg);
+      console.log("err", res.msg);
     }
   };
 
@@ -151,23 +156,41 @@ const Shop = () => {
     setShowFilters(!showFilters);
   };
 
+  const [selectedColor, setSelectedColor] = useState([]);
   // Define functions to handle filter changes
-  const handleColorChange = (selectedColor) => {
-    const updatedColors = selectedColors.includes(selectedColor)
-      ? selectedColors.filter((color) => color !== selectedColor)
-      : [...selectedColors, selectedColor];
+  const GetProductsByColor = async () => {
+    setLoading(true);
+    const res = await getProducts();
 
-    // Update the selected colors state
-    setSelectedColors(updatedColors);
-
-    // Filter products based on the selected colors locally
-    const filteredProducts = ProductData.filter((product) => {
-      const isIncluded = updatedColors.includes(product.productColor);
-      return isIncluded;
-    });
+    const filteredProducts = selectedColor
+      ? res.products.filter((product) => product.productColor === selectedColor)
+      : res.products;
 
     setProductData(filteredProducts);
+    setLoading(false);
   };
+
+  useEffect(() => {
+    GetProductsByColor();
+  }, [selectedColor]);
+
+  const handleColorChange = (color) => {
+    console.log("Selected color:", color);
+    setSelectedColor( color);
+  };
+
+  // const handleColorChange = (color) => {
+  //   console.log("Selected color:", color);
+  //   if (selectedColor.includes(color)) {
+  //     const colorIndex = selectedColor.indexOf(color);
+  //     var tempColor = [...selectedColor];
+  //     tempColor.splice(colorIndex, 1);
+  //     setSelectedColor(tempColor);
+  //   } else {
+  //     setSelectedColor([...selectedColor, color]);
+  //   }
+  //   // setSelectedColor([...selectedColor, color]);
+  // };
 
   const handleSeasonChange = (selectedseason) => {
     const updatedColors = selectedSeason.includes(selectedseason)
@@ -220,7 +243,13 @@ const Shop = () => {
   const getFilteredItems = async () => {
     const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
 
-    const queryString = Object.entries(QueryParams)
+    // Construct query parameters including the selected category
+    const queryParams = {
+      ...QueryParams,
+      category: selectedCategory, // Add selected category to the query parameters
+    };
+
+    const queryString = Object.entries(queryParams)
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
 
@@ -235,10 +264,32 @@ const Shop = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const GetproductByCategory = async () => {
+    setLoading(true);
+    const res = await getProducts();
+
+    const filteredProducts = selectedCategory
+      ? res.products.filter((product) => product.category === selectedCategory)
+      : res.products;
+
+    // console.log("filter data", filteredProducts, ProductData);
+
+    setProductData(filteredProducts);
+    setLoading(false);
+    // setCategoryData(categoryRes);
+  };
+
+  useEffect(() => {
+    GetproductByCategory();
+  }, [selectedCategory]);
+
   const handleCategoryChange = (selectedCategory) => {
-    changeQueryparams("category", selectedCategory);
+    console.log("Selected category:", selectedCategory);
+
     setSelectedCategory(selectedCategory);
   };
+
   const handleMaterialChange = (selectedmaterial) => {
     changeQueryparams("material", selectedmaterial);
     setSelectedMaterial(selectedmaterial);
@@ -299,7 +350,7 @@ const Shop = () => {
   const handleCartClick = async (id) => {
     GetLoggedInCustomer();
     try {
-      console.log("My data",ProductData);
+      console.log("My data", ProductData);
       const product = ProductData.find((p) => p._id === id);
       console.log("PPP", product); // Find the product by ID
       if (
@@ -316,7 +367,7 @@ const Shop = () => {
         });
         return; // Exit the function to prevent adding to cart
       }
-      console.log("ci",CustomerInfo);
+      console.log("ci", CustomerInfo);
       if (authToken) {
         const customerId = CustomerInfo._id;
         const cartInfo = {
@@ -344,10 +395,10 @@ const Shop = () => {
           }
         }
 
-        const res = await addToCart(customerId,cartInfo);
+        const res = await addToCart(customerId, cartInfo);
         console.log(customerId);
         console.log(cartInfo);
-        console.log("m response",res)
+        console.log("m response", res);
 
         if (res.success) {
           // Cart updated successfully
@@ -439,7 +490,7 @@ const Shop = () => {
                               name="checkbox"
                               id={`color-${color}`}
                               value={color.name}
-                              checked={selectedColors.includes(color.name)}
+                              checked={selectedColor.includes(color.name)}
                               onChange={() => handleColorChange(color.name)}
                             />
                             <label
@@ -630,6 +681,7 @@ const Shop = () => {
               </div>
             </div>
           </div>
+          {/* { loading && <p className="text-align-center h5" >Loading...</p> } */}
           {ProductData
             ? ProductData.slice(0, productsToShow).map((product) => (
                 <div
@@ -689,9 +741,13 @@ const Shop = () => {
 
                       <h5 className="notAvailableTitle">
                         {product.productStock.length === 0 ? (
-                          <span className="stock-message-list">Not available</span>
+                          <span className="stock-message-list">
+                            Not available
+                          </span>
                         ) : product.productStock[0].quantity <= 0 ? (
-                          <span className="stock-message-list">Out of stock</span>
+                          <span className="stock-message-list">
+                            Out of stock
+                          </span>
                         ) : product.productStock[0].quantity < 5 ? (
                           <span className="stock-message-list">
                             Only {product.productStock[0].quantity} left
