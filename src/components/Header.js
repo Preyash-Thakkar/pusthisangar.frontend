@@ -27,7 +27,7 @@ const Header = () => {
   const [username, setUsername] = useState("");
   const [CartData, setCartData] = useState([]);
   const [currentSubCategoryId, setCurrentSubCategoryId] = useState(null);
-const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
+  const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
 
   const {
     createCustomer,
@@ -77,7 +77,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
         `${url}/product/getproductbytags?tag=${tag}`
       );
       const { success, products } = response.data;
-     
+
       if (success) {
         setProducts(products);
       } else {
@@ -93,7 +93,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-    
+
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -103,7 +103,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
 
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
-   
+
     if (res.success) {
       setCartData(res.cartItems);
     }
@@ -113,7 +113,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
     try {
       const customerId = CustomerInfo._id;
       const res = await removeItemFromCart(customerId, productId);
-      
+
       if (res.success) {
         console.log("Cart updated successfully");
       } else {
@@ -175,7 +175,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
   const handleSubCategoryHover = async (index, subcategory) => {
     setSubActiveIndex(index);
     setSubSubMenuDropdownOpen(true);
-  
+
     try {
       const data = subcategory;
       setSelectedSubCategory(subcategory.subsubcategories);
@@ -262,7 +262,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
 
   const handleLogin = async (Values) => {
     const res = await loginCustomer(Values);
-    
+
     if (res.success) {
       window.localStorage.setItem("loggedIn", true);
       window.localStorage.setItem("authToken", res.token);
@@ -303,7 +303,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
 
   const handleSignupSubmit = async (Values) => {
     const res = await createCustomer(Values);
- 
+
     if (res.success) {
       handleLoginClick();
     }
@@ -335,17 +335,17 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
     GetLoggedInCustomer(authToken);
     getLoggedinCustomerCart(CustomerInfo._id);
     localStorage.setItem('currentSubCategoryId', currentSubCategoryId);
-   // localStorage.setItem('currentSubSubCategoryId', JSON.stringify(currentSubSubCategoryId));
+    // localStorage.setItem('currentSubSubCategoryId', JSON.stringify(currentSubSubCategoryId));
     Getcategories();
     const getStoredUsername = () => {
       const storedUsername = window.localStorage.getItem("username");
       if (storedUsername) {
         setUsername(storedUsername);
       }
-      
+
     };
     getStoredUsername();
-  }, [CustomerInfo._id, selectedCategory,currentSubCategoryId,currentSubSubCategoryId]);
+  }, [CustomerInfo._id, selectedCategory, currentSubCategoryId, currentSubSubCategoryId]);
 
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -492,11 +492,10 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                                           className={`eye-icon-container text-end`}
                                         >
                                           <p
-                                            className={`bi ${
-                                              passwordVisible
+                                            className={`bi ${passwordVisible
                                                 ? "bi-eye"
                                                 : "bi-eye-slash"
-                                            } eye-icon text-end`}
+                                              } eye-icon text-end`}
                                             onClick={() =>
                                               setPasswordVisible(
                                                 !passwordVisible
@@ -809,11 +808,10 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                                             className={`eye-icon-container text-end`}
                                           >
                                             <p
-                                              className={`bi ${
-                                                passwordVisible
+                                              className={`bi ${passwordVisible
                                                   ? "bi-eye"
                                                   : "bi-eye-slash"
-                                              } eye-icon text-end me-2`}
+                                                } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setPasswordVisible(
                                                   !passwordVisible
@@ -845,11 +843,10 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                                             className={`eye-icon-container text-end`}
                                           >
                                             <p
-                                              className={`bi ${
-                                                ConfirmpasswordVisible
+                                              className={`bi ${ConfirmpasswordVisible
                                                   ? "bi-eye"
                                                   : "bi-eye-slash"
-                                              } eye-icon text-end me-2`}
+                                                } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setConfirmPasswordVisible(
                                                   !ConfirmpasswordVisible
@@ -930,13 +927,13 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                     onChange={(e) => setTag(e.target.value)}
                     placeholder="Search for items..."
                   />
-                  <button className="btn" ty>
-                    {tag ? (
-                      <Link to={`/bytags/${tag}`}>Search...</Link>
-                    ) : (
-                      <span>Search...</span>
-                    )}
-                  </button>
+                  <Link to={tag ? `/bytags/${tag}` : '#'}>
+  <button className="btn" type="button" style={{ height: '54px' }}>
+    Search...
+  </button>
+</Link>
+
+
                 </form>
                 {/* {showDropdown && (
                   <ul className="search-list">
@@ -977,51 +974,50 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                           <ul>
                             {CartData
                               ? CartData.map((item) => (
-                                  <li key={item.product._id}>
-                                    {item.product && item.product.name && (
-                                      <>
-                                        <div className="shopping-cart-img">
-                                          <Link to="#">
-                                            <img
-                                              alt="cart"
-                                              src={`${url}/products/${
-                                                item.product.imageGallery &&
+                                <li key={item.product._id}>
+                                  {item.product && item.product.name && (
+                                    <>
+                                      <div className="shopping-cart-img">
+                                        <Link to="#">
+                                          <img
+                                            alt="cart"
+                                            src={`${url}/products/${item.product.imageGallery &&
                                                 item.product.imageGallery[0]
-                                                  ? item.product.imageGallery[0]
-                                                  : "default-image.jpg"
+                                                ? item.product.imageGallery[0]
+                                                : "default-image.jpg"
                                               }`}
-                                            />
+                                          />
+                                        </Link>
+                                      </div>
+                                      <div className="shopping-cart-title">
+                                        <h4>
+                                          <Link to="#">
+                                            {item.product.name}
                                           </Link>
-                                        </div>
-                                        <div className="shopping-cart-title">
-                                          <h4>
-                                            <Link to="#">
-                                              {item.product.name}
-                                            </Link>
-                                          </h4>
-                                          <h3>
-                                            <span>{item.quantity}× </span>
-                                            {item.product.prices.discounted
-                                              ? item.product.prices.discounted
-                                              : item.product.prices
-                                                  .calculatedPrice}
-                                          </h3>
-                                        </div>
-                                        <div className="shopping-cart-delete">
-                                          <Link
-                                            onClick={() => {
-                                              handleRemoveItemFromCart(
-                                                item.product._id
-                                              );
-                                            }}
-                                          >
-                                            <i className="fi-rs-cross-small bi bi-x" />
-                                          </Link>
-                                        </div>
-                                      </>
-                                    )}
-                                  </li>
-                                ))
+                                        </h4>
+                                        <h3>
+                                          <span>{item.quantity}× </span>
+                                          {item.product.prices.discounted
+                                            ? item.product.prices.discounted
+                                            : item.product.prices
+                                              .calculatedPrice}
+                                        </h3>
+                                      </div>
+                                      <div className="shopping-cart-delete">
+                                        <Link
+                                          onClick={() => {
+                                            handleRemoveItemFromCart(
+                                              item.product._id
+                                            );
+                                          }}
+                                        >
+                                          <i className="fi-rs-cross-small bi bi-x" />
+                                        </Link>
+                                      </div>
+                                    </>
+                                  )}
+                                </li>
+                              ))
                               : null}
                           </ul>
                           <div className="shopping-cart-footer">
@@ -1133,7 +1129,7 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                           <li
                             key={index}
                             onMouseEnter={() =>
-                              handleCategoryHover(category._id, index,localStorage.removeItem("currentSubSubCategoryId"))
+                              handleCategoryHover(category._id, index, localStorage.removeItem("currentSubSubCategoryId"))
                             }
                             onMouseLeave={() => {
                               handleCategoryLeave();
@@ -1152,9 +1148,8 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                             {isMegaMenuDropdownOpen && (
                               <>
                                 <div
-                                  className={`inner2 ${
-                                    activeIndex === index ? "show" : ""
-                                  }`}
+                                  className={`inner2 ${activeIndex === index ? "show" : ""
+                                    }`}
                                   onMouseEnter={handleSubSubMenuHover}
                                   onMouseLeave={handleSuSubMenuLeave}
                                 >
@@ -1169,17 +1164,17 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                                               subcategory,
                                               localStorage.removeItem("currentSubSubCategoryId")
                                             )
-                                            
+
                                           }
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
 
-                                        <Link to={`/product-list/${currentSubCategoryId}/subCategoryId`}>
-                                          {subcategory.name}
-                                        </Link>
+                                          <Link to={`/product-list/${currentSubCategoryId}/subCategoryId`}>
+                                            {subcategory.name}
+                                          </Link>
 
-                                     
+
                                         </li>
                                       ))}
                                     </ul>
@@ -1196,15 +1191,15 @@ const [currentSubSubCategoryId, setCurrentSubSubCategoryId] = useState(null);
                                               className="sub-category-item"
                                               onClick={() => {
                                                 setCurrentSubSubCategoryId(subsubcategory._id);
-                                                localStorage.setItem('currentSubSubCategoryId',(subsubcategory._id))
-                                              } }
-                                              // onMouseLeave={() => {
-                                              //   localStorage.removeItem("currentSubSubCategoryId") ;
-                                              // }}
+                                                localStorage.setItem('currentSubSubCategoryId', (subsubcategory._id))
+                                              }}
+                                            // onMouseLeave={() => {
+                                            //   localStorage.removeItem("currentSubSubCategoryId") ;
+                                            // }}
                                             >
-                                             <Link to={`/product-list/${subsubcategory._id}/subSubCategory`}>
-                                              {subsubcategory.name}
-                                            </Link>
+                                              <Link to={`/product-list/${subsubcategory._id}/subSubCategory`}>
+                                                {subsubcategory.name}
+                                              </Link>
                                             </li>
                                           )
                                         )}
