@@ -493,8 +493,8 @@ const Header = () => {
                                         >
                                           <p
                                             className={`bi ${passwordVisible
-                                                ? "bi-eye"
-                                                : "bi-eye-slash"
+                                              ? "bi-eye"
+                                              : "bi-eye-slash"
                                               } eye-icon text-end`}
                                             onClick={() =>
                                               setPasswordVisible(
@@ -809,8 +809,8 @@ const Header = () => {
                                           >
                                             <p
                                               className={`bi ${passwordVisible
-                                                  ? "bi-eye"
-                                                  : "bi-eye-slash"
+                                                ? "bi-eye"
+                                                : "bi-eye-slash"
                                                 } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setPasswordVisible(
@@ -844,8 +844,8 @@ const Header = () => {
                                           >
                                             <p
                                               className={`bi ${ConfirmpasswordVisible
-                                                  ? "bi-eye"
-                                                  : "bi-eye-slash"
+                                                ? "bi-eye"
+                                                : "bi-eye-slash"
                                                 } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setConfirmPasswordVisible(
@@ -928,10 +928,10 @@ const Header = () => {
                     placeholder="Search for items..."
                   />
                   <Link to={tag ? `/bytags/${tag}` : '#'}>
-  <button className="btn" type="button" style={{ height: '54px' }}>
-    Search...
-  </button>
-</Link>
+                    <button className="btn" type="button" style={{ height: '54px' }}>
+                      Search...
+                    </button>
+                  </Link>
 
 
                 </form>
@@ -982,9 +982,9 @@ const Header = () => {
                                           <img
                                             alt="cart"
                                             src={`${url}/products/${item.product.imageGallery &&
-                                                item.product.imageGallery[0]
-                                                ? item.product.imageGallery[0]
-                                                : "default-image.jpg"
+                                              item.product.imageGallery[0]
+                                              ? item.product.imageGallery[0]
+                                              : "default-image.jpg"
                                               }`}
                                           />
                                         </Link>
