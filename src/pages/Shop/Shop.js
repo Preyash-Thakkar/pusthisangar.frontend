@@ -375,6 +375,7 @@ const Shop = () => {
       category: selectedCategory, // Add selected category to the query parameters
     };
 
+    console.log("querty", queryParams);
     const queryString = Object.entries(queryParams)
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
