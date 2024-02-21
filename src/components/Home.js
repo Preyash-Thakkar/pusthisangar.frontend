@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import CatgoryMobileView from "./CategotyMobile";
 import Category from "./Category";
 import FeatureCategory from "./FeatureCategory";
 import Featured from "./Featured";
@@ -27,6 +28,13 @@ const Home = () => {
 
       <MobileSidebar />
       <HomeSlider  />
+      <div className="mobileCategoryDiv">
+
+
+      <CatgoryMobileView />
+
+
+      </div>
       {/* <FeatureCategory/> */}
       <Category />
       <OfferPart />
