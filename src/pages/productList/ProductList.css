@@ -270,7 +270,8 @@ shop-product-fillter .sort-by-product-area .sort-by-product-wrap .sort-by-dropdo
 }
 .stock-message1{
   color: red;
-  margin-left: -7rem;
+  /* margin-left: -7rem; */
+  text-align: start;
 }
 
 @media (max-width: 767.98px) {
