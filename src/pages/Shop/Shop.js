@@ -135,9 +135,10 @@ const Shop = () => {
   const [selectedShopBy, setSelectedShopBy] = useState([]);
   const [price, setPrice] = useState(40);
   const [productsToShow, setProductsToShow] = useState(5);
+  const [selectedColor, setSelectedColor] = useState([]);
 
   const resetFilters = () => {
-    setSelectedColors([]);
+    setSelectedColor([]);
     setSelectedPriceRange(null);
     setSelectedCategory([]);
     setSelectedShopBy([]);
@@ -156,7 +157,132 @@ const Shop = () => {
     setShowFilters(!showFilters);
   };
 
-  const [selectedColor, setSelectedColor] = useState([]);
+  const applyFilters = async () => {
+    try {
+      console.log("Fetching products...");
+      let res;
+      let filteredProducts;
+      if (!selectedPriceRange) {
+        res = await getProducts();
+        filteredProducts = res.products;
+      } else {
+        const url = `${process.env.REACT_APP_BASE_URL}/product/getallproductsforprice`;
+
+        // Construct query parameters including the selected category
+        const queryParams = {
+          ...QueryParams,
+          category: selectedCategory, // Add selected category to the query parameters
+        };
+
+        const queryString = Object.entries(queryParams)
+          .map(([key, value]) => `${key}=${value}`)
+          .join("&");
+
+        const fullUrl = queryString ? `${url}?${queryString}` : url;
+
+        console.log(fullUrl);
+
+        try {
+          const response = await axios.post(fullUrl);
+          console.log("res", response);
+          if (response.data.success) {
+            setProductData(response.data.products);
+            res = response.data;
+            filteredProducts = res.products;
+          }
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+
+      if (selectedColor.length !== 0) {
+        console.log("selectedColor True");
+        filteredProducts = filteredProducts.filter(
+          (product) => product.productColor !== ""
+        );
+      }
+
+      // material
+      if (selectedMaterial.length !== 0) {
+        console.log("selected material True");
+        filteredProducts = filteredProducts.filter(
+          (product) => product.material !== ""
+        );
+      }
+
+      console.log("Products fetched:", res.products);
+
+      console.log("Filtered by not color:", filteredProducts);
+
+      //Filter by color
+      if (selectedColor.length > 0) {
+        console.log("Filtering by color:", selectedColor);
+        filteredProducts = filteredProducts.filter((product) =>
+          selectedColor.includes(product.productColor)
+        );
+        console.log("Filtered by color:", filteredProducts);
+      }
+
+      // Filter by price range
+      // if (selectedPriceRange) {
+      //   console.log("Filtering by price range:", selectedPriceRange);
+      //   filteredProducts = filteredProducts.filter((product) => {
+      //     const price = product.price;
+      //     if (selectedPriceRange === "Over ₹5000") {
+      //       return price >= 5000;
+      //     } else {
+      //       const [minPrice, maxPrice] = selectedPriceRange
+      //         .split(" - ")
+      //         .map(parseFloat);
+      //       return price >= minPrice && price <= maxPrice;
+      //     }
+      //   });
+      //   console.log("Filtered by price range:", filteredProducts);
+      // }
+
+      // Filter by category
+      if (selectedCategory.length > 0) {
+        console.log("Filtering by category:", selectedCategory);
+        filteredProducts = filteredProducts.filter((product) =>
+          selectedCategory.includes(product.category)
+        );
+        console.log("Filtered by category:", filteredProducts);
+      }
+
+      // Filter by material
+      if (selectedMaterial.length > 0) {
+        console.log("Filtering by material:", selectedMaterial);
+        filteredProducts = filteredProducts.filter((product) =>
+          selectedMaterial.includes(product.material)
+        );
+        console.log("Filtered by material:", filteredProducts);
+      }
+
+      // Filter by season
+      if (selectedSeason.length > 0) {
+        console.log("Filtering by season:", selectedSeason);
+        filteredProducts = filteredProducts.filter((product) =>
+          selectedSeason.includes(product.season)
+        );
+        console.log("Filtered by season:", filteredProducts);
+      }
+
+      setProductData(filteredProducts);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    }
+  };
+
+  useEffect(() => {
+    applyFilters();
+  }, [
+    selectedColor,
+    selectedPriceRange,
+    selectedCategory,
+    selectedMaterial,
+    selectedSeason,
+  ]);
+
   // Define functions to handle filter changes
   const GetProductsByColor = async () => {
     setLoading(true);
@@ -170,13 +296,13 @@ const Shop = () => {
     setLoading(false);
   };
 
-  useEffect(() => {
-    GetProductsByColor();
-  }, [selectedColor]);
+  // useEffect(() => {
+  //   GetProductsByColor();
+  // }, [selectedColor]);
 
   const handleColorChange = (color) => {
     console.log("Selected color:", color);
-    setSelectedColor( color);
+    setSelectedColor(color);
   };
 
   // const handleColorChange = (color) => {
@@ -249,6 +375,7 @@ const Shop = () => {
       category: selectedCategory, // Add selected category to the query parameters
     };
 
+    console.log("querty", queryParams);
     const queryString = Object.entries(queryParams)
       .map(([key, value]) => `${key}=${value}`)
       .join("&");
@@ -259,6 +386,7 @@ const Shop = () => {
 
     try {
       const response = await axios.post(fullUrl);
+      console.log("res", response);
       if (response.data.success) setProductData(response.data.products);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -277,12 +405,12 @@ const Shop = () => {
 
     setProductData(filteredProducts);
     setLoading(false);
-    // setCategoryData(categoryRes);
+    //setCategoryData(categoryRes);
   };
 
-  useEffect(() => {
-    GetproductByCategory();
-  }, [selectedCategory]);
+  // useEffect(() => {
+  //   GetproductByCategory();
+  // }, [selectedCategory]);
 
   const handleCategoryChange = (selectedCategory) => {
     console.log("Selected category:", selectedCategory);
@@ -340,7 +468,7 @@ const Shop = () => {
         return priceB - priceA;
       });
     }
-    setProductData(sortedData);
+    //setProductData(sortedData);
   };
 
   const handleShowMore = () => {
@@ -428,9 +556,9 @@ const Shop = () => {
     GetSeasons();
   }, [authToken]);
 
-  useEffect(() => {
-    getFilteredItems();
-  }, [selectedCategory, QueryParams, selectedColors, selectedPriceRange]);
+  // useEffect(() => {
+  //   getFilteredItems();
+  // }, [selectedCategory, QueryParams, selectedColors, selectedPriceRange]);
 
   return (
     <div>
