@@ -647,13 +647,13 @@ const ProductList = () => {
                           {product.name}
                         </Link>
                       </h2>
-                      <h5>
+                      <h5 className="stock-message1">
                         {product.productStock.length === 0 ? (
-                          <span className="stock-message1">Not available</span>
+                          <span >Not available</span>
                         ) : product.productStock[0].quantity <= 0 ? (
-                          <span className="stock-message1">Out of stock</span>
+                          <span >Out of stock</span>
                         ) : product.productStock[0].quantity < 5 ? (
-                          <span className="stock-message1">
+                          <span>
                             Only {product.productStock[0].quantity} left
                           </span>
                         ) : null}

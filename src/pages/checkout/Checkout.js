@@ -10,6 +10,7 @@ import { Formik } from "formik";
 import SignContext from "../../contextAPI/Context/SignContext";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { Table } from "react-bootstrap";
 
 const allStates = [
   "Andhra Pradesh",
@@ -508,7 +509,7 @@ const Checkout = () => {
             }) => (
               <form onSubmit={handleSubmit}>
                 <div className="row">
-                  <div className="col-lg-5 col-md-12">
+                  <div className="col-lg-6 col-md-12">
                     <div className="billing-details cart-buttons mt-0">
                       <h3 className="title">Shipping Address</h3>
 
@@ -680,91 +681,74 @@ const Checkout = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-lg-5 col-md-12">
+                  <div className="col-lg-6 col-md-12">
                     <div className="order-details">
                       <section className="cart-area ptb-50">
                         <div className="container">
                           <div className="row">
                             <div className="col-lg-38 col-md-12">
                               <div
-                                className="cart-table table-responsive"
-                                style={{ width: "fit-content" }}
+                                className="cart-table "
+                             
                               >
-                                <table className="table table-bordered">
-                                  <thead>
-                                    <tr>
-                                      <th scope="col">Product</th>
-                                      <th scope="col">Name</th>
-                                      <th scope="col" className="text-center">
-                                        Unit Price
-                                      </th>
-                                      <th scope="col" className="text-center">
-                                        QTY
-                                      </th>
-                                      <th scope="col">Total</th>
-                                      {/* <th scope="col">Total</th> */}
-                                    </tr>
-                                  </thead>
-                                  <tbody>
-                                    {CartData
-                                      ? CartData.map((item) => (
-                                          <tr key={item.product.key}>
-                                            <td className="product-thumbnail">
-                                              <Link to="#">
-                                                <img
-                                                  src={`${url}/products/${item.product.imageGallery[0]}`}
-                                                  alt="item"
-                                                />
-                                              </Link>
-                                            </td>
-                                            <td className="product-name">
-                                              <Link to="#">
-                                                {item.product.name} <br />{" "}
-                                              </Link>
-                                            </td>
-
-                                            <td className="product-price text-center">
-                                              <span className="unit-amount">
-                                                ₹
-                                                {item.product.prices &&
-                                                  (item.product.prices
-                                                    .discounted
-                                                    ? item.product.prices
-                                                        .discounted
-                                                    : item.product.prices
-                                                        .calculatedPrice)}
-                                              </span>
-                                            </td>
-
-                                            <td className="product-quantity text-center">
-                                              <div className="input-counter">
-                                                <input
-                                                  type="text"
-                                                  value={Math.min(
-                                                    item.quantity,
-                                                    item.stock.quantity
-                                                  )}
-                                                  readOnly
-                                                />
-                                              </div>
-                                            </td>
-
-                                            <td>
-                                              ₹
-                                              {item.product.prices &&
-                                                (item.product.prices.discounted
-                                                  ? item.product.prices
-                                                      .discounted *
-                                                    item.quantity
-                                                  : item.product.prices
-                                                      .calculatedPrice *
-                                                    item.quantity)}
-                                            </td>
-                                          </tr>
-                                        ))
-                                      : null}
-                                  </tbody>
-                                </table>
+                                <Table responsive bordered>
+      <thead>
+        <tr>
+          <th scope="col">Product</th>
+          <th scope="col">Name</th>
+          <th scope="col" className="text-center">
+            Unit Price
+          </th>
+          <th scope="col" className="text-center">
+            QTY
+          </th>
+          <th scope="col">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {CartData &&
+          CartData.map((item) => (
+            <tr key={item.product.key}>
+              <td className="product-thumbnail">
+                <Link to="#">
+                  <img
+                    src={`${url}/products/${item.product.imageGallery[0]}`}
+                    alt="item"
+                  />
+                </Link>
+              </td>
+              <td className="product-name">
+                <Link to="#">{item.product.name}</Link>
+              </td>
+              <td className="product-price text-center">
+                <span className="unit-amount">
+                  ₹
+                  {item.product.prices &&
+                    (item.product.prices.discounted
+                      ? item.product.prices.discounted
+                      : item.product.prices.calculatedPrice)}
+                </span>
+              </td>
+              <td className="product-quantity text-center">
+                <div className="input-counter">
+                  <input
+                    type="text"
+                    value={Math.min(item.quantity, item.stock.quantity)}
+                    readOnly
+                  />
+                </div>
+              </td>
+              <td>
+                ₹
+                {item.product.prices &&
+                  (item.product.prices.discounted
+                    ? item.product.prices.discounted * item.quantity
+                    : item.product.prices.calculatedPrice * item.quantity)}
+              </td>
+            </tr>
+          ))}
+      </tbody>
+    </Table>
                               </div>
                               <div className="cart-buttons">
                                 <div className="row align-items-center"></div>

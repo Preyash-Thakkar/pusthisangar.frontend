@@ -151,12 +151,7 @@ body {
     padding: 0 20px 20px 20px !important;
   }
 
-  .navbar-light .navbar-nav .nav-link {
-    color: #000 !important;
-    font-size: 18px;
-    font-weight: 600;
-    padding: 10px;
-  }
+
 
   .shringar-card {
     width: 215px !important;
@@ -213,7 +208,12 @@ body {
   .header-style-1 {
     display: none !important;
   }
-
+  .navbar-light .navbar-nav .nav-link {
+    color: #000 ;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 10px;
+  }
   .shop-filter-toogle {
     right: 39% !important;
     top: -10px !important;
