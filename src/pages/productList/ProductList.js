@@ -123,6 +123,8 @@ const ProductList = () => {
           if (response.data.success) {
             setProductData(response.data.products);
             console.log("DATA", response.data.products);
+            res = response.data;
+            filteredProducts = res.products;
           }
         } catch (error) {
           console.error("Error fetching data:", error);
