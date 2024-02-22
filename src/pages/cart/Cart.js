@@ -22,7 +22,6 @@ const Cart = () => {
 
   const [CartData, setCartData] = useState([]);
   const [productTax, setproductTax] = useState(0);
-  
 
   useEffect(() => {
     getLoggedinCustomerCart(id);
@@ -34,7 +33,6 @@ const Cart = () => {
       setCartData(res.cartItems);
     }
   };
-
 
   const handleRemoveAll = async () => {
     const res = await RemoveAllItemsFromCart(id);
@@ -48,13 +46,10 @@ const Cart = () => {
       const customerId = id; // Replace with the actual customer ID
       const res = await UpdateCartItem(customerId, { cartItems: CartData });
       if (res.success) {
-        
       } else {
-      
         console.error(res.msg);
       }
     } catch (error) {
-      
       console.error("Unexpected error:", error);
     }
   };
@@ -77,13 +72,12 @@ const Cart = () => {
   }, [CartData]);
 
   const handleQuantityChange = (productId, newQuantity) => {
-    const updatedQuantity = Math.max(newQuantity, 0);
+    const updatedQuantity = Math.max(newQuantity, 1);
     const updatedCart = CartData
       ? CartData.map((item) =>
           item.product._id === productId
             ? { ...item, quantity: updatedQuantity }
             : item
-            
         )
       : null;
     setCartData(updatedCart);
@@ -114,8 +108,6 @@ const Cart = () => {
       [itemKey]: newQuantity,
     }));
   };
-
-  
 
   const totalPrice = CartData
     ? CartData.reduce((acc, item) => {
@@ -236,7 +228,10 @@ const Cart = () => {
                                 </span>
                                 <input
                                   type="text"
-                                  value={Math.min(item.quantity,item.stock.quantity)}
+                                  value={Math.min(
+                                    item.quantity,
+                                    item.stock.quantity
+                                  )}
                                   onChange={(event) =>
                                     updateQuantity(
                                       item.quantity,
@@ -248,24 +243,31 @@ const Cart = () => {
                                   className="plus-btn"
                                   onClick={() => {
                                     const newQuantity = item.quantity + 1;
-                                
+
                                     // Check if increasing quantity exceeds available stock
-                                    if (item.stock && item.stock.quantity !== null && newQuantity <= item.stock.quantity) {
-                                      handleQuantityChange(item.product._id, newQuantity);
+                                    if (
+                                      item.stock &&
+                                      item.stock.quantity !== null &&
+                                      newQuantity <= item.stock.quantity
+                                    ) {
+                                      handleQuantityChange(
+                                        item.product._id,
+                                        newQuantity
+                                      );
                                     }
                                   }}
                                 >
                                   <i className="bx bx-plus bi bi-plus" />
                                 </span>
-                                
                               </div>
                               <div className="mt-2 ms-2  text-danger">
-                                {item.stock && item.stock.quantity !== null && item.stock.quantity < 6 ? (
- `Hurry up, only ${item.stock.quantity} left!`
-) : null}
-                                </div>
+                                {item.stock &&
+                                item.stock.quantity !== null &&
+                                item.stock.quantity < 6
+                                  ? `Hurry up, only ${item.stock.quantity} left!`
+                                  : null}
+                              </div>
                             </td>
-                              
 
                             <td>
                               ₹
@@ -306,28 +308,29 @@ const Cart = () => {
               </div>
             </div>
             {CartData && CartData.length > 0 && (
-            <div className="col-md-12 col-lg-4">
-              <div className="cart-totals ">
-                <h3>Summary</h3>
-                <ul>
-                  <li>
-                    Subtotal
-                    <span>₹{totalPrice}</span>
-                  </li>
-                  <li>
-                    Tax
-                    <span>
-                      ₹{tPwithGST ? (tPwithGST - totalPrice).toFixed(2) : null}
-                    </span>
-                  </li>
-                  <li>
-                    Order Total
-                    <span>
-                      <b>₹{tPwithGST ? tPwithGST.toFixed(2) : null}</b>
-                    </span>
-                  </li>
-                </ul>
-                {/* <div className="cart-buttons mb-4">
+              <div className="col-md-12 col-lg-4">
+                <div className="cart-totals ">
+                  <h3>Summary</h3>
+                  <ul>
+                    <li>
+                      Subtotal
+                      <span>₹{totalPrice}</span>
+                    </li>
+                    <li>
+                      Tax
+                      <span>
+                        ₹
+                        {tPwithGST ? (tPwithGST - totalPrice).toFixed(2) : null}
+                      </span>
+                    </li>
+                    <li>
+                      Order Total
+                      <span>
+                        <b>₹{tPwithGST ? tPwithGST.toFixed(2) : null}</b>
+                      </span>
+                    </li>
+                  </ul>
+                  {/* <div className="cart-buttons mb-4">
                   <div className="shopping-coupon-code">
                     <input
                       type="text"
@@ -342,14 +345,13 @@ const Cart = () => {
                     Coupon code can also be applied at checkout before payment.
                   </small>
                 </div> */}
-               
+
                   <Link to={`/checkout/${id}`} className="default-btn">
                     Proceed to Checkout
                     <span />
                   </Link>
-                
+                </div>
               </div>
-            </div>
             )}
           </div>
         </div>
@@ -360,14 +362,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
-
-
-
-
-
-
-
-
-
