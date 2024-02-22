@@ -128,7 +128,7 @@ const Checkout = () => {
     setSelectedCoupon(selectedCoupon);
 
     const newDiscountedTotal = calculateDiscountedTotal(
-      tPwithGST ? tPwithGST : totalAmount,
+      tPwithGST || totalAmount,
       selectedCoupon
     );
 
@@ -170,14 +170,15 @@ const Checkout = () => {
     }
   };
 
-  function calculateDiscountedTotal(total, coupon) {
-    if (coupon && coupon.type === "%") {
-      const discountAmount = (total * coupon.discount) / 100;
-      return total - discountAmount - 75;
-    } else if (coupon && coupon.discount !== null) {
-      return total - coupon.discount;
+  function calculateDiscountedTotal(subtotal, discountPercentage) {
+    if (discountPercentage && discountPercentage.type === "%") {
+      const discountAmount = (subtotal * discountPercentage.discount) / 100;
+      console.log("pric3eee", subtotal - discountAmount);
+      return subtotal - discountAmount;
+    } else if (discountPercentage && discountPercentage.discount !== null) {
+      return subtotal - discountPercentage.discount;
     } else {
-      return total;
+      return subtotal;
     }
   }
 
@@ -427,7 +428,7 @@ const Checkout = () => {
                     console.log("inner t", transactionId);
                   }
 
-                  console.log("Phone values",values.phone);
+                  console.log("Phone values", values.phone);
                   const response = await CreateOrder({
                     customer: CustomerInfo._id,
                     FirstName: values.firstName,
@@ -450,10 +451,10 @@ const Checkout = () => {
                     couponCode: selectedCoupon ? selectedCoupon._id : null,
                     paymentMethod: values.paymentMethod,
                     transactionId: transactionId,
-                    phone: values.phone
+                    phone: values.phone,
                   });
-                  console.log("Values",values);
-                  console.log("Phone k",values.phone);
+                  console.log("Values", values);
+                  console.log("Phone k", values.phone);
 
                   setName(values.firstName);
                   setPhone(values.phone);
@@ -959,7 +960,8 @@ const Checkout = () => {
                                           : 0) +
                                           (!isNaN(ShippingCharge)
                                             ? ShippingCharge
-                                            : 0)
+                                            : 0) -
+                                          15
                                       )}
                                     </span>
                                   </td>

@@ -110,6 +110,8 @@ const Header = () => {
   };
 
   const handleRemoveItemFromCart = async (productId) => {
+    console.log("Removing item with productId:", productId);
+
     try {
       const customerId = CustomerInfo._id;
       const res = await removeItemFromCart(customerId, productId);
@@ -334,7 +336,7 @@ const Header = () => {
   useEffect(() => {
     GetLoggedInCustomer(authToken);
     getLoggedinCustomerCart(CustomerInfo._id);
-    localStorage.setItem('currentSubCategoryId', currentSubCategoryId);
+    localStorage.setItem("currentSubCategoryId", currentSubCategoryId);
     // localStorage.setItem('currentSubSubCategoryId', JSON.stringify(currentSubSubCategoryId));
     Getcategories();
     const getStoredUsername = () => {
@@ -342,10 +344,14 @@ const Header = () => {
       if (storedUsername) {
         setUsername(storedUsername);
       }
-
     };
     getStoredUsername();
-  }, [CustomerInfo._id, selectedCategory, currentSubCategoryId, currentSubSubCategoryId]);
+  }, [
+    CustomerInfo._id,
+    selectedCategory,
+    currentSubCategoryId,
+    currentSubSubCategoryId,
+  ]);
 
   return (
     <header className="header-area header-style-1 header-height-2">
@@ -492,10 +498,11 @@ const Header = () => {
                                           className={`eye-icon-container text-end`}
                                         >
                                           <p
-                                            className={`bi ${passwordVisible
-                                              ? "bi-eye"
-                                              : "bi-eye-slash"
-                                              } eye-icon text-end`}
+                                            className={`bi ${
+                                              passwordVisible
+                                                ? "bi-eye"
+                                                : "bi-eye-slash"
+                                            } eye-icon text-end`}
                                             onClick={() =>
                                               setPasswordVisible(
                                                 !passwordVisible
@@ -808,10 +815,11 @@ const Header = () => {
                                             className={`eye-icon-container text-end`}
                                           >
                                             <p
-                                              className={`bi ${passwordVisible
-                                                ? "bi-eye"
-                                                : "bi-eye-slash"
-                                                } eye-icon text-end me-2`}
+                                              className={`bi ${
+                                                passwordVisible
+                                                  ? "bi-eye"
+                                                  : "bi-eye-slash"
+                                              } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setPasswordVisible(
                                                   !passwordVisible
@@ -843,10 +851,11 @@ const Header = () => {
                                             className={`eye-icon-container text-end`}
                                           >
                                             <p
-                                              className={`bi ${ConfirmpasswordVisible
-                                                ? "bi-eye"
-                                                : "bi-eye-slash"
-                                                } eye-icon text-end me-2`}
+                                              className={`bi ${
+                                                ConfirmpasswordVisible
+                                                  ? "bi-eye"
+                                                  : "bi-eye-slash"
+                                              } eye-icon text-end me-2`}
                                               onClick={() =>
                                                 setConfirmPasswordVisible(
                                                   !ConfirmpasswordVisible
@@ -927,13 +936,15 @@ const Header = () => {
                     onChange={(e) => setTag(e.target.value)}
                     placeholder="Search for items..."
                   />
-                  <Link to={tag ? `/bytags/${tag}` : '#'}>
-                    <button className="btn" type="button" style={{ height: '54px' }}>
+                  <Link to={tag ? `/bytags/${tag}` : "#"}>
+                    <button
+                      className="btn"
+                      type="button"
+                      style={{ height: "54px" }}
+                    >
                       Search...
                     </button>
                   </Link>
-
-
                 </form>
                 {/* {showDropdown && (
                   <ul className="search-list">
@@ -974,50 +985,51 @@ const Header = () => {
                           <ul>
                             {CartData
                               ? CartData.map((item) => (
-                                <li key={item.product._id}>
-                                  {item.product && item.product.name && (
-                                    <>
-                                      <div className="shopping-cart-img">
-                                        <Link to="#">
-                                          <img
-                                            alt="cart"
-                                            src={`${url}/products/${item.product.imageGallery &&
-                                              item.product.imageGallery[0]
-                                              ? item.product.imageGallery[0]
-                                              : "default-image.jpg"
-                                              }`}
-                                          />
-                                        </Link>
-                                      </div>
-                                      <div className="shopping-cart-title">
-                                        <h4>
+                                  <li key={item.product._id}>
+                                    {item.product && item.product.name && (
+                                      <>
+                                        <div className="shopping-cart-img">
                                           <Link to="#">
-                                            {item.product.name}
+                                            <img
+                                              alt="cart"
+                                              src={`${url}/products/${
+                                                item.product.imageGallery &&
+                                                item.product.imageGallery[0]
+                                                  ? item.product.imageGallery[0]
+                                                  : "default-image.jpg"
+                                              }`}
+                                            />
                                           </Link>
-                                        </h4>
-                                        <h3>
-                                          <span>{item.quantity}× </span>
-                                          {item.product.prices.discounted
-                                            ? item.product.prices.discounted
-                                            : item.product.prices
-                                              .calculatedPrice}
-                                        </h3>
-                                      </div>
-                                      <div className="shopping-cart-delete">
-                                        <Link
-                                          onClick={() => {
-                                            handleRemoveItemFromCart(
-                                              item.product._id
-                                            );
-                                          }}
-                                        >
-                                          <i className="fi-rs-cross-small bi bi-x" />
-                                        </Link>
-                                      </div>
-                                    </>
-                                  )}
-                                </li>
-                              ))
+                                        </div>
+                                        <div className="shopping-cart-title">
+                                          <h4>
+                                            <Link to="#">
+                                              {item.product.name}
+                                            </Link>
+                                          </h4>
+                                          <h3>
+                                            <span>{item.quantity}× </span>
+                                            {item.product.prices.discounted
+                                              ? item.product.prices.discounted
+                                              : item.product.prices
+                                                  .calculatedPrice}
+                                          </h3>
+                                        </div>
+                                        <div className="shopping-cart-delete">
+                                          <Link
+                                            onClick={() => {
+                                              handleRemoveItemFromCart(
+                                                item.product._id
+                                              );
+                                            }}
+                                          >
+                                            <i className="fi-rs-cross-small bi bi-x" />
+                                          </Link>
+                                        </div>
+                                      </>
+                                    )}
+                                  </li>
+                                ))
                               : null}
                           </ul>
                           <div className="shopping-cart-footer">
@@ -1129,14 +1141,22 @@ const Header = () => {
                           <li
                             key={index}
                             onMouseEnter={() =>
-                              handleCategoryHover(category._id, index, localStorage.removeItem("currentSubSubCategoryId"))
+                              handleCategoryHover(
+                                category._id,
+                                index,
+                                localStorage.removeItem(
+                                  "currentSubSubCategoryId"
+                                )
+                              )
                             }
                             onMouseLeave={() => {
                               handleCategoryLeave();
                             }}
                             className="category-item"
                           >
-                            <Link to={`/product-list/${category._id}/categoryId`}>
+                            <Link
+                              to={`/product-list/${category._id}/categoryId`}
+                            >
                               {" "}
                               <img
                                 src={`${url}/cagtegory/${category.image}`}
@@ -1148,8 +1168,9 @@ const Header = () => {
                             {isMegaMenuDropdownOpen && (
                               <>
                                 <div
-                                  className={`inner2 ${activeIndex === index ? "show" : ""
-                                    }`}
+                                  className={`inner2 ${
+                                    activeIndex === index ? "show" : ""
+                                  }`}
                                   onMouseEnter={handleSubSubMenuHover}
                                   onMouseLeave={handleSuSubMenuLeave}
                                 >
@@ -1162,19 +1183,19 @@ const Header = () => {
                                             handleSubCategoryHover(
                                               sindex,
                                               subcategory,
-                                              localStorage.removeItem("currentSubSubCategoryId")
+                                              localStorage.removeItem(
+                                                "currentSubSubCategoryId"
+                                              )
                                             )
-
                                           }
                                           onMouseLeave={handleSubCategoryLeave}
                                           className="category-item"
                                         >
-
-                                          <Link to={`/product-list/${currentSubCategoryId}/subCategoryId`}>
+                                          <Link
+                                            to={`/product-list/${currentSubCategoryId}/subCategoryId`}
+                                          >
                                             {subcategory.name}
                                           </Link>
-
-
                                         </li>
                                       ))}
                                     </ul>
@@ -1190,14 +1211,21 @@ const Header = () => {
                                               key={subsubcategory._id}
                                               className="sub-category-item"
                                               onClick={() => {
-                                                setCurrentSubSubCategoryId(subsubcategory._id);
-                                                localStorage.setItem('currentSubSubCategoryId', (subsubcategory._id))
+                                                setCurrentSubSubCategoryId(
+                                                  subsubcategory._id
+                                                );
+                                                localStorage.setItem(
+                                                  "currentSubSubCategoryId",
+                                                  subsubcategory._id
+                                                );
                                               }}
-                                            // onMouseLeave={() => {
-                                            //   localStorage.removeItem("currentSubSubCategoryId") ;
-                                            // }}
+                                              // onMouseLeave={() => {
+                                              //   localStorage.removeItem("currentSubSubCategoryId") ;
+                                              // }}
                                             >
-                                              <Link to={`/product-list/${subsubcategory._id}/subSubCategory`}>
+                                              <Link
+                                                to={`/product-list/${subsubcategory._id}/subSubCategory`}
+                                              >
                                                 {subsubcategory.name}
                                               </Link>
                                             </li>
