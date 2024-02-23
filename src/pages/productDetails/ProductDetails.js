@@ -20,6 +20,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Preloader from "../../components/Loader";
 import MobileSidebar from "../../components/MobileSidebar";
 import SignContext from "../../contextAPI/Context/SignContext";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
 const WishlistMessage = ({ onClose }) => (
   <div className="wishlist-message">
@@ -237,6 +240,51 @@ const ProductDetails = () => {
     setSelectedImage(imageURL);
   };
 
+  const CustomPrevArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", left: "-30px", zIndex: "10" }}
+        onClick={onClick}
+      >
+        <img
+          src="/path/to/your/left-arrow-icon.svg"
+          alt="Previous"
+          style={{ width: "20px", height: "20px", fill: "grey" }}
+        />
+      </div>
+    );
+  };
+
+  const CustomNextArrow = (props) => {
+    const { className, style, onClick } = props;
+    return (
+      <div
+        className={className}
+        style={{ ...style, display: "block", right: "-30px", zIndex: "10" }}
+        onClick={onClick}
+      >
+        <img
+          src="/path/to/your/right-arrow-icon.svg"
+          alt="Next"
+          style={{ width: "20px", height: "20px", fill: "grey" }}
+        />
+      </div>
+    );
+  };
+
+  const settings = {
+    arrows: true,
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
+  };
+
   const handleColorChange = (color) => {
     // Toggle the selected color
     if (selectedColors.includes(color)) {
@@ -304,7 +352,7 @@ const ProductDetails = () => {
                         }}
                       />
                     </div>
-                    <div className="wrapper_thumb p-2" id="wrapper-thumb">
+                    <Slider {...settings}>
                       {ProductData.imageGallery?.map((image, index) => (
                         <div
                           key={index}
@@ -329,7 +377,7 @@ const ProductDetails = () => {
                           />
                         </div>
                       ))}
-                    </div>
+                    </Slider>
                   </div>
 
                   {/* End Gallery */}
@@ -403,7 +451,6 @@ const ProductDetails = () => {
                           className="qty-val"
                           value={Quantity}
                           min={1}
-                          
                         />
                         <Link
                           to="#"
