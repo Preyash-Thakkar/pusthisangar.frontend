@@ -100,7 +100,10 @@ const Header = () => {
       console.log(res.msg);
     }
   };
-
+  useEffect(() => {
+    // This is just to log and see that CartData change is being detected
+    console.log("CartData changed:", CartData);
+  }, [CartData]);
   const getLoggedinCustomerCart = async (CustomerId) => {
     const res = await GetLoggedInCartItems(CustomerId);
 
@@ -266,6 +269,7 @@ const Header = () => {
     const res = await loginCustomer(Values);
 
     if (res.success) {
+      window.location.reload();
       window.localStorage.setItem("loggedIn", true);
       window.localStorage.setItem("authToken", res.token);
       window.localStorage.setItem("username", res.customer.username);
@@ -974,7 +978,7 @@ const Header = () => {
                       <Link className="mini-cart-icon" to="#">
                         <BsCart />
                         <span className="pro-count blue">
-                          {CartData ? CartData.length : null}
+                          {CartData ? CartData.length : 0}
                         </span>
                       </Link>
                       <Link to="#">

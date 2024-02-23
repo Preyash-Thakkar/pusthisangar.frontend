@@ -9,7 +9,7 @@ import SignContext from "../../contextAPI/Context/SignContext";
 import { useState } from "react";
 import { useEffect } from "react";
 
-const   PrintStatement = () => {
+const PrintStatement = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
 
   const { id } = useParams();
@@ -47,11 +47,11 @@ const   PrintStatement = () => {
       setCouponData(res.coupon);
     }
   };
-  // console.log(CouponData);
+  console.log("1245", CouponData);
 
   const getSpecificCustomer = async (customerId) => {
     try {
-      console.log("invoked")
+      console.log("invoked");
       const res = await GetSpecificCustomer(customerId);
       console.log("My customer response", res);
       if (res.data.success) {
@@ -61,7 +61,6 @@ const   PrintStatement = () => {
       console.error("Error fetching customer:", error);
     }
   };
-
 
   const totalPrice = ProductData
     ? ProductData.reduce((acc, item) => {
@@ -142,8 +141,18 @@ const   PrintStatement = () => {
     console.log("Me product", ProductData);
   }
 
-  console.log("Setted customer info",CustomerInfo);
+  console.log("Setted customer info", CustomerInfo);
 
+  console.log("Total proce", typeof totalPrice);
+  console.log("gst", typeof tPwithGST);
+  console.log("amount", typeof OrderData.totalAmount);
+  let a =
+    Number(totalPrice) +
+    (Number(tPwithGST) - Number(totalPrice)) +
+    150 -
+    Number(OrderData.totalAmount);
+  const discount = a.toFixed(2);
+  console.log("aaaaaa", discount);
   return (
     <div>
       <section class="pt-4 vmobile-tag-kl">
@@ -241,7 +250,7 @@ const   PrintStatement = () => {
                         <th>Name</th>
                         <td>{CustomerInfo.username}</td>
                       </tr>
-                    
+
                       <tr>
                         <th>Email Id</th>
                         <td>{CustomerInfo.email}</td>
@@ -259,13 +268,15 @@ const   PrintStatement = () => {
                     <tbody className="text-start">
                       <tr>
                         <th>Name</th>
-                        <td>{OrderData.FirstName} {OrderData.LastName}</td>
+                        <td>
+                          {OrderData.FirstName} {OrderData.LastName}
+                        </td>
                       </tr>
                       <tr>
                         <th>Address </th>
                         <td>{OrderData.shippingAddress}</td>
                       </tr>
-                  
+
                       <tr>
                         <th>Mobile No</th>
                         <td>+91 {OrderData.phone}</td>
@@ -315,7 +326,6 @@ const   PrintStatement = () => {
                             <td>{p.product.prices.calculatedPrice}</td>
                             <td className="text-center">{p.quantity}</td>
                             <td className="text-center">{p.product.gst}%</td>
-                            
                           </tr>
                         ))}
                       </tbody>
@@ -340,16 +350,9 @@ const   PrintStatement = () => {
                         </tr>
                         <tr>
                           <td>
-                            Discount{" "}
-                            <span className="text-muted">
-                              ({CouponData ? CouponData.name : null})
-                            </span>{" "}
-                            : :
+                            Discount <span className="text-muted"></span> : :
                           </td>
-                          <td className="text-end">
-                            -{CouponData ? CouponData.discount : null}
-                            {CouponData ? CouponData.type : null}
-                          </td>
+                          <td className="text-end">₹ {discount}</td>
                         </tr>
                         {/* <tr>
                                 <td>Shipping Charge :</td>
