@@ -172,7 +172,9 @@ const Checkout = () => {
 
   function calculateDiscountedTotal(subtotal, discountPercentage) {
     if (discountPercentage && discountPercentage.type === "%") {
-      const discountAmount = (subtotal * discountPercentage.discount) / 100;
+      let discountAmount = (subtotal * discountPercentage.discount) / 100;
+      discountAmount =
+        discountAmount + (ShippingCharge * discountPercentage.discount) / 100;
       console.log("pric3eee", subtotal - discountAmount);
       return subtotal - discountAmount;
     } else if (discountPercentage && discountPercentage.discount !== null) {
@@ -960,8 +962,7 @@ const Checkout = () => {
                                           : 0) +
                                           (!isNaN(ShippingCharge)
                                             ? ShippingCharge
-                                            : 0) -
-                                          15
+                                            : 0)
                                       )}
                                     </span>
                                   </td>
