@@ -12,7 +12,7 @@ const MyProfile = () => {
   const { getLoggedInCustomer, UpdateCustomer, changePassword } =
     useContext(SignContext);
   const authToken = localStorage.getItem("authToken");
-  const [CustomerInfo, setCustomerInfo] = useState({ username: '' });
+  const [CustomerInfo, setCustomerInfo] = useState({ username: "" });
   // const [UpdatedCustomerInfo, setUpdatedCustomerInfo] = useState({});
 
   const initialValues = {
@@ -34,7 +34,6 @@ const MyProfile = () => {
     localStorage.removeItem("authToken");
     localStorage.removeItem("username");
     localStorage.removeItem("loggedIn");
-    
   };
 
   const handleUsernameSubmit = async (e) => {
@@ -45,6 +44,10 @@ const MyProfile = () => {
       if (updateResult.success) {
         // Update the state with the new username
         setCustomerInfo(updateResult.customer);
+
+        // Update the username in local storage
+        window.localStorage.setItem("username", updateResult.customer.username);
+        window.location.reload();
       } else {
         // Handle the case where the update fails
         console.error(updateResult.msg);
@@ -54,14 +57,14 @@ const MyProfile = () => {
     }
   };
 
-  const handlePasswordSubmit = async (values, { setSubmitting , resetForm }) => {
+  const handlePasswordSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
       const passwordResult = await changePassword(
         { oldPassword: values.oldPassword, newPassword: values.newPassword },
         id,
         authToken
       );
-  
+
       if (passwordResult.success) {
         // Handle success, e.g., show a success message
         resetForm();
@@ -72,9 +75,8 @@ const MyProfile = () => {
     } catch (error) {
       console.error("Error updating password:", error);
     }
-      setSubmitting(false);
+    setSubmitting(false);
   };
-  
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
@@ -85,12 +87,9 @@ const MyProfile = () => {
     }
   };
 
-  
-
   useEffect(() => {
     GetLoggedInCustomer(authToken);
   }, [authToken]);
-
 
   return (
     <div>
@@ -117,7 +116,9 @@ const MyProfile = () => {
                       <Link to="/my-account">My Account</Link>
                     </li>
                     <li>
-                      <Link to={`/my-order/${CustomerInfo._id}`}>My Orders</Link>
+                      <Link to={`/my-order/${CustomerInfo._id}`}>
+                        My Orders
+                      </Link>
                     </li>
                     {/* <li>
                       <Link to="/my-address">My Addresses</Link>
@@ -132,7 +133,9 @@ const MyProfile = () => {
                       <Link to="/ticket-support">Support Ticket</Link>
                     </li> */}
                     <li>
-                      <Link onClick={handleSignout} to="/">Logout</Link>
+                      <Link onClick={handleSignout} to="/">
+                        Logout
+                      </Link>
                     </li>
                   </ul>
                 </section>
@@ -145,32 +148,30 @@ const MyProfile = () => {
                     <div className="col-md-6 col-lg-6">
                       <h5 className="text-start">Account Information</h5>
                       <hr />
-                      
-                        
-                          <form onSubmit={handleUsernameSubmit} >
-                          <div className="billing-details">
-        <div className="form-group">
-          <label>
-            USER NAME
-            <span className="required">*</span>
-          </label>
-          <input
-            type="text"
-            name="username"
-            className="form-control"
-            value={CustomerInfo.username}
-            onChange={handleChange}
-          />
-        </div>
-      </div>
-      <div className="text-left">
-        <button type="submit" className="default-btn">
-          Update Now
-          <span />
-        </button>
-      </div>
-                          </form>
-                       
+
+                      <form onSubmit={handleUsernameSubmit}>
+                        <div className="billing-details">
+                          <div className="form-group">
+                            <label>
+                              USER NAME
+                              <span className="required">*</span>
+                            </label>
+                            <input
+                              type="text"
+                              name="username"
+                              className="form-control"
+                              value={CustomerInfo.username}
+                              onChange={handleChange}
+                            />
+                          </div>
+                        </div>
+                        <div className="text-left">
+                          <button type="submit" className="default-btn">
+                            Update Now
+                            <span />
+                          </button>
+                        </div>
+                      </form>
                     </div>
                     <div className="col-md-6 col-lg-6">
                       <h5 className="text-start">Change Password</h5>
@@ -201,7 +202,7 @@ const MyProfile = () => {
                               </div>
                               <div className="form-group">
                                 <label>
-                                   NEW PASSWORD
+                                  NEW PASSWORD
                                   <span className="required">*</span>
                                 </label>
                                 <Field
