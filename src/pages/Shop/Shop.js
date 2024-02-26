@@ -468,7 +468,7 @@ const Shop = () => {
         return priceB - priceA;
       });
     }
-    //setProductData(sortedData);
+    setProductData(sortedData);
   };
 
   const handleShowMore = () => {

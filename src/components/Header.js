@@ -933,7 +933,6 @@ const Header = () => {
                       placeholder="Search"
                     />
                   </div>
-
                   <input
                     type="text"
                     value={tag}
@@ -943,30 +942,15 @@ const Header = () => {
                   <Link to={tag ? `/bytags/${tag}` : "#"}>
                     <button
                       className="btn"
-                      type="button"
-                      style={{ height: "54px" }}
+                      type="submit"
+                      style={{ height: "54px", borderRadius: "0" }}
                     >
                       Search...
                     </button>
                   </Link>
                 </form>
-                {/* {showDropdown && (
-                  <ul className="search-list">
-                    {products ? (
-                      products.map((product) => (
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          key={product._id}
-                        >
-                          <li>{product.name}</li>
-                        </Link>
-                      ))
-                    ) : (
-                      <></>
-                    )}
-                  </ul>
-                )} */}
               </div>
+
               {authToken ? (
                 <div className="header-action-right">
                   <div className="header-action-2">
