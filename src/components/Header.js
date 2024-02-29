@@ -1096,6 +1096,10 @@ const Header = () => {
         </div>
       </div>
 
+
+
+
+
       <div className="header-bottom header-bottom-bg-color sticky-bar ">
         <div className="container">
           <div className="header-wrap header-space-between position-relative">
@@ -1231,6 +1235,11 @@ const Header = () => {
                   </div>
                 )}
               </div>
+
+
+
+
+              
 
               <div className="main-menu main-menu-padding-1 main-menu-lh-2 d-none d-lg-block font-heading">
                 <nav>
