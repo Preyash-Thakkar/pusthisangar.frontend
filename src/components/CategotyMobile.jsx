@@ -1,17 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
-import axios from "axios"; // Import Axios
+import axios from "axios";
 
 const MobileCategory = () => {
   const [navBarData, setNavBarData] = useState([]);
 
   useEffect(() => {
-    // Fetch your categories data from the backend and update the state
     const fetchCategories = async () => {
       try {
         const response = await axios.post(`${process.env.REACT_APP_BASE_URL}/category/getcategories`);
-        setNavBarData(response.data); // Use response.data directly
-        console.log(">>>>>>>", response.data);
+        setNavBarData(response.data);
       } catch (error) {
         console.error("Error fetching categories", error);
       }
@@ -20,53 +18,37 @@ const MobileCategory = () => {
     fetchCategories();
   }, []);
 
-  const menuShow = (mItems) => {
-    return mItems.map((item, index) => {
-      if (item.submenu) {
-        return (
-          <NavDropdown title={item.name} key={index}>
-            {menuShow(item.submenu)}
-          </NavDropdown>
-        );
-      } else {
-        return (
-          <Nav.Link href={`/${item._id}`} key={index}>
-            {item.name}
-          </Nav.Link>
-        );
-      }
-    });
-  };
-
-  const renderSubmenu = (submenu) => {
-    if (!submenu) return null;
-    return submenu.map((item, index) => {
-      if (item.submenu) {
-        return (
-          <NavDropdown title={item.name} key={index}>
-            {renderSubmenu(item.submenu)}
-          </NavDropdown>
-        );
-      } else {
-        return (
-          <Nav.Link href={`/${item._id}`} key={index}>
-            {item.name}
-          </Nav.Link>
-        );
-      }
-    });
-  };
-
   return (
     <Navbar bg="light" expand="lg" variant="light">
+      <style>
+        {`
+          .custom-dropdown .dropdown-toggle {
+            background-color: transparent;
+            color: inherit;
+            border: none;
+            padding: 0;
+          }
+
+          .custom-dropdown .dropdown-toggle:focus {
+            box-shadow: none;
+          }
+
+          .custom-dropdown .dropdown-toggle:active {
+            background-color: transparent;
+          }
+        `}
+      </style>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
-          <NavDropdown className="navDropDownDiv" title="Browse All Categories">
-            {navBarData.map((item, index) => (
-              <NavDropdown title={item.name} key={index}>
-                {renderSubmenu(item.submenu)}
-              </NavDropdown>
+          <NavDropdown title="Browse All Categories" className="custom-dropdown">
+            {navBarData.map((item) => (
+              <NavDropdown.Item
+                href={`/product-list/${item._id}/categoryId`}  // Replace 'categoryId' with the actual identifier
+                key={item._id}
+              >
+                {item.name}
+              </NavDropdown.Item>
             ))}
           </NavDropdown>
         </Nav>
