@@ -55,7 +55,7 @@ const MidFooter = () => {
 
   const GetLoggedInCustomer = async (token) => {
     const res = await getLoggedInCustomer(token);
-   
+
     if (res.success) {
       setCustomerInfo(res.customer);
     } else {
@@ -90,9 +90,11 @@ const MidFooter = () => {
                     <MdLocationPin className="react-icon " />
                     <strong className=""> Address : </strong>{" "}
                     <span style={{ fontWeight: "600", fontSize: "14px" }}>
-                      103, VrajMadhurya Flats, Laxmi Colony 20, Behind
-                      Govardhannathji Haveli, Productivity road, Vadodara,
-                      Gujarat.390007
+                      Pushtishangar
+                      103, VrajMadhurya Flats, Laxmi Colony 20,
+                      Behind Govardhannathji Haveli,
+                      Productivity road, 
+                      Vadodara Gujarat 390007
                     </span>
                   </li>
                   <li>
@@ -107,7 +109,7 @@ const MidFooter = () => {
                     <MdEmail className="react-icon" />
                     <strong className=""> Email :</strong>
                     <span style={{ fontWeight: "600", fontSize: "14px" }}>
-                      pushtishangarsales@gmail.com
+                    pushtishangarsales@gmail.com
                     </span>
                   </li>
                   <li className="text-start d-flex jusify-content-start">
@@ -227,7 +229,7 @@ const MidFooter = () => {
                   Copyright © 2023,
                   <strong className=" fw-bold"> Pushti Shangar</strong> , All
                   rights reserved
-                </p>  
+                </p>
               </div>
               <div>
                 <p className="font-sm mb-0 text-start d-block text-white">
