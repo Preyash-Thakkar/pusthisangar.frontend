@@ -64,52 +64,52 @@ const PrintStatement = () => {
 
   const totalPrice = ProductData
     ? ProductData.reduce((acc, item) => {
-        const quantity = parseFloat(item.quantity);
-        // const gst = parseFloat(item.tax);
+      const quantity = parseFloat(item.quantity);
+      // const gst = parseFloat(item.tax);
 
-        const discountedPrice = parseFloat(
-          item.product.prices.discounted
-            ? item.product.prices.discounted
-            : item.product.prices.calculatedPrice
-        );
+      const discountedPrice = parseFloat(
+        item.product.prices.discounted
+          ? item.product.prices.discounted
+          : item.product.prices.calculatedPrice
+      );
 
-        if (isNaN(quantity) || isNaN(discountedPrice)) {
-          return acc; // Skip this item if it has invalid data
-        }
+      if (isNaN(quantity) || isNaN(discountedPrice)) {
+        return acc; // Skip this item if it has invalid data
+      }
 
-        return acc + quantity * discountedPrice;
-      }, 0)
+      return acc + quantity * discountedPrice;
+    }, 0)
     : null;
 
   const tPwithGST = ProductData
     ? ProductData.reduce((acc, item) => {
-        const quantity = parseFloat(item.quantity);
-        const gst = parseFloat(item.product.gst);
+      const quantity = parseFloat(item.quantity);
+      const gst = parseFloat(item.product.gst);
 
-        const discountedPrice = parseFloat(
-          item.product.prices.discounted
-            ? item.product.prices.discounted
-            : item.product.prices.calculatedPrice
-        );
-        const totalPriceWithGST =
-          quantity * discountedPrice + (quantity * discountedPrice * gst) / 100;
+      const discountedPrice = parseFloat(
+        item.product.prices.discounted
+          ? item.product.prices.discounted
+          : item.product.prices.calculatedPrice
+      );
+      const totalPriceWithGST =
+        quantity * discountedPrice + (quantity * discountedPrice * gst) / 100;
 
-        if (isNaN(quantity) || isNaN(discountedPrice)) {
-          return acc;
-        }
+      if (isNaN(quantity) || isNaN(discountedPrice)) {
+        return acc;
+      }
 
-        return acc + totalPriceWithGST;
-      }, 0)
+      return acc + totalPriceWithGST;
+    }, 0)
     : null;
 
   const shpChrg = ProductData
     ? ProductData.reduce((acc, item) => {
-        // Ensure that item.quantity and item.discountedPrice are valid numbers
-        let quantity = 0;
-        quantity = quantity + parseFloat(item.product.shippingCharge);
+      // Ensure that item.quantity and item.discountedPrice are valid numbers
+      let quantity = 0;
+      quantity = quantity + parseFloat(item.product.shippingCharge);
 
-        return quantity;
-      }, 0)
+      return quantity;
+    }, 0)
     : null;
 
   useEffect(() => {
@@ -184,16 +184,23 @@ const PrintStatement = () => {
                     <h4 className="mb-2">Pushti Shangar</h4>
                     <p>
                       {" "}
-                      <strong>Address :</strong> Vadodara-390022,Gujarat
+                      <strong>Address :</strong>  Pushtishangar<br />
+                      103, VrajMadhurya Flats, Laxmi Colony 20,<br />
+                      Behind Govardhannathji Haveli,<br />
+                      Productivity road, <br />
+                      Vadodara Gujarat 390007
                     </p>
                     <p>
                       {" "}
                       <strong>Customer Care Email :</strong>
-                      pushtishangar@gmail.com
+                      <a href="mailto:pushtishangarsales@gmail.com">pushtishangarsales@gmail.com</a>
+
                     </p>
                     <p>
                       {" "}
-                      <strong>Customer Care No. :</strong> +91 89808 08585
+                      <strong>Customer Care No. :</strong>
+                      <a href="tel:+918980963151">+91 8980963151</a>
+
                     </p>
                   </div>
                 </div>
