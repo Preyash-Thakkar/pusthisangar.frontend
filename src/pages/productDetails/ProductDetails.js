@@ -61,6 +61,11 @@ const ProductDetails = () => {
   const [categoryNameMapping, setCategoryNameMapping] = useState({});
   const [CustomerInfo, setCustomerInfo] = useState({});
   const navigate = useNavigate();
+
+  const numberOfImages = ProductData.imageGallery?.length || 0;
+  console.log("images", numberOfImages);
+  const actualSlidesToShow = Math.min(numberOfImages, 4);
+
   const CategoryId = ProductData.category;
 
   // const Image1 = ProductData.imageGallery?ProductData.imageGallery[0]:null;
@@ -236,8 +241,9 @@ const ProductDetails = () => {
     getproductsbyCategoryId(CategoryId);
   }, [id, Quantity, CategoryId]);
 
-  const handleThumbClick = (imageURL) => {
-    setSelectedImage(imageURL);
+  const handleThumbClick = (image) => {
+    console.log("Clicked thumbnail:", image);
+    setSelectedImage(image);
   };
 
   const CustomPrevArrow = (props) => {
@@ -275,11 +281,11 @@ const ProductDetails = () => {
   };
 
   const settings = {
+    slidesToShow: numberOfImages === 1 ? 1 : Math.min(numberOfImages, 4),
     arrows: true,
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
     slidesToScroll: 1,
     prevArrow: <CustomPrevArrow />,
     nextArrow: <CustomNextArrow />,
@@ -342,9 +348,8 @@ const ProductDetails = () => {
                     <div className="wrapper_preview_img" id="preview_img">
                       <img
                         className="productImg"
-                        src={`${url}/products/${
-                          selectedImage || ProductData?.imageGallery?.[0] || ""
-                        }`}
+                        src={`${url}/products/${selectedImage || ProductData?.imageGallery?.[0] || ""
+                          }`}
                         alt="Preview"
                         onError={(e) => {
                           e.target.src =
@@ -355,14 +360,10 @@ const ProductDetails = () => {
                     <Slider {...settings}>
                       {ProductData.imageGallery?.map((image, index) => (
                         <div
-                          key={index}
-                          className={`thumb p-2 ${
-                            selectedImage === image ? "active" : ""
-                          } ${
-                            ProductData.imageGallery.length < 4
-                              ? "single-column"
-                              : ""
-                          }`}
+                          key={image.id || index} // Use a unique identifier if possible
+                          className={`thumb p-2 ${selectedImage === image ? "active" : ""
+                            } ${numberOfImages < 4 ? "single-column" : ""
+                            }`}
                           onClick={() => handleThumbClick(image)}
                         >
                           <img
@@ -378,6 +379,7 @@ const ProductDetails = () => {
                         </div>
                       ))}
                     </Slider>
+
                   </div>
 
                   {/* End Gallery */}
@@ -420,7 +422,7 @@ const ProductDetails = () => {
                             <span className="old-price font-md ml-15 fs-5">
                               ₹
                               {ProductData.prices &&
-                              ProductData.prices.calculatedPrice
+                                ProductData.prices.calculatedPrice
                                 ? ProductData.prices.calculatedPrice
                                 : "NA"}
                             </span>
@@ -1136,76 +1138,76 @@ const ProductDetails = () => {
         <div className="row">
           {CategorybyProductsData
             ? CategorybyProductsData.slice(0, 5).map((product) => (
-                <div
-                  className=" col-lg-3 col-md-4 col-sm-6 mb-4 responsive-div"
-                  key={product.id}
-                >
-                  <div className="product-cart-wrap popular-card" tabIndex={0}>
-                    <div className="product-img-action-wrap">
-                      <div className="product-img product-img-zoom">
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          tabIndex={0}
-                        >
-                          <img
-                            className="default-img"
-                            src={`${url}/products/${product.imageGallery[0]}`}
-                            onError={(e) => {
-                              e.target.src =
-                                "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
-                            }}
-                            alt=""
-                          />
-                          <img
-                            className="hover-img"
-                            src={product.hoverImageUrl}
-                            alt=""
-                          />
-                        </Link>
-                      </div>
+              <div
+                className=" col-lg-3 col-md-4 col-sm-6 mb-4 responsive-div"
+                key={product.id}
+              >
+                <div className="product-cart-wrap popular-card" tabIndex={0}>
+                  <div className="product-img-action-wrap">
+                    <div className="product-img product-img-zoom">
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        tabIndex={0}
+                      >
+                        <img
+                          className="default-img"
+                          src={`${url}/products/${product.imageGallery[0]}`}
+                          onError={(e) => {
+                            e.target.src =
+                              "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
+                          }}
+                          alt=""
+                        />
+                        <img
+                          className="hover-img"
+                          src={product.hoverImageUrl}
+                          alt=""
+                        />
+                      </Link>
                     </div>
-                    <div class="product-content-wrap">
-                      <div class="product-category">
-                        <Link to={`/product-details/${product._id}`}>
-                          {categoryNameMapping[ProductData.category]}
-                        </Link>
-                      </div>
-                      <h2>
-                        <Link to={`/product-details/${product._id}`}>
-                          {product.name}
-                        </Link>
-                      </h2>
+                  </div>
+                  <div class="product-content-wrap">
+                    <div class="product-category">
+                      <Link to={`/product-details/${product._id}`}>
+                        {categoryNameMapping[ProductData.category]}
+                      </Link>
+                    </div>
+                    <h2>
+                      <Link to={`/product-details/${product._id}`}>
+                        {product.name}
+                      </Link>
+                    </h2>
 
-                      <div class="product-card-bottom">
-                        <div class="product-price popular-card-price">
-                          <span>
-                            ₹{" "}
-                            {product.prices.discounted
-                              ? product.prices.discounted
-                              : product.prices.calculatedPrice}
+                    <div class="product-card-bottom">
+                      <div class="product-price popular-card-price">
+                        <span>
+                          ₹{" "}
+                          {product.prices.discounted
+                            ? product.prices.discounted
+                            : product.prices.calculatedPrice}
+                        </span>
+                        {!product.calculationOnWeight && (
+                          <span className="old-price ">
+                            ₹{product.prices ? product.prices.original : null}
                           </span>
-                          {!product.calculationOnWeight && (
-                            <span className="old-price ">
-                              ₹{product.prices ? product.prices.original : null}
-                            </span>
-                          )}
-                        </div>
-                        <div class="add-cart popular-card-cart">
-                          <Link
-                            class="add add-cart-btn"
-                            onClick={() => {
-                              handleCartClick(product);
-                            }}
-                          >
-                            <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add{" "}
-                          </Link>
-                        </div>
+                        )}
+                      </div>
+                      <div class="add-cart popular-card-cart">
+                        <Link
+                          class="add add-cart-btn"
+                          onClick={() => {
+                            handleCartClick(product);
+                          }}
+                        >
+                          <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
+                          Add{" "}
+                        </Link>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))
+              </div>
+            ))
             : null}
         </div>
       </div>
