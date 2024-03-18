@@ -240,7 +240,7 @@ const Header = () => {
     // Fetch cart data every second
     const interval = setInterval(() => {
       getLoggedinCustomerCart(CustomerInfo._id);
-    }, 1000);
+    }, 2500);
 
     // Clear interval on component unmount
     return () => clearInterval(interval);
