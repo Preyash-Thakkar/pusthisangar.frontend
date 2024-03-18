@@ -45,9 +45,9 @@ const HomeSlider = () => {
 
   return (
     <div>
-      <section className="home-slider style-2 position-relative ">
-        <div className="container">
-          <div className="row">
+      {/* <section className="home-slider style-2 position-relative "> */}
+        {/* <div className="container"> */}
+          {/* <div className="row">
             <div className="col-xl-8 col-lg-12">
               <div className="home-slide-cover">
                 <div
@@ -83,8 +83,8 @@ const HomeSlider = () => {
                           />
                         </Link>
                         <div className="carousel-caption d-none d-md-block">
-                          {/* <h5>{banner.title}</h5> */}
-                          {/* <p>{banner.description}</p> */}
+                          <h5>{banner.title}</h5>
+                          <p>{banner.description}</p>
                         </div>
                       </div>
                     ))}
@@ -136,15 +136,15 @@ const HomeSlider = () => {
                             overflow: "hidden",
                           }}
                         /> */}
-                  <Link to="/shop" className="shop-now-hover btn btn">
+                  {/* <Link to="/shop" className="shop-now-hover btn btn">
                     Shop Now <i className="fi-rs-arrow-small-right" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+                  </Link> */}
+                {/* </div> */}
+              {/* </div> */}
+            {/* </div> */}
+          {/* // </div> */} 
+        {/* </div> */}
+      {/* </section> */}
     </div>
   );
 };

@@ -7,6 +7,7 @@ import { SidebarData } from "./SidebarData";
 import SubMenu from "./SubMenu";
 import smallsangar from "../images/smallsanagr.jpg";
 import { IoIosSearch } from "react-icons/io";
+import { BsPerson, BsCart } from "react-icons/bs";
 import {
   FaFacebook,
   FaTwitter,
@@ -135,6 +136,9 @@ const Sidebar = () => {
   const [CustomerInfo, setCustomerInfo] = useState({});
   const [showDropdown, setShowDropdown] = useState(false);
 
+  const [isCartDropdownOpen, setCartDropdownOpen] = useState(false);
+  const [isAccountDropdownOpen, setAccountDropdownOpen] = useState(false);
+
   const handleTagsSearch = async (e) => {
     e.preventDefault();
     try {
@@ -207,21 +211,30 @@ const Sidebar = () => {
       console.error("Unexpected error:", error);
     }
   };
+// const handleLoginClick = () => {
+//     setOpenLoginModal(true);
+//     setShowSignupModal(false);
+//   };
+const handleCartClick = () => {
+  setCartDropdownOpen(!isCartDropdownOpen);
+  if (!isCartDropdownOpen) {
+    // Fetch cart data when opening the cart dropdown
+    getLoggedinCustomerCart(CustomerInfo._id);
+  }
+};
 
-  const handleCartClick =async () => {
-    // Check if the user is logged in (you need to implement this)
-    const isLoggedIn = await checkIfUserIsLoggedIn(); // You need to implement this function
-    console.log("iss",isLoggedIn);
-    // If user is not logged in, redirect to the sign-in page
-    if (!isLoggedIn) {
-      // Redirect to the sign-in page
-      window.location.href = "/login"; // Directly change window location
-      return; // Make sure to return to exit the function
-    }
+useEffect(() => {
+  // Fetch cart data when component mounts
+  getLoggedinCustomerCart(CustomerInfo._id);
 
-    // Proceed with showing the cart tooltip
-    toggleCartTooltip();
-  };
+  // Fetch cart data every second
+  const interval = setInterval(() => {
+    getLoggedinCustomerCart(CustomerInfo._id);
+  }, 1000);
+
+  // Clear interval on component unmount
+  return () => clearInterval(interval);
+}, [CustomerInfo._id]);
 
   const showSidebar = () => setSidebar(!sidebar);
 
@@ -251,22 +264,150 @@ const Sidebar = () => {
   return (
     <>
       <div className="mobile-header">
-        <Nav className="main-nav-div">
-          <NavIcon to="#" className="three-lines">
-            <FaIcons.FaBars onClick={showSidebar} />
-          </NavIcon>
-          <Link to="/">
-            <Logo className="nav-logo" src={logo} alt="logo" />
-          </Link>
-          <CartButton
-            className="nav-cart"
-            onClick={handleCartClick}
-            
-          >
-            <FaIcons.FaShoppingCart color="#5a5757" style={{marginRight : '10px' , fontSize :"30px"}} />
-            {cartCount > 0 && <CartCount>{cartCount}</CartCount>}
-          </CartButton>
-        </Nav>
+      {/* {authToken ? */}
+       
+                <div className="header-action-right">
+                  <div className="header-action-2">
+                    <div
+                      className="header-action-icon-2"
+                      // onMouseEnter={handleCartHover}
+                      // onMouseLeave={handleCartLeave}
+                      onClick={handleCartClick}
+                    >
+                      <Link className="mini-cart-icon" to="#">
+                        <BsCart />
+                        <span className="pro-count blue">
+                          {CartData ? CartData.length : 0}
+                        </span>
+                      </Link>
+                      <Link to="#">
+                        <span className="lable">Cart</span>
+                      </Link>
+                      {isCartDropdownOpen && (
+                        <div className="cart-dropdown-wrap cart-dropdown-hm2">
+                          <ul>
+                            {CartData
+                              ? CartData.map((item) => (
+                                  <li key={item.product._id}>
+                                    {item.product && item.product.name && (
+                                      <>
+                                        <div className="shopping-cart-img">
+                                          <Link to="#">
+                                            <img
+                                              alt="cart"
+                                              src={`${url}/products/${
+                                                item.product.imageGallery &&
+                                                item.product.imageGallery[0]
+                                                  ? item.product.imageGallery[0]
+                                                  : "default-image.jpg"
+                                              }`}
+                                            />
+                                          </Link>
+                                        </div>
+                                        <div className="shopping-cart-title">
+                                          <h4>
+                                            <Link to="#">
+                                              {item.product.name}
+                                            </Link>
+                                          </h4>
+                                          <h3>
+                                            <span>{item.quantity}× </span>
+                                            {item.product.prices.discounted
+                                              ? item.product.prices.discounted
+                                              : item.product.prices
+                                                  .calculatedPrice}
+                                          </h3>
+                                        </div>
+                                        <div className="shopping-cart-delete">
+                                          <Link
+                                            onClick={() => {
+                                              handleRemoveItemFromCart(
+                                                item.product._id
+                                              );
+                                            }}
+                                          >
+                                            <i className="fi-rs-cross-small bi bi-x" />
+                                          </Link>
+                                        </div>
+                                      </>
+                                    )}
+                                  </li>
+                                ))
+                              : null}
+                          </ul>
+                          <div className="shopping-cart-footer">
+                            {/* <div className="shopping-cart-total">
+                              <h4 className="d-flex justify-content-between">
+                                <span>Total</span> <span>{totalPrice}</span>
+                              </h4>
+                            </div> */}
+                            <div className="shopping-cart-button">
+                              {CartData.length > 0 ? (
+                                <>
+                                  <Link to={`/cart/${CustomerInfo._id}`}>
+                                    View cart
+                                  </Link>
+                                  <Link to={`/checkout/${CustomerInfo._id}`}>
+                                    Checkout
+                                  </Link>
+                                </>
+                              ) : (
+                                <h4 className="text-center text-danger">
+                                  Your cart is empty
+                                </h4>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <div
+                      className="header-action-icon-2"
+                      // onMouseEnter={handleAccountHover}
+                      // onMouseLeave={handleAccountLeave}
+                    >
+                      <Link to="#">
+                        <BsPerson />
+                      </Link>
+                      <Link to="#">
+                        <span className="lable ml-0">Account</span>
+                      </Link>
+                      {isAccountDropdownOpen && (
+                        <div className="cart-dropdown-wrap cart-dropdown-hm2 account-dropdown">
+                          <ul className="">
+                            <li>
+                              <Link to="/my-account">
+                                <i className="fi fi-rs-user mr-10" />
+                                My Account
+                              </Link>
+                            </li>
+
+                            <li>
+                              <Link to={`/my-wishlist/${CustomerInfo._id}`}>
+                                <i className="fi fi-rs-heart mr-10" />
+                                My Wishlist
+                              </Link>
+                            </li>
+
+                            <li>
+                              <Link onClick={handleSignout}>
+                                <i className="fi fi-rs-sign-out mr-10" />
+                                Sign out
+                              </Link>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              {/* // ) : 
+              // (
+              //   <button className="btn" onClick={handleLoginClick}>
+              //     Login/SignUp
+              //   </button>
+              // ) */}
+              
         <SidebarNav sidebar={sidebar} className="side-nav">
           <SidebarWrap>
             <Logo1 src={logo} alt="logo" className="inner-nav-logo" />

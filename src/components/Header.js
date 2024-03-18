@@ -225,6 +225,27 @@ const Header = () => {
     getLoggedinCustomerCart(CustomerInfo._id);
   };
 
+  const handleCartClick = () => {
+    setCartDropdownOpen(!isCartDropdownOpen);
+    if (!isCartDropdownOpen) {
+      // Fetch cart data when opening the cart dropdown
+      getLoggedinCustomerCart(CustomerInfo._id);
+    }
+  };
+
+  useEffect(() => {
+    // Fetch cart data when component mounts
+    getLoggedinCustomerCart(CustomerInfo._id);
+
+    // Fetch cart data every second
+    const interval = setInterval(() => {
+      getLoggedinCustomerCart(CustomerInfo._id);
+    }, 1000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, [CustomerInfo._id]);
+
   const handleCartLeave = () => {
     setCartDropdownOpen(false);
   };
@@ -958,6 +979,7 @@ const Header = () => {
                       className="header-action-icon-2"
                       onMouseEnter={handleCartHover}
                       onMouseLeave={handleCartLeave}
+                      onClick={handleCartClick}
                     >
                       <Link className="mini-cart-icon" to="#">
                         <BsCart />

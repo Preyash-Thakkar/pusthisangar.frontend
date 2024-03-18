@@ -12,6 +12,8 @@ import NewArrival from "./NewArrival";
 import OfferPart from "./OfferPart";
 import SeasonalProducts from "./SeasonalProducts";
 import Shringar from "./Shringar";
+import Pichwai from "./Pichwai";
+import Silver from "./Silvervessel";
 import Subscribe from "./Subscribe";
 import TopProducts from "./TopProducts";
 import Vastra from "./Vastra";
@@ -25,7 +27,6 @@ const Home = () => {
   return (
     <div>
       <Header  />
-
       <MobileSidebar />
       <HomeSlider  />
       <div className="mobileCategoryDiv">
@@ -36,16 +37,21 @@ const Home = () => {
 
       </div>
       {/* <FeatureCategory/> */}
-      <Category />
-      <OfferPart />
+      
+      
       <NewArrival />
       <Shringar />
+      <Silver/>
+      <Pichwai/>
+      
 
       {/* <SeasonalProducts/> */}
-      <Vastra />
-      <Sugandhi />    
+      {/* <Vastra /> */}
+      {/* <Sugandhi />     */}
       {/* sugandhi category */}
       <TopProducts />
+      <Category />
+      <OfferPart />
       <Subscribe />
       <Featured />
       <MidFooter />
