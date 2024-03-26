@@ -20,6 +20,7 @@ import Vastra from "./Vastra";
 import Deals_Of_the_day from "./Deals_Of_the_day";
 import { SignState } from "../contextAPI/State/SignState";
 import Sugandhi from "./Sugandhi";
+import Silvervessel from "./Silvervessel";
 
 const Home = () => {
   

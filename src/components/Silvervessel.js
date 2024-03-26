@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import SignContext from "../contextAPI/Context/SignContext";
 import "./Shringar.css";
 
-const Silver = () => {
+const Silvervessel = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
   const id = "650837faf32a06ef841fa5d8";
   // const navigate = useNavigate();
@@ -30,7 +30,7 @@ const Silver = () => {
     const res = await GetProductsbyCategoryId("categoryId", id);
 
     const categoryRes = await getCategories();
-
+    
     if (categoryRes) {
       const mapping = {};
       categoryRes.forEach((category) => {
@@ -93,7 +93,7 @@ const Silver = () => {
     dots: false,
     infinite: true,
     speed: 500,
-    slidesToShow: 4,
+    slidesToShow: Math.min(ProductData.length, 4), // Adjust slidesToShow dynamically
     slidesToScroll: 1,
     nextArrow: <NextArrow />,
     prevArrow: <PrevArrow />,
@@ -101,14 +101,14 @@ const Silver = () => {
       {
         breakpoint: 1025,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 1,
           slidesToScroll: 1,
         },
       },
       {
         breakpoint: 600,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 1, // Adjusted to 1 for smaller screen sizes
           slidesToScroll: 1,
           initialSlide: 0,
         },
@@ -122,6 +122,8 @@ const Silver = () => {
       },
     ],
   };
+
+  
 
   const shringarStyle = {
     filter: "brightness(85%)",
@@ -209,7 +211,7 @@ const Silver = () => {
       <div className="container mb-4">
         <div className="row text-start">
           <div className="col">
-            <h1 className="fs-1 mt-4 mb-4 titleCategory">Silver Vessels</h1>
+            <h1 className="fs-1 mt-4 mb-4 titleCategory">Silver Vessel</h1>
           </div>
           <div className="col text-end d-flex align-items-center justify-content-end">
             <Link
@@ -358,4 +360,4 @@ const Silver = () => {
   );
 };
 
-export default Silver;
+export default Silvervessel;
