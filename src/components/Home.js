@@ -6,6 +6,7 @@ import Featured from "./Featured";
 import Header from "./Header";
 import HomeSlider from "./HomeSlider";
 import MidFooter from "./MidFooter";
+import Silvervessel from "./Silvervessel";
 
 import MobileSidebar from "./MobileSidebar";
 import NewArrival from "./NewArrival";
@@ -42,7 +43,7 @@ const Home = () => {
       <Shringar />
 
       {/* <SeasonalProducts/> */}
-      <Vastra />
+      <Silvervessel />
       <Sugandhi />    
       {/* sugandhi category */}
       <TopProducts />
