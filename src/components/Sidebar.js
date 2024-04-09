@@ -244,9 +244,30 @@ const Sidebar = () => {
   };
 
   useEffect(() => {
-    GetLoggedInCustomer(authToken);
-    getLoggedinCustomerCart(CustomerInfo._id);
-  }, [CustomerInfo._id]);
+    // Define a function to fetch the customer's cart
+    const fetchCustomerCart = async () => {
+      try {
+        if (CustomerInfo._id) {
+          const res = await GetLoggedInCartItems(CustomerInfo._id);
+          if (res.success) {
+            setCartData(res.cartItems);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching customer cart:", error);
+      }
+    };
+  
+    // Fetch the customer's cart initially
+    fetchCustomerCart();
+  
+    // Set up an interval to fetch the cart every second
+    const intervalId = setInterval(fetchCustomerCart, 1000);
+  
+    // Clear the interval on component unmount to avoid memory leaks
+    return () => clearInterval(intervalId);
+  }, [CustomerInfo._id]); // Only run the effect when CustomerInfo._id changes
+  
 
   return (
     <>

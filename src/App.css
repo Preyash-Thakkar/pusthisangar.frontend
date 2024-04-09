@@ -434,6 +434,12 @@ body {
   .detail-extralink>div {
     margin-left: 0px !important;
   }
+  .search-style-2 form input {
+    width: 437px !important;
+    margin-left: 40px;
+    padding: 20px 14px;
+    margin-bottom: 10px;
+}
 }
 
 @media screen and (max-width: 426px) {

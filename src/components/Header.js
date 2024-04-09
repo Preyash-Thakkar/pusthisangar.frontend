@@ -358,6 +358,35 @@ const Header = () => {
   ]);
 
   return (
+    <>
+     <div className="search-style-2 d-lg-none mobile-search ">
+                <form onSubmit={handleTagsSearch} className="d-flex justify-content-between align-items-center">
+                  {/* <div style={{ width: "300px" }}>
+                    <Select
+                      defaultValue={selectedOption}
+                      onChange={setSelectedOption}
+                      options={options}
+                      placeholder="Search"
+                    />
+                  </div> */}
+                  <input
+                    type="text"
+                    value={tag}
+                    onChange={(e) => setTag(e.target.value)}
+                    placeholder="Search for items..."
+                    className="rounded"
+                  />
+                  <Link to={tag ? `/bytags/${tag}` : "#"}>
+                    <button
+                      className="btn m-search-btn"
+                      type="submit"
+                     
+                    >
+                      Search...
+                    </button>
+                  </Link>
+                </form>
+              </div>
     <header className="header-area header-style-1 header-height-2">
       <div className="header-top header-top-ptb-1  d-lg-block">
         <div className="container">
@@ -1291,6 +1320,390 @@ const Header = () => {
         </div>
       </div>
     </header>
+    
+    {OpenLoginModal && (
+              <div
+                className="modal fade show modal-backdrop-opacity"
+                id="LoginRegister"
+                style={{ display: "block" }}
+                aria-modal="true"
+              >
+                <div className="modal-dialog modal-lg">
+                  <div className="modal-content">
+                    {/* Modal body */}
+                    <div className="modal-body">
+                      <div className="login-part" style={{ display: "block" }}>
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="modal"
+                          onClick={handleModalClose}
+                        >
+                          ×
+                        </button>
+                        <div className="row m-0">
+                          <div className="col-md-12 col-lg-8">
+                            <div className="lr-details">
+                              <h5>Sign in to PushtiShangar</h5>
+                              {errorBanner && (
+                                <div class="alert alert-danger" role="alert">
+                                  {errorBanner}
+                                </div>
+                              )}
+                              <Formik
+                                initialValues={{
+                                  email: "",
+                                  password: "",
+                                }}
+                                validationSchema={loginSchema}
+                                onSubmit={async (values, { resetForm }) => {
+                                  await handleLogin(values);
+                                  resetForm();
+                                  // togglemodal();
+                                  // toast.success("User Added Successfully", { autoClose: 3000 });
+                                }}
+                              >
+                                {({
+                                  isSubmitting,
+                                  handleChange,
+                                  handleSubmit,
+                                  errors,
+                                  touched,
+                                  values,
+                                  handleBlur,
+                                  setFieldValue,
+                                }) => (
+                                  <Form onSubmit={handleSubmit}>
+                                    <div className="billing-details mt-4">
+                                      <div className="form-group">
+                                        <Field
+                                          type="text"
+                                          name="email"
+                                          className="form-control login-input"
+                                          placeholder="Email Address *"
+                                          onChange={handleChange}
+                                          onBlur={handleBlur}
+                                          value={values.email}
+                                        />
+                                        <p className="error text-danger">
+                                          {errors.email &&
+                                            touched.email &&
+                                            errors.email}
+                                        </p>
+                                        <span>
+                                          <i className="bx bx-user-circle bi bi-person-circle" />
+                                        </span>
+                                      </div>
+                                      <div className="form-group">
+                                        <div className="password-input-container">
+                                          <Field
+                                            type={
+                                              passwordVisible
+                                                ? "text"
+                                                : "password"
+                                            }
+                                            name="password"
+                                            id="password-input"
+                                            className="form-control login-input"
+                                            placeholder="Password *"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.password}
+                                          />
+                                          <span>
+                                            <i className="bx bxs-lock bi bi-lock-fill" />
+                                          </span>
+                                        </div>
+                                        <div
+                                          className={`eye-icon-container text-end`}
+                                        >
+                                          <p
+                                            className={`bi ${
+                                              passwordVisible
+                                                ? "bi-eye"
+                                                : "bi-eye-slash"
+                                            } eye-icon text-end`}
+                                            onClick={() =>
+                                              setPasswordVisible(
+                                                !passwordVisible
+                                              )
+                                            }
+                                          ></p>
+                                        </div>
+                                        <p className="error text-danger">
+                                          {errors.password &&
+                                            touched.password &&
+                                            errors.password}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="forogotlink text-start">
+                                      <Link
+                                        className="forgotlinking forgot_password"
+                                        onClick={handleForgotPasswordClick}
+                                        to="#"
+                                      >
+                                        Forgot Password ?
+                                      </Link>
+                                    </div>
+                                    <div className="text-center mt-3">
+                                      <button
+                                        type="submit"
+                                        className="default-btn w-50"
+                                        disabled={isSubmitting}
+                                      >
+                                        Sign In
+                                        <span />
+                                      </button>
+                                    </div>
+                                  </Form>
+                                )}
+                              </Formik>
+                            </div>
+                          </div>
+                          <div className="col-md-12 col-lg-4 flex-col img-part">
+                            <div className="login-white-container">
+                              <h1>Hello!</h1>
+                              <p className="text-center mt-2">
+                                Unlock a personalized shopping experience by
+                                joining us now.
+                              </p>
+                              <div className="register">
+                                <Link
+                                  className="createlinking register_button"
+                                  to="#"
+                                  onClick={handleSignupClick}
+                                  id
+                                >
+                                  Sign Up
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+{showSignupModal && (
+              <div
+                className="modal fade show modal-backdrop-opacity"
+                id="LoginRegister"
+                style={{ display: "block", paddingRight: 17 }}
+                aria-modal="true"
+              >
+                <div className="modal-dialog modal-lg">
+                  <div className="modal-content">
+                    {/* Modal body */}
+                    <div className="modal-body">
+                      <div className="register-part" style={{}}>
+                        <button
+                          type="button"
+                          className="close"
+                          data-dismiss="modal"
+                          onClick={handleSignupModalClose}
+                          style={{ right: 10, left: "auto" }}
+                        >
+                          ×
+                        </button>
+                        <div className="row m-0">
+                          <div className="col-md-12 col-lg-4 flex-col img-part">
+                            <div className="login-white-container">
+                              <h1>Welcome Back !</h1>
+                              <p className="text-center mt-2">
+                                Log in to continue shopping and managing your
+                                account.
+                              </p>
+                              <div className="register">
+                                <Link
+                                  className="createlinking login_button"
+                                  onClick={handleLoginClick}
+                                  to="#"
+                                  id
+                                >
+                                  Sign In
+                                </Link>
+                              </div>
+                            </div>
+                          </div>
+                          <div className="col-md-12 col-lg-8">
+                            <div className="lr-details">
+                              <h5>Create Account</h5>
+                              <Formik
+                                initialValues={{
+                                  username: "",
+                                  email: "",
+                                  password: "",
+                                  confirmPassword: "",
+                                  phone: "",
+                                }}
+                                validationSchema={signupSchema}
+                                onSubmit={async (values, { resetForm }) => {
+                                  await handleSignupSubmit(values);
+                                  resetForm();
+                                  // togglemodal();
+                                  // toast.success("User Added Successfully", { autoClose: 3000 });
+                                }}
+                              >
+                                {({
+                                  isSubmitting,
+                                  handleChange,
+                                  handleSubmit,
+                                  errors,
+                                  touched,
+                                  values,
+                                  handleBlur,
+                                  setFieldValue,
+                                }) => (
+                                  <Form onSubmit={handleSubmit}>
+                                    <div className="billing-details mt-4">
+                                      <div className="row">
+                                        <div className="form-group col-md-12">
+                                          <Field
+                                            type="text"
+                                            name="username"
+                                            className="form-control"
+                                            placeholder="Full Name *"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.username}
+                                          />
+                                          <p className="error text-danger">
+                                            {errors.username &&
+                                              touched.username &&
+                                              errors.username}
+                                          </p>
+                                        </div>
+
+                                        <div className="form-group col-md-12">
+                                          <Field
+                                            type="text"
+                                            name="email"
+                                            className="form-control"
+                                            placeholder="Email Address *"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.email}
+                                          />
+                                          <p className="error text-danger">
+                                            {errors.email &&
+                                              touched.email &&
+                                              errors.email}
+                                          </p>
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                          <Field
+                                            type={
+                                              passwordVisible
+                                                ? "text"
+                                                : "password"
+                                            }
+                                            name="password"
+                                            className="form-control"
+                                            placeholder="Password *"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.password}
+                                          />
+                                          <div
+                                            className={`eye-icon-container text-end`}
+                                          >
+                                            <p
+                                              className={`bi ${
+                                                passwordVisible
+                                                  ? "bi-eye"
+                                                  : "bi-eye-slash"
+                                              } eye-icon text-end me-2`}
+                                              onClick={() =>
+                                                setPasswordVisible(
+                                                  !passwordVisible
+                                                )
+                                              }
+                                            ></p>
+                                          </div>
+                                          <p className="error text-danger">
+                                            {errors.password &&
+                                              touched.password &&
+                                              errors.password}
+                                          </p>
+                                        </div>
+                                        <div className="form-group col-md-6">
+                                          <Field
+                                            type={
+                                              ConfirmpasswordVisible
+                                                ? "text"
+                                                : "password"
+                                            }
+                                            name="confirmPassword"
+                                            className="form-control"
+                                            placeholder="Confirm Password *"
+                                            onChange={handleChange}
+                                            onBlur={handleBlur}
+                                            value={values.confirmPassword}
+                                          />
+                                          <div
+                                            className={`eye-icon-container text-end`}
+                                          >
+                                            <p
+                                              className={`bi ${
+                                                ConfirmpasswordVisible
+                                                  ? "bi-eye"
+                                                  : "bi-eye-slash"
+                                              } eye-icon text-end me-2`}
+                                              onClick={() =>
+                                                setConfirmPasswordVisible(
+                                                  !ConfirmpasswordVisible
+                                                )
+                                              }
+                                            ></p>
+                                          </div>
+                                          <p className="error text-danger">
+                                            {errors.confirmPassword &&
+                                              touched.confirmPassword &&
+                                              errors.confirmPassword}
+                                          </p>
+                                        </div>
+                                        <div className="form-group col-md-12">
+                                          <Field
+                                            type="text"
+                                            name="phone"
+                                            className="form-control"
+                                            placeholder="Mobile Number *"
+                                          />
+                                          <p className="error text-danger">
+                                            {errors.phone &&
+                                              touched.phone &&
+                                              errors.phone}
+                                          </p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="text-center mt-3">
+                                      <button
+                                        type="submit"
+                                        className="default-btn w-50"
+                                        disabled={isSubmitting}
+                                      >
+                                        Submit Here
+                                        <span />
+                                      </button>
+                                    </div>
+                                  </Form>
+                                )}
+                              </Formik>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+    </>
   );
 };
 
