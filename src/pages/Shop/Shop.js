@@ -1,10 +1,11 @@
 // ProductList.js
 import React, { useContext, useEffect, useState } from "react";
-import Header from "../../components/Header";
-import MidFooter from "../../components/MidFooter";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+// import Header from "../../components/Header";
+// import MidFooter from "../../components/MidFooter";
 import "../productList/ProductList.css";
 
-import Subscribe from "../../components/Subscribe";
+// import Subscribe from "../../components/Subscribe";
 
 import "../../components/SeasonalProducts.css";
 import "../../components/TopProducts.css";
@@ -18,11 +19,16 @@ import "../../components/TopProducts.css";
 // import S8 from "../../images/s8.jpg";
 // import S9 from "../../images/s9.jpg";
 import { Link, useNavigate } from "react-router-dom";
-import MobileSidebar from "../../components/MobileSidebar";
+// import MobileSidebar from "../../components/MobileSidebar";
 import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
 import SignContext from "../../contextAPI/Context/SignContext";
 import axios from "axios";
 import Swal from "sweetalert2";
+
+const Header = React.lazy(() => import("../../components/Header"));
+const MidFooter = React.lazy(() => import("../../components/MidFooter"));
+const Subscribe = React.lazy(() => import("../../components/Subscribe"));
+const MobileSidebar = React.lazy(() => import("../../components/MobileSidebar"));
 
 const Shop = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
@@ -50,23 +56,41 @@ const Shop = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const Getproduct = async () => {
-    const res = await getProducts();
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
+  useEffect(() => {
+    const fetchInitialProducts = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.get(`${url}/product/getLimitedAllProducts`);
+        setProductData(response.data.products);
+        setPage(prevPage => prevPage + 1);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching initial products:", error);
+        setLoading(false);
+      }
+    };
+
+    fetchInitialProducts();
+  }, [url]);
+
+  const Getproduct = async () => {
+    if (!hasMore) return;
+
+    setLoading(true);
+    const res = await getProducts(page);
     console.log("res", res);
 
-    const categoryRes = await getCategories();
-    console.log("categories", categoryRes);
-    if (categoryRes) {
-      const mapping = {};
-      categoryRes.forEach((category) => {
-        mapping[category._id] = category.name;
-      });
-
-      setCategoryNameMapping(mapping);
+    if (res.products.length > 0) {
+      setProductData(prevProducts => [...prevProducts, ...res.products]);
+      setPage(prevPage => prevPage + 1);
+    } else {
+      setHasMore(false);
     }
-    setProductData(res.products);
-    setCategoryData(categoryRes);
+
+    setLoading(false);
   };
 
   //  const changeQueryparams = (parameter, value) => {
@@ -471,8 +495,26 @@ const Shop = () => {
     setProductData(sortedData);
   };
 
-  const handleShowMore = () => {
-    setProductsToShow(ProductData.length);
+
+
+  const handleShowMore = async () => {
+    if (!hasMore) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.get(`${url}/product/getLimitedAllProducts`, { page });
+      if (response.data.products.length > 0) {
+        setProductData(prevProducts => [...prevProducts, ...response.data.products]);
+        setPage(prevPage => prevPage + 1);
+        setProductsToShow(ProductData.length);
+      } else {
+        setHasMore(false);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching more products:", error);
+      setLoading(false);
+    }
   };
 
   const handleCartClick = async (id) => {
@@ -812,115 +854,113 @@ const Shop = () => {
           {/* { loading && <p className="text-align-center h5" >Loading...</p> } */}
           {ProductData
             ? ProductData.slice(0, productsToShow).map((product) => (
+              <div
+                className=" col-lg-3 col-md-4 col-sm-6 col-6  mb-4"
+                key={product.id}
+              >
                 <div
-                  className=" col-lg-3 col-md-4 col-sm-6 col-6  mb-4"
-                  key={product.id}
+                  className="product-cart-wrap popular-card filter-card"
+                  tabIndex={0}
                 >
-                  <div
-                    className="product-cart-wrap popular-card filter-card"
-                    tabIndex={0}
-                  >
-                    <div className="product-img-action-wrap">
-                      <div className="product-img product-img-zoom">
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          tabIndex={0}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            className="default-img"
-                            src={`${url}/products/${product.imageGallery[0]}`}
-                            alt=""
-                            onError={(e) => {
-                              e.target.src =
-                                "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
-                              e.target.style.width = "192.6px";
-                              e.target.style.height = "192.6px";
-                            }}
-                          />
-                          <img
-                            className="hover-img"
-                            src={product.hoverImageUrl}
-                            alt=""
-                          />
-                        </Link>
-                      </div>
+                  <div className="product-img-action-wrap">
+                    <div className="product-img product-img-zoom">
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        tabIndex={0}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <LazyLoadImage
+                          alt={product.name}
+                          src={`${url}/products/${product.imageGallery[0]}`} // original image src
+                          effect="blur"
+                          placeholderSrc="https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg" // placeholder while loading
+                          onError={(e) => {
+                            e.target.src = "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg";
+                            e.target.style.width = "192.6px";
+                            e.target.style.height = "192.6px";
+                          }}
+                        />
+                        <img
+                          className="hover-img"
+                          src={product.hoverImageUrl}
+                          alt=""
+                        />
+                      </Link>
                     </div>
-                    <div class="product-content-wrap">
-                      <div class="product-category">
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {categoryNameMapping[product.category]}
-                        </Link>
+                  </div>
+                  <div class="product-content-wrap">
+                    <div class="product-category">
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {categoryNameMapping[product.category]}
+                      </Link>
+                    </div>
+                    <h2>
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {product.name}
+                      </Link>
+                    </h2>
+
+                    <h5 className="notAvailableTitle">
+                      {product.productStock.length === 0 ? (
+                        <span className="stock-message-list">
+                          Not available
+                        </span>
+                      ) : product.productStock[0].quantity <= 0 ? (
+                        <span className="stock-message-list">
+                          Out of stock
+                        </span>
+                      ) : product.productStock[0].quantity < 5 ? (
+                        <span className="stock-message-list">
+                          Only {product.productStock[0].quantity} left
+                        </span>
+                      ) : null}
+                    </h5>
+
+                    <div class="product-card-bottom">
+                      <div class="product-price popular-card-price">
+                        <span id="f-c-p">
+                          ₹
+                          {product.prices.discounted
+                            ? product.prices.discounted
+                            : product.prices.calculatedPrice}
+                        </span>
+                        {!product.calculationOnWeight && (
+                          <span class="old-price " id="f-c-o-p">
+                            ₹{product.prices ? product.prices.original : null}
+                          </span>
+                        )}
                       </div>
-                      <h2>
+                      <div class="add-cart popular-card-cart">
                         <Link
-                          to={`/product-details/${product._id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          class="add add-cart-btn"
+                          id="shop-cart"
+                          onClick={() => {
+                            handleCartClick(product._id);
+                          }}
                         >
-                          {product.name}
+                          <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
+                          Add
                         </Link>
-                      </h2>
-
-                      <h5 className="notAvailableTitle">
-                        {product.productStock.length === 0 ? (
-                          <span className="stock-message-list">
-                            Not available
-                          </span>
-                        ) : product.productStock[0].quantity <= 0 ? (
-                          <span className="stock-message-list">
-                            Out of stock
-                          </span>
-                        ) : product.productStock[0].quantity < 5 ? (
-                          <span className="stock-message-list">
-                            Only {product.productStock[0].quantity} left
-                          </span>
-                        ) : null}
-                      </h5>
-
-                      <div class="product-card-bottom">
-                        <div class="product-price popular-card-price">
-                          <span id="f-c-p">
-                            ₹
-                            {product.prices.discounted
-                              ? product.prices.discounted
-                              : product.prices.calculatedPrice}
-                          </span>
-                          {!product.calculationOnWeight && (
-                            <span class="old-price " id="f-c-o-p">
-                              ₹{product.prices ? product.prices.original : null}
-                            </span>
-                          )}
-                        </div>
-                        <div class="add-cart popular-card-cart">
-                          <Link
-                            class="add add-cart-btn"
-                            id="shop-cart"
-                            onClick={() => {
-                              handleCartClick(product._id);
-                            }}
-                          >
-                            <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add
-                          </Link>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))
+              </div>
+            ))
             : null}
         </div>
         <div>
-          {productsToShow < ProductData.length && (
-            <div className="btn" onClick={handleShowMore}>
-              Show More
-            </div>
+          {hasMore && (
+            <button className="btn" onClick={handleShowMore}>Show More</button>
           )}
         </div>
       </div>
