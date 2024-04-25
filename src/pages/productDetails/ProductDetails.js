@@ -49,7 +49,7 @@ const ProductDetails = () => {
     OpenLoginModal,
     setOpenLoginModal,
   } = useContext(SignContext);
-  const [ProductData, setProductData] = useState([]);
+  const [ProductData, setProductData] = useState({ productStock: [{ quantity: 0 }] });
   const [OtherProductData, setOtherProductData] = useState([]);
   const [CategorybyProductsData, setCategorybyProductsData] = useState([]);
   const [DailyPrice, setDailyPrice] = useState([]);
@@ -78,6 +78,7 @@ const ProductDetails = () => {
 
     if (res.success) {
       setProductData(res.product);
+      console.log("pp", res.product);
     }
 
     const categoryRes = await getCategories();
@@ -128,7 +129,7 @@ const ProductDetails = () => {
 
       if (
         ProductData.productStock.length === 0 ||
-        Quantity > ProductData.productStock[0].quantity
+        Quantity > ProductData.productStock[0]?.quantity
       ) {
         // Assuming productStock is an array and quantity indicates the stock level
         Swal.fire({
@@ -184,7 +185,7 @@ const ProductDetails = () => {
   const handleIncrement = () => {
     if (
       ProductData.productStock.length === 0 ||
-      Quantity >= ProductData.productStock[0].quantity
+      Quantity >= ProductData.productStock[0]?.quantity
     ) {
       // Disable increment if product stock is not available or if current quantity is equal to or greater than product stock
       return;
@@ -392,13 +393,13 @@ const ProductDetails = () => {
                     </span>
                     <h2 className="title-detail mb-4">{ProductData.name}</h2>
 
-                    {ProductData.productStock.length === 0 ? (
+                    {ProductData.productStock?.length === 0 ? (
                       <span className="stock-message">Not available</span>
-                    ) : ProductData.productStock[0].quantity <= 0 ? (
+                    ) : ProductData.productStock[0]?.quantity <= 0 ? (
                       <span className="stock-message">Out of stock</span>
-                    ) : ProductData.productStock[0].quantity < 5 ? (
+                    ) : ProductData.productStock[0]?.quantity < 5 ? (
                       <span className="stock-message">
-                        Only {ProductData.productStock[0].quantity} left
+                        Only {ProductData.productStock[0]?.quantity} left
                       </span>
                     ) : null}
                     <span className="mb-5 mt-3">
@@ -421,9 +422,9 @@ const ProductDetails = () => {
                           {!ProductData.calculationOnWeight && (
                             <span className="old-price font-md ml-15 fs-5">
                               ₹
-                              {ProductData.prices &&
-                                ProductData.prices.calculatedPrice
-                                ? ProductData.prices.calculatedPrice
+                              {ProductData?.prices &&
+                                ProductData?.prices.calculatedPrice
+                                ? ProductData?.prices.calculatedPrice
                                 : "NA"}
                             </span>
                           )}
@@ -433,7 +434,7 @@ const ProductDetails = () => {
                     <div className="short-desc mb-4">
                       <div
                         dangerouslySetInnerHTML={{
-                          __html: ProductData.description,
+                          __html: ProductData?.description,
                         }}
                       />
                     </div>
@@ -505,7 +506,7 @@ const ProductDetails = () => {
                         <h3>Available Colors:</h3>
                         <div className="color-options">
                           {OtherProductData ? (
-                            OtherProductData.map((OtherProduct) => (
+                            OtherProductData?.map((OtherProduct) => (
                               <Link
                                 key={OtherProduct._id}
                                 to={`/product-details/${OtherProduct._id}`}
@@ -524,7 +525,7 @@ const ProductDetails = () => {
                         <h3>Available Sizes:</h3>
                         <div className="size-options">
                           {OtherProductData ? (
-                            OtherProductData.map((OtherProduct) => (
+                            OtherProductData?.map((OtherProduct) => (
                               <Link
                                 key={OtherProduct._id}
                                 to={`/product-details/${OtherProduct._id}`}
@@ -610,7 +611,7 @@ const ProductDetails = () => {
                       <div className>
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: ProductData.description,
+                            __html: ProductData?.description,
                           }}
                         />
                         {/* <p>

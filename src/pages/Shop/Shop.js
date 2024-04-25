@@ -1,11 +1,11 @@
 // ProductList.js
 import React, { useContext, useEffect, useState } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-// import Header from "../../components/Header";
-// import MidFooter from "../../components/MidFooter";
+import Header from "../../components/Header";
+import MidFooter from "../../components/MidFooter";
 import "../productList/ProductList.css";
 
-// import Subscribe from "../../components/Subscribe";
+import Subscribe from "../../components/Subscribe";
 
 import "../../components/SeasonalProducts.css";
 import "../../components/TopProducts.css";
@@ -19,16 +19,16 @@ import "../../components/TopProducts.css";
 // import S8 from "../../images/s8.jpg";
 // import S9 from "../../images/s9.jpg";
 import { Link, useNavigate } from "react-router-dom";
-// import MobileSidebar from "../../components/MobileSidebar";
+import MobileSidebar from "../../components/MobileSidebar";
 import { AiOutlineHome, AiOutlineRight } from "react-icons/ai";
 import SignContext from "../../contextAPI/Context/SignContext";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-const Header = React.lazy(() => import("../../components/Header"));
-const MidFooter = React.lazy(() => import("../../components/MidFooter"));
-const Subscribe = React.lazy(() => import("../../components/Subscribe"));
-const MobileSidebar = React.lazy(() => import("../../components/MobileSidebar"));
+// const Header = React.lazy(() => import("../../components/Header"));
+// const MidFooter = React.lazy(() => import("../../components/MidFooter"));
+// const Subscribe = React.lazy(() => import("../../components/Subscribe"));
+// const MobileSidebar = React.lazy(() => import("../../components/MobileSidebar"));
 
 const Shop = () => {
   const url = `${process.env.REACT_APP_BASE_URL}`;
