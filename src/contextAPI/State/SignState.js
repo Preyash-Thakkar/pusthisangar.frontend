@@ -319,6 +319,17 @@ export const SignState = (props) => {
       return { success: false, msg: "server Error" };
     }
   };
+  const getProductsByCategoryIdDashboard = async (filtrationField, CategoryId) => {
+    try {
+      const response = await axios.post(
+        `${url}/product/getProductsByCategoryIdDashboard?${filtrationField}=${CategoryId}`,
+        {}
+      );
+      return response.data;
+    } catch (error) {
+      return { success: false, msg: "server Error" };
+    }
+  };
 
   const GetallCoupons = async () => {
     try {
@@ -710,6 +721,7 @@ export const SignState = (props) => {
         GetLoggedInWishlistItems,
         removeItemFromWishlist,
         GetProductsbyCategoryId,
+        getProductsByCategoryIdDashboard,
         GetallCoupons,
         GetCouponbyId,
         getAllBanner,

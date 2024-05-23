@@ -12,7 +12,7 @@ const Shringar = () => {
   const id = "650837d4f32a06ef841fa5d6";
   // const navigate = useNavigate();
   const {
-    GetProductsbyCategoryId,
+    getProductsByCategoryIdDashboard,
     getCategories,
     getLoggedInCustomer,
     GetLoggedInCartItems,
@@ -27,7 +27,7 @@ const Shringar = () => {
   const authToken = localStorage.getItem("authToken");
 
   const Getproduct = async (id) => {
-    const res = await GetProductsbyCategoryId("categoryId", id);
+    const res = await getProductsByCategoryIdDashboard("categoryId", id);
 
     const categoryRes = await getCategories();
 
@@ -247,61 +247,61 @@ const Shringar = () => {
             <Slider {...settings}>
               {products
                 ? products.map((product) => (
-                    <div key={product.id}>
-                      <Link
-                        to={`/product-details/${product._id}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                  <div key={product.id}>
+                    <Link
+                      to={`/product-details/${product._id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <div
+                        className="product-cart-wrap shringar-card slick-slide slick-current slick-active"
+                        tabIndex={0}
+                        style={{ width: 246 }}
+                        data-slick-index={3}
+                        aria-hidden="false"
                       >
-                        <div
-                          className="product-cart-wrap shringar-card slick-slide slick-current slick-active"
-                          tabIndex={0}
-                          style={{ width: 246 }}
-                          data-slick-index={3}
-                          aria-hidden="false"
-                        >
-                          <div className="product-img-action-wrap">
-                            <div className="product-img product-img-zoom">
-                              <Link
-                                to={`/product-details/${product._id}`}
-                                tabIndex={0}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                <img
-                                  className="default-img img-fluid"
-                                  src={`${url}/products/${product.imageGallery[0]}`}
-                                  alt=""
-                                  onError={(e) => {
-                                    e.target.src =
-                                      "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
-                                  }}
-                                />
-                              </Link>
-                            </div>
+                        <div className="product-img-action-wrap">
+                          <div className="product-img product-img-zoom">
+                            <Link
+                              to={`/product-details/${product._id}`}
+                              tabIndex={0}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                className="default-img img-fluid"
+                                src={`${url}/products/${product.imageGallery[0]}`}
+                                alt=""
+                                onError={(e) => {
+                                  e.target.src =
+                                    "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
+                                }}
+                              />
+                            </Link>
                           </div>
-                          <div className="product-content-wrap">
-                            <div className="product-category">
-                              <Link
-                                to={`/product-details/${product._id}`}
-                                tabIndex={0}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {categoryNameMapping[product.category]}
-                              </Link>
-                            </div>
-                            <h2 className="vastra-title">
-                              <Link
-                                to={`/product-details/${product._id}`}
-                                tabIndex={0}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                              >
-                                {product.name}
-                              </Link>
-                            </h2>
-                            <h5 className="notAvailableTitle">
+                        </div>
+                        <div className="product-content-wrap">
+                          <div className="product-category">
+                            <Link
+                              to={`/product-details/${product._id}`}
+                              tabIndex={0}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {categoryNameMapping[product.category]}
+                            </Link>
+                          </div>
+                          <h2 className="vastra-title">
+                            <Link
+                              to={`/product-details/${product._id}`}
+                              tabIndex={0}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {product.name}
+                            </Link>
+                          </h2>
+                          <h5 className="notAvailableTitle">
                             {product.productStock.length === 0 ? (
                               <span>
                                 Not available
@@ -315,40 +315,40 @@ const Shringar = () => {
                                 Only {product.productStock[0].quantity} left
                               </span>
                             ) : null}
-                            </h5>
-                            
-                            <div className="product-price mt-10 mb-2">
-                              <span>
+                          </h5>
+
+                          <div className="product-price mt-10 mb-2">
+                            <span>
+                              ₹
+                              {product.prices.discounted
+                                ? product.prices.discounted
+                                : product.prices.calculatedPrice}
+                            </span>
+                            {!product.calculationOnWeight && (
+                              <span class="old-price">
                                 ₹
-                                {product.prices.discounted
-                                  ? product.prices.discounted
-                                  : product.prices.calculatedPrice}
+                                {product.prices
+                                  ? product.prices.original
+                                  : null}
                               </span>
-                              {!product.calculationOnWeight && (
-                                <span class="old-price">
-                                  ₹
-                                  {product.prices
-                                    ? product.prices.original
-                                    : null}
-                                </span>
-                              )}
-                            </div>
-                            <Link
-                              // to="/product-details"
-                              className="btn w-100 hover-up"
-                              tabIndex={0}
-                              onClick={() => {
-                                handleCartClick(product._id);
-                              }}
-                            >
-                              <i className="fi-rs-shopping-cart bi bi-cart mr-5 me-1 " />
-                              Add To Cart
-                            </Link>
+                            )}
                           </div>
+                          <Link
+                            // to="/product-details"
+                            className="btn w-100 hover-up"
+                            tabIndex={0}
+                            onClick={() => {
+                              handleCartClick(product._id);
+                            }}
+                          >
+                            <i className="fi-rs-shopping-cart bi bi-cart mr-5 me-1 " />
+                            Add To Cart
+                          </Link>
                         </div>
-                      </Link>
-                    </div>
-                  ))
+                      </div>
+                    </Link>
+                  </div>
+                ))
                 : null}
             </Slider>
           </div>
