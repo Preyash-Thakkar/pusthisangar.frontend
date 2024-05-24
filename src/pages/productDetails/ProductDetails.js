@@ -411,8 +411,8 @@ const ProductDetails = () => {
                           ₹
                           {ProductData.prices &&
                             (ProductData.prices.discounted
-                              ? ProductData.prices.discounted
-                              : ProductData.prices.calculatedPrice)}
+                              ? ProductData.prices.discounted.toFixed(2)
+                              : ProductData.prices.calculatedPrice.toFixed(2))}
                         </span>
 
                         <span>
@@ -423,8 +423,8 @@ const ProductDetails = () => {
                             <span className="old-price font-md ml-15 fs-5">
                               ₹
                               {ProductData?.prices &&
-                                ProductData?.prices.calculatedPrice
-                                ? ProductData?.prices.calculatedPrice
+                                ProductData?.prices.calculatedPrice.toFixed(2)
+                                ? ProductData?.prices.calculatedPrice.toFixed(2)
                                 : "NA"}
                             </span>
                           )}

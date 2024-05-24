@@ -158,7 +158,7 @@ const Shop = () => {
   const [selectedSeason, setSelectedSeason] = useState([]);
   const [selectedShopBy, setSelectedShopBy] = useState([]);
   const [price, setPrice] = useState(40);
-  const [productsToShow, setProductsToShow] = useState(5);
+  const [productsToShow, setProductsToShow] = useState(10);
   const [selectedColor, setSelectedColor] = useState([]);
 
   const resetFilters = () => {

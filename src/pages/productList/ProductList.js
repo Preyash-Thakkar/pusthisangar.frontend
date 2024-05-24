@@ -37,6 +37,7 @@ const ProductList = () => {
     GetLoggedInCartItems,
     OpenLoginModal,
     setOpenLoginModal,
+    GetAllProductsbyCategoryId,
   } = useContext(SignContext);
   // const { _id, subcategoryId, subsubcategoryId } = useParams();
   const [ProductData, setProductData] = useState([]);
@@ -311,7 +312,7 @@ const ProductList = () => {
 
   const [selectedShopBy, setSelectedShopBy] = useState([]);
   const [price, setPrice] = useState(40);
-  const [productsToShow, setProductsToShow] = useState(5);
+  const [productsToShow, setProductsToShow] = useState(10);
 
   const resetFilters = () => {
     setSelectedColor([]);
@@ -458,9 +459,38 @@ const ProductList = () => {
 
     setProductData(sortedData);
   };
+  const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  const handleShowMore = () => {
-    setProductsToShow(ProductData ? ProductData.length : null);
+  const handleShowMore = async () => {
+    if (!hasMore) return;
+
+    setLoading(true);
+    try {
+      const categoryId = 1; // Replace with the actual categoryId you are working with
+      const response = await GetAllProductsbyCategoryId(filtrationField, id);
+
+      console.log('Fetched products:', response.products); // Debug line
+
+      if (response.products.length > 0) {
+        setProductData(prevProducts => {
+          const newProducts = [...prevProducts, ...response.products];
+          console.log('Updated products:', newProducts); // Debug line
+          return newProducts;
+        });
+        setPage(prevPage => prevPage + 1);
+        // Use a callback with setProductsToShow to ensure we're using the updated state
+        setProductsToShow(prevProductsToShow => prevProductsToShow + response.products.length);
+        setHasMore(true)
+      } else {
+        setHasMore(false);
+      }
+    } catch (error) {
+      console.error("Error fetching more products:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCartClick = async (id) => {
@@ -751,114 +781,113 @@ const ProductList = () => {
           </div>
           {ProductData
             ? ProductData.slice(0, productsToShow).map((product) => (
+              <div
+                className=" col-lg-3 col-md-4 col-sm-6 col-6 mb-4"
+                key={product.id}
+              >
                 <div
-                  className=" col-lg-3 col-md-4 col-sm-6 col-6 mb-4"
-                  key={product.id}
+                  className="product-cart-wrap popular-card filter-card"
+                  tabIndex={0}
                 >
-                  <div
-                    className="product-cart-wrap popular-card filter-card"
-                    tabIndex={0}
-                  >
-                    <div className="product-img-action-wrap">
-                      <div className="product-img product-img-zoom">
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          tabIndex={0}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            className="default-img"
-                            src={`${url}/products/${product.imageGallery[0]}`}
-                            alt=""
-                            onError={(e) => {
-                              e.target.src =
-                                "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
-                            }}
-                          />
-                          <img
-                            className="hover-img"
-                            src={product.hoverImageUrl}
-                            alt=""
-                          />
-                        </Link>
-                      </div>
+                  <div className="product-img-action-wrap">
+                    <div className="product-img product-img-zoom">
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        tabIndex={0}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          className="default-img"
+                          src={`${url}/products/${product.imageGallery[0]}`}
+                          alt=""
+                          onError={(e) => {
+                            e.target.src =
+                              "https://upload.wikimedia.org/wikipedia/commons/6/65/No-Image-Placeholder.svg"; // Replace with the path to your alternate image
+                          }}
+                        />
+                        <img
+                          className="hover-img"
+                          src={product.hoverImageUrl}
+                          alt=""
+                        />
+                      </Link>
                     </div>
-                    <div class="product-content-wrap">
-                      <div class="product-category">
-                        <Link
-                          to={`/product-details/${product._id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          {categoryNameMapping[product.category]}
-                        </Link>
+                  </div>
+                  <div class="product-content-wrap">
+                    <div class="product-category">
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {categoryNameMapping[product.category]}
+                      </Link>
+                    </div>
+                    <h2>
+                      <Link
+                        to={`/product-details/${product._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {product.name}
+                      </Link>
+                    </h2>
+
+                    <h5 className="notAvailableTitle">
+                      {product.productStock.length === 0 ? (
+                        <span className="stock-message-list">
+                          Not available
+                        </span>
+                      ) : product.productStock[0].quantity <= 0 ? (
+                        <span className="stock-message-list">
+                          Out of stock
+                        </span>
+                      ) : product.productStock[0].quantity < 5 ? (
+                        <span className="stock-message-list">
+                          Only {product.productStock[0].quantity} left
+                        </span>
+                      ) : null}
+                    </h5>
+
+                    <div className="product-card-bottom">
+                      <div className="product-price popular-card-price">
+                        <span id="f-c-p">
+                          ₹
+                          {product.prices.discounted
+                            ? Number(product.prices.discounted).toFixed(2)
+                            : Number(product.prices.calculatedPrice).toFixed(2)}
+                        </span>
+                        {!product.calculationOnWeight && (
+                          <span className="old-price" id="f-c-o-p">
+                            ₹{product.prices ? Number(product.prices.original).toFixed(2) : null}
+                          </span>
+                        )}
                       </div>
-                      <h2>
+
+                      <div class="add-cart popular-card-cart">
                         <Link
-                          to={`/product-details/${product._id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                          class="add add-cart-btn"
+                          id="shop-cart"
+                          onClick={() => {
+                            handleCartClick(product._id);
+                          }}
                         >
-                          {product.name}
+                          <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
+                          Add{" "}
                         </Link>
-                      </h2>
-
-                      <h5 className="notAvailableTitle">
-                        {product.productStock.length === 0 ? (
-                          <span className="stock-message-list">
-                            Not available
-                          </span>
-                        ) : product.productStock[0].quantity <= 0 ? (
-                          <span className="stock-message-list">
-                            Out of stock
-                          </span>
-                        ) : product.productStock[0].quantity < 5 ? (
-                          <span className="stock-message-list">
-                            Only {product.productStock[0].quantity} left
-                          </span>
-                        ) : null}
-                      </h5>
-
-                      <div class="product-card-bottom">
-                        <div class="product-price popular-card-price">
-                          <span id="f-c-p">
-                            ₹
-                            {product.prices.discounted
-                              ? product.prices.discounted
-                              : product.prices.calculatedPrice}
-                          </span>
-                          {!product.calculationOnWeight && (
-                            <span class="old-price" id="f-c-o-p">
-                              ₹{product.prices ? product.prices.original : null}
-                            </span>
-                          )}
-                        </div>
-                        <div class="add-cart popular-card-cart">
-                          <Link
-                            class="add add-cart-btn"
-                            id="shop-cart"
-                            onClick={() => {
-                              handleCartClick(product._id);
-                            }}
-                          >
-                            <i class="fi-rs-shopping-cart mr-5 bi bi-cart me-2"></i>
-                            Add{" "}
-                          </Link>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              ))
+              </div>
+            ))
             : null}
         </div>
         <div>
-          {productsToShow < (ProductData?.length || 0) ? (
-            <div className="btn" onClick={handleShowMore}>
-              Show More
-            </div>
-          ) : null}
+          {hasMore && (
+            <button className="btn" onClick={handleShowMore}>Show More</button>
+          )}
         </div>
       </div>
       <Subscribe />
