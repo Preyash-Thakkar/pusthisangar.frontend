@@ -38,7 +38,7 @@ const MobileCategory = () => {
           }
         `}
       </style>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
+      {/* <Navbar.Toggle aria-controls="basic-navbar-nav" /> */}
       <Navbar.Collapse id="basic-navbar-nav">
         <Nav className="mr-auto">
           <NavDropdown title="Browse All Categories" className="custom-dropdown">
